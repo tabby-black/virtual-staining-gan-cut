@@ -41,8 +41,13 @@ def find_class_in_module(target_cls_name, module):
     return cls
 
 
+# adapted this function so hyperspectral data can also be detected and converted into a numpy image array for visualisation
+
+# TODO: make sure PCA is only applied to each image once
+
 def tensor2im(input_image, imtype=np.uint8):
-    """"Converts a Tensor array into a numpy image array.
+    """ "Converts a Tensor array into a numpy image array.
+    If input_image is hyperspectral (C >3), PCA is applied for visualisation only.
 
     Parameters:
         input_image (tensor) --  the input image tensor array
@@ -53,10 +58,33 @@ def tensor2im(input_image, imtype=np.uint8):
             image_tensor = input_image.data
         else:
             return input_image
-        image_numpy = image_tensor[0].clamp(-1.0, 1.0).cpu().float().numpy()  # convert it into a numpy array
-        if image_numpy.shape[0] == 1:  # grayscale to RGB
+        
+        # convert it into a numpy array
+        image_numpy = image_tensor[0].cpu().float().numpy()
+        C, H, W = image_numpy.shape
+
+        # hyperspectral case
+        if C > 3:
+            # reshape to (H*W, C)
+            pixels = image_numpy.reshape(C, -1).T
+
+            # PCA for visualisation
+            pca = PCA(n_components=3)
+            pixels_rgb = pca.fit_transform(pixels)
+
+            # reshape back to image
+            image_numpy = pixels_rgb.reshape(H, W, 3)
+
+            # normalise to [0, 255]
+            image_numpy -= image_numpy.min()
+            image_numpy /= (image_numpy.max() + 1e-8)
+            image_numpy *= 255.0
+        
+        # RGB / grayscale case
+        elif image_numpy.shape[0] == 1:  # grayscale to RGB
             image_numpy = np.tile(image_numpy, (3, 1, 1))
         image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0  # post-processing: tranpose and scaling
+
     else:  # if it is a numpy array, do nothing
         image_numpy = input_image
     return image_numpy.astype(imtype)

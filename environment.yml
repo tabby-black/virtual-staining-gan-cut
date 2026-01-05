@@ -1,16 +1,25 @@
-name: contrastive-unpaired-translation
+# this is a conda environment specification file
+# use: 'mamba env create -f environment.yml', 'conda activate cut-gan-hyperspectral' to create and activate the environment needed to run the code in this repo
+name: cut-gan-hyperspectral
 channels:
 - pytorch
-- defaults
+- conda-forge
+- nvidia
 dependencies:
-- python=3.6
-- pytorch=1.4.0
+- python=3.11
+- pytorch=2.4.0
+- torchvision=0.19.0
+- pytorch-cuda=12.1
+
+- numpy=1.24.3
 - scipy
+- scikit-image
+- packaging
+
+-pip
 - pip:
-  - dominate==2.4.0
-  - torchvision==0.5.0
-  - Pillow==6.1.0
-  - numpy==1.16.4
-  - visdom==0.1.8
-  - packaging
-  - GPUtil==1.4.0
+  - dominate>=2.8.0
+  - Pillow>=10.0.0
+  - visdom>=0.2.4
+  - GPUtil>=1.4.0
+  - wandb>=0.16.0
