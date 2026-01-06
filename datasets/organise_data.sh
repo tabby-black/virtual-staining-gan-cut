@@ -24,7 +24,7 @@ mkdir -p ${RAW_DIR} ${WHITE_DIR} ${DARK_DIR} ${PREPROCESSED_DIR} ${RGB_DIR} ${TR
 # rename files then move
 
 # organise hdr files
-for hdr_path in "${DATASET_DIR}"/P*/ROI*/raw.hdr; do
+for hdr_path in ../../datasets/'PKG - HistologyHSI-GB'/P*/ROI*/raw.hdr; do
     # extract P* and ROI* parts from path
     # ROI* part includes cover image number and tumor marker  eg. ROI_1_C01_T
     patient=$(basename "$(dirname "$(dirname "$hdr_path")")")
