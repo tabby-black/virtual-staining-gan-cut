@@ -100,7 +100,7 @@ def reduce_spectral_dimensions(intensity_array, wavelengths, n=3):
         1D numpy array containing the spectral bands corresponding to the hyperspectral cube after the band reduction
     """
     w = np.ones(n)/n
-    moving_averaged_image = scipy.ndimage.convolved(intensity_array, w, axis=2)
+    moving_averaged_image = scipy.ndimage.convolve1d(intensity_array, w, axis=2)
     band_reduced_cube = moving_averaged_image[:,:,1:-1:n]
     wavelength_reduced = wavelengths[1:-1:n]
     return band_reduced_cube, wavelength_reduced
@@ -170,16 +170,16 @@ for raw_hdr in sorted(glob(raw_glob)):
 
     #CALIBRATION
     base = os.path.splitext(os.path.basename(raw_hdr))[0]
-    print("Base:", base)
     prefix = base.replace("_raw", "")
-    print("Prefix: ", prefix)
-    print("White reference hdr file code is trying to open for calibration: datasets/white/" + prefix + "_whiteReference.hdr")
     white_hdr = f"datasets/white/{prefix}_whiteReference.hdr"
     dark_hdr = f"datasets/dark/{prefix}_darkReference.hdr"
 
     white_reference_hs_data, white_wavelengths, white_cube_metadata = load_hyperspectral_cube(white_hdr)
+    print("Successfully loaded white hyperspectral cube")
     dark_reference_hs_data, dark_wavelengths, dark_cube_metadata = load_hyperspectral_cube(dark_hdr)
+    print("Successfully loaded dark hyperspectral cube")
     raw_hs_data, raw_wavelengths, raw_cube_metadata = load_hyperspectral_cube(raw_hdr)
+    print("Successfully loaded raw hyperspectral cube")
 
 
     # white and dark cubes are full-size and match shape so use per-pixel calibration
@@ -191,7 +191,7 @@ for raw_hdr in sorted(glob(raw_glob)):
     # clipping to a sensible range
     calibrated_cube = np.clip(calibrated_cube, 0, 1)
     # please don't delete my codespace
-
+    print("Calibration of this cube completed.")
 
     # delete /datasets/white and /datasets/dark now that calibration using these reference images has finished
     #os.remove("/datasets/white")
