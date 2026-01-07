@@ -21,7 +21,7 @@ import scipy
 from scipy.ndimage import affine_transform
 # spectral is a module for processing hyperspectral image data eg. reading, displaying, manipulating
 from spectral import io as spio
-from spectral import save_image
+from spectral.io.envi import save_image
 # glob is a module that provides tools to find path names matching specified patterns that follow Unix shell rules
 from glob import glob
 # shutil allows files to be moved around between directories
