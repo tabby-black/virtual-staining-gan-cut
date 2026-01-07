@@ -61,6 +61,17 @@ done
    # mv "$hdr_path" "${WHITE_DIR}/${new_name}"
 #done
 
+# organise whiteReference files
+for hdr_path in ../../../datasets/HistologyHSI-GB/P*/ROI*/whiteReference; do
+    extract P* and ROI* parts from path
+    patient=$(basename "$(dirname "$(dirname "$hdr_path")")")
+    roi=$(basename "$(dirname "$hdr_path")")
+
+    new_name="${patient}_${roi}_whiteReference"
+
+    mv "$hdr_path" "${WHITE_DIR}/${new_name}"
+done
+
 # organise darkReference hdr files
 #for hdr_path in ../../../datasets/HistologyHSI-GB/P*/ROI*/darkReference.hdr; do
     # extract P* and ROI* parts from path
@@ -71,6 +82,17 @@ done
 
     #mv "$hdr_path" "${DARK_DIR}/${new_name}"
 #done
+
+# organise darkReference hdr files
+for hdr_path in ../../../datasets/HistologyHSI-GB/P*/ROI*/darkReference; do
+    extract P* and ROI* parts from path
+    patient=$(basename "$(dirname "$(dirname "$hdr_path")")")
+    roi=$(basename "$(dirname "$hdr_path")")
+
+    new_name="${patient}_${roi}_darkReference"
+
+    mv "$hdr_path" "${DARK_DIR}/${new_name}"
+done
 
 # organise rgb files
 #for hdr_path in ../../../datasets/HistologyHSI-GB/P*/ROI*/rgb.png; do
