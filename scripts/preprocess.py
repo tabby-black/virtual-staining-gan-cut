@@ -175,7 +175,7 @@ for raw_hdr in sorted(glob(raw_glob)):
     print("Prefix: ", prefix)
     print("White reference hdr file code is trying to open for calibration: datasets/white/" + prefix + "_whiteReference.hdr")
     white_hdr = f"datasets/white/{prefix}_whiteReference.hdr"
-    dark_hdr = f"datasets/dark/{prefix}_darkReference"
+    dark_hdr = f"datasets/dark/{prefix}_darkReference.hdr"
 
     white_reference_hs_data, white_wavelengths, white_cube_metadata = load_hyperspectral_cube(white_hdr)
     dark_reference_hs_data, dark_wavelengths, dark_cube_metadata = load_hyperspectral_cube(dark_hdr)
