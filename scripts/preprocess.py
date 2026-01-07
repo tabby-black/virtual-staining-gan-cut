@@ -191,7 +191,7 @@ for raw_hdr in sorted(glob(raw_glob)):
     # clipping to a sensible range
     calibrated_cube = np.clip(calibrated_cube, 0, 1)
     # please don't delete my codespace
-    print("Calibration of this cube completed.")
+    print("Calibration of this cube completed!")
 
     # delete /datasets/white and /datasets/dark now that calibration using these reference images has finished
     #os.remove("/datasets/white")
@@ -209,7 +209,8 @@ for raw_hdr in sorted(glob(raw_glob)):
     # base = "P1_ROI_3_C01_T_raw"
 
     # change number of bands in metadata before saving new .hdr and cube files
-    reduced_metadata = raw_cube_metadata.copy()
+    # added .metadata to this to see if it fixes error
+    reduced_metadata = raw_cube_metadata.metadata.copy()
     reduced_metadata['bands'] = str(band_reduced_cube.shape[2])
 
 
