@@ -165,7 +165,9 @@ def register_hsi_image(rgb_image, hsi_cube):
 
 # go through each raw hyperspectral file in order
 # spectral Python always loads cubes via the header, not via the raw binary file directly
+i = 0
 for raw_hdr in sorted(glob(raw_glob)):
+    i += 1
     # load the correct references for this raw hdr
 
     #CALIBRATION
@@ -175,11 +177,8 @@ for raw_hdr in sorted(glob(raw_glob)):
     dark_hdr = f"datasets/dark/{prefix}_darkReference.hdr"
 
     white_reference_hs_data, white_wavelengths, white_cube_metadata = load_hyperspectral_cube(white_hdr)
-    print("Successfully loaded white hyperspectral cube")
     dark_reference_hs_data, dark_wavelengths, dark_cube_metadata = load_hyperspectral_cube(dark_hdr)
-    print("Successfully loaded dark hyperspectral cube")
     raw_hs_data, raw_wavelengths, raw_cube_metadata = load_hyperspectral_cube(raw_hdr)
-    print("Successfully loaded raw hyperspectral cube")
 
 
     # white and dark cubes are full-size and match shape so use per-pixel calibration
@@ -190,15 +189,14 @@ for raw_hdr in sorted(glob(raw_glob)):
     calibrated_cube = numerator / denominator
     # clipping to a sensible range
     calibrated_cube = np.clip(calibrated_cube, 0, 1)
-    print("Calibration of this cube completed!")
 
     # delete /datasets/white and /datasets/dark now that calibration using these reference images has finished
     #os.remove("/datasets/white")
     #os.remove("/datasets/dark")
 
+
     # BAND REDUCTION
     band_reduced_cube, wavelength_reduced = reduce_spectral_dimensions(calibrated_cube, raw_wavelengths, n=3)
-    print("Band reduction of this cube completed!")
 
 
     # saves both updated .hdr file and corresponding preprocessed hyperspectral image
@@ -212,7 +210,6 @@ for raw_hdr in sorted(glob(raw_glob)):
     # added .metadata to this to see if it fixes error
     reduced_metadata = raw_cube_metadata.metadata.copy()
     reduced_metadata['bands'] = str(band_reduced_cube.shape[2])
-    print("Metadata of this cube updated!")
 
     base = os.path.splitext(os.path.basename(raw_hdr))[0]
     output_hdr = os.path.join(output_dir, base + "_preprocessed.hdr")
@@ -222,7 +219,7 @@ for raw_hdr in sorted(glob(raw_glob)):
     # is this definitely right that it is using the raw cube interleave? I suppose this hasn't changed
     interleave = reduced_metadata.get('interleave', 'bill')
     save_image(output_hdr, band_reduced_cube.astype(np.float32), dtype=np.float32, interleave=interleave, metadata=reduced_metadata, ext='', force=True)
-    print("Calibrated and band reduced cube saved!")
+    print("Calibrated and band reduced cube", i, "saved!")
 
 
 # IMAGE REGISTRATION
