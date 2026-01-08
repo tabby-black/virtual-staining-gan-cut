@@ -167,9 +167,11 @@ def register_hsi_image(rgb_image, hsi_cube):
 # spectral Python always loads cubes via the header, not via the raw binary file directly
 
 # commented this out because all cubes have been calibrated and band reduced :)
-#i = 0
-for raw_hdr in sorted(glob(raw_glob)):
-    #i += 1
+i = 0
+list = ["datasets/raw/P1_ROI_01_C01_T_raw_preprocessed.hdr"]
+#for raw_hdr in sorted(glob(raw_glob)):
+for raw_hdr in list:
+    i += 1
     # load the correct references for this raw hdr
 
     #CALIBRATION
@@ -239,10 +241,13 @@ rgb_glob = "datasets/rgb/*.png"
 
 
 # sorted sorts the list lexographically
-hdr_files = sorted(glob(preprocessed_hdr_glob))
-cube_files = sorted(glob(preprocessed_cube_glob))
-rgb_files = sorted(glob(rgb_glob))
+#hdr_files = sorted(glob(preprocessed_hdr_glob))
+#cube_files = sorted(glob(preprocessed_cube_glob))
+#rgb_files = sorted(glob(rgb_glob))
 
+hdr_files = ["datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed.hdr"]
+cube_files = ["datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed"]
+rgb_files = ["datasets/rgb/P1_ROI_01_C01_T_raw_preprocessed.png"]
 
 for hdr, cube, rgb in zip(hdr_files, cube_files, rgb_files):
     hsi_cube, hsi_wavelengths, hsi_metadata = load_hyperspectral_cube(hdr)
