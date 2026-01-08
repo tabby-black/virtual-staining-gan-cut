@@ -231,17 +231,17 @@ for raw_hdr in sorted(glob(raw_glob)):
 
 # globs - these are lists so we can iterate over them zipped together
 # pattern to match for preprocessed cube headers
-#preprocessed_hdr_glob = "datasets/preprocessed/*.hdr"
+preprocessed_hdr_glob = "datasets/preprocessed/*.hdr"
 # pattern to match for preprocessed cubes
-#preprocessed_cube_glob = "datasets/preprocessed/*_preprocessed"
+preprocessed_cube_glob = "datasets/preprocessed/*_preprocessed"
 # pattern to match for rgb images
-#rgb_glob = "datasets/rgb/*.png"
+rgb_glob = "datasets/rgb/*.png"
 
 
 # sorted sorts the list lexographically
-#hdr_files = sorted(glob(preprocessed_hdr_glob))
-#cube_files = sorted(glob(preprocessed_cube_glob))
-#rgb_files = sorted(glob(rgb_glob))
+hdr_files = sorted(glob(preprocessed_hdr_glob))
+cube_files = sorted(glob(preprocessed_cube_glob))
+rgb_files = sorted(glob(rgb_glob))
 
 
 for hdr, cube, rgb in zip(hdr_files, cube_files, rgb_files):
@@ -540,6 +540,8 @@ shutil.move("datasets/preprocessed/P11_ROI_01_C02_T_raw_preprocessed.hdr", "data
 shutil.move("datasets/preprocessed/P11_ROI_01_C02_T_raw_preprocessed", "datasets/trainA/")
 shutil.move("datasets/preprocessed/P11_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/trainA/")
 shutil.move("datasets/preprocessed/P11_ROI_01_C03_T_raw_preprocessed", "datasets/trainA/")
+
+print("Hyperspectral tumor images moved into trainA!")
 
 # move hyperspectral non-tumor images into trainA
 shutil.move("datasets/preprocessed/P1_ROI_02_C01_NT_raw_preprocessed.hdr", "datasets/trainA/")
@@ -1265,6 +1267,8 @@ shutil.move("datasets/preprocessed/P8_ROI_03_C11_T_raw_preprocessed", "datasets/
 shutil.move("datasets/preprocessed/P8_ROI_03_C12_T_raw_preprocessed.hdr", "datasets/testA/")
 shutil.move("datasets/preprocessed/P8_ROI_03_C12_T_raw_preprocessed", "datasets/testA/")
 
+print("Hyperspectral non-tumor images moved into testA!")
+
 #os.remove("datasets/preprocessed")
 
 # move rgb tumor images into trainB
@@ -1717,6 +1721,8 @@ shutil.move("datasets/rgb/P13_ROI_01_C10_T_rgb.png", "datasets/testB/")
 shutil.move("datasets/rgb/P13_ROI_01_C11_T_rgb.png", "datasets/testB/")
 shutil.move("datasets/rgb/P13_ROI_01_C12_T_rgb.png", "datasets/testB/")
 
+print("RGB tumor images moved into trainB!")
+
 # move rgb non-tumor images into testB
 shutil.move("datasets/rgb/P7_ROI_01_C07_NT_rgb.png", "datasets/testB/")
 shutil.move("datasets/rgb/P7_ROI_01_C08_NT_rgb.png", "datasets/testB/")
@@ -1798,6 +1804,8 @@ shutil.move("datasets/rgb/P8_ROI_03_C09_T_rgb.png", "datasets/testB/")
 shutil.move("datasets/rgb/P8_ROI_03_C10_T_rgb.png", "datasets/testB/")
 shutil.move("datasets/rgb/P8_ROI_03_C11_T_rgb.png", "datasets/testB/")
 shutil.move("datasets/rgb/P8_ROI_03_C12_T_rgb.png", "datasets/testB/")
+
+print("RGB non-tumor images moved into testB!")
 
 #os.remove("/datasets/rgb")
 
