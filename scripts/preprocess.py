@@ -274,7 +274,7 @@ for hdr, cube, rgb in zip(hdr_files, cube_files, rgb_files):
 shutil.move("datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
 
 
-shutil.move("/datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed", "/datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
 shutil.move("/datasets/preprocessed/P1_ROI_01_C02_T_raw_preprocessed.hdr", "/datasets/histology/trainA/")
 shutil.move("/datasets/preprocessed/P1_ROI_01_C02_T_raw_preprocessed", "/datasets/histology/trainA/")
 shutil.move("/datasets/preprocessed/P1_ROI_01_C03_T_raw_preprocessed.hdr", "/datasets/histology/trainA/")
