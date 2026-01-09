@@ -256,15 +256,15 @@ for hdr, cube, rgb in zip(hdr_files, cube_files, rgb_files):
     # read rgb image into HxWx3 array before calling register_hsi_image function
     rgb = np.array(Image.open(rgb))
     registered_hsi_cube = register_hsi_image(rgb, hsi_cube)
-    print("Cube", i, "registered against corresponding rgb image.")
+    print("Cube", i, "registered against corresponding rgb image!")
 
     # change H, W, B in metadata before saving new .hdr and cube files
-    registered_metadata = hsi_metadata.copy()
+    registered_metadata = hsi_metadata.metadata.copy()
     H, W, B = registered_hsi_cube.shape
     registered_metadata['lines'] = str(H)
     registered_metadata['samples'] = str(W)
     registered_metadata['bands'] = str(B)
-    print("Cube", i, "metadata updated.")
+    print("Cube", i, "metadata updated!")
    
     # store registered cube, overriding non-registered cube 
     base = os.path.basename(cube)
