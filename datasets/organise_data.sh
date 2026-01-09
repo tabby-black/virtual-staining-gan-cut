@@ -100,7 +100,7 @@ done
     #patient=$(basename "$(dirname "$(dirname "$hdr_path")")")
     #roi=$(basename "$(dirname "$hdr_path")")
 
-    #new_name="${patient}_${roi}_rgb.hdr"
+    #new_name="${patient}_${roi}_rgb.png"
 
     #mv "$hdr_path" "${RGB_DIR}/${new_name}"
 #done
