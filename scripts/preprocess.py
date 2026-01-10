@@ -169,7 +169,7 @@ def register_hsi_image(rgb_image, hsi_cube):
 
 # commented this out because all cubes have been calibrated and band reduced :)
 #i = 0
-list = ["datasets/raw/P1_ROI_01_C11_T_raw.hdr"]
+list = ["datasets/raw/P1_ROI_01_C12_T_raw.hdr"]
 #for raw_hdr in sorted(glob(raw_glob)):
 for raw_hdr in list:
     #i += 1
