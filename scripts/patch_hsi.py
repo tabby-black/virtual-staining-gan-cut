@@ -8,9 +8,8 @@ import glob
 from PIL import Image
 #from itertools import product
 
-i = 0
 
-def patch_hsi(hdr_path):
+def patch_hsi(hdr_path, i=0):
     i+= 1
     # load hyperspectral cube
     img = open_image(hdr_path).load
@@ -48,7 +47,7 @@ def patch_hsi(hdr_path):
     #os.remove(raw_path)
 
 
-def patch_rgb(image_path):
+def patch_rgb(image_path, i=0):
     i += 1
     rgb = Image.open(image_path)
     W, H = rgb.size
