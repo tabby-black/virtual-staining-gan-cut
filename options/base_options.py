@@ -31,7 +31,7 @@ class BaseOptions():
         # model parameters
         parser.add_argument('--model', type=str, default='cut', help='chooses which model to use.')
         # I have changed the default value of input_nc from 3 for rgb input to 275 for hyperspectral input
-        parser.add_argument('--input_nc', type=int, default=3, help='# of input image channels: 275 for hyperspectral')
+        parser.add_argument('--input_nc', type=int, default=275, help='# of input image channels: 275 for hyperspectral')
         # The default value of output_nc remains at 3 for RGB image output
         parser.add_argument('--output_nc', type=int, default=3, help='# of output image channels: 3 for RGB and 1 for grayscale')
         parser.add_argument('--ngf', type=int, default=64, help='# of gen filters in the last conv layer')
