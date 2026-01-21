@@ -4,6 +4,10 @@ import sys
 import ntpath
 import time
 from . import util, html
+#from pathlib import Path
+#import wandb
+#import os
+#import torch.distributed as dist
 from subprocess import Popen, PIPE
 
 if sys.version_info[0] == 2:
@@ -46,7 +50,7 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
 class Visualizer():
     """This class includes several functions that can display/save images and print/save logging information.
 
-    It uses a Python library 'visdom' for display, and a Python library 'dominate' (wrapped in 'HTML') for creating HTML files with images.
+    It uses a Python library 'visdom' for display, 'wandb' for logging (optional), and a Python library 'dominate' (wrapped in 'HTML') for creating HTML files with images.
     """
 
     def __init__(self, opt):
