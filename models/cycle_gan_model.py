@@ -89,7 +89,7 @@ class CycleGANModel(BaseModel):
         if self.isTrain:
 
             
-            # TODO: I will need to change this bit as input and output images do not have the same number of channels!
+            # I removed this bit as input and output images do not have the same number of channels!
             # TODO: check what this bit of code does
             #if opt.lambda_identity > 0.0:  # only works when input and output images have the same number of channels
                 #assert(opt.input_nc == opt.output_nc)

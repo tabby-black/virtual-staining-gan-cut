@@ -31,7 +31,8 @@ from options.train_options import TrainOptions
 from data import create_dataset
 from models import create_model
 from util.visualizer import Visualizer
-from util.util import init_ddp, cleanup_ddp
+# I have commented this line out as ddp is not needed (or provided by utils.py)
+#from util.util import init_ddp, cleanup_ddp
 
 # I have not adapted the rest of this to match the same train.py script as in CycleGAN repo but it should work. cycle_gan_model.py (and rest of files) are the same in both repos so this training script should work 
 
