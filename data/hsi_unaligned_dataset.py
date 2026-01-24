@@ -52,8 +52,15 @@ class HSIUnalignedDataset(BaseDataset):
             self.dir_A = os.path.join(opt.dataroot, "valA")
             self.dir_B = os.path.join(opt.dataroot, "valB")
 
-        self.A_paths = sorted(make_dataset(self.dir_A, opt.max_dataset_size))   # load images from '/path/to/data/trainA'
-        self.B_paths = sorted(make_dataset(self.dir_B, opt.max_dataset_size))    # load images from '/path/to/data/trainB'
+        # load images from '/path/to/data/trainA'
+        # don't use make_dataset() because this only loads certain file types
+        self.A_paths = sorted([
+            os.path.join(self.dir_A, f)
+            for f in os.listdir(self.dir_A)
+            if f.endswith(".img")
+        ])
+        # load images from '/path/to/data/trainB'
+        self.B_paths = sorted(make_dataset(self.dir_B, opt.max_dataset_size))
         self.A_size = len(self.A_paths)  # get the size of dataset A
         self.B_size = len(self.B_paths)  # get the size of dataset B
 
