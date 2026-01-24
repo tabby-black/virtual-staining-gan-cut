@@ -58,8 +58,8 @@ class HSIUnalignedDataset(BaseDataset):
         self.B_size = len(self.B_paths)  # get the size of dataset B
 
         # assertions to make it obvious is HSI data hasn't been loaded as intended
-        assert self.A_size > 0 f"No HSI files found in {self.dir_A}"
-        assert self.B_size > 0 f"No RGB files found in {self.dir_B}"
+        assert self.A_size > 0, f"No HSI files found in {self.dir_A}"
+        assert self.B_size > 0, f"No RGB files found in {self.dir_B}"
 
     # add load_hsi and load_rgb functions to separate the loading of these different image types
     # load rgb images in the same way we load hyperspectral images for consistency - e.g. transposee explicitly rather than inside ToTensor()
