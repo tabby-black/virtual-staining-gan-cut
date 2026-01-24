@@ -82,9 +82,10 @@ class HSIUnalignedDataset(BaseDataset):
       if not os.path.exists(hdr_path):
           raise FileNotFoundError(f"Missing .hdr file for {img_path}")
           
-        
       cube = spectral.open_image(hdr_path).load()
-      cube = np.asarray(cube, dtype=np.float32) # (H, W, C) - needs transposing
+      # make cube float and writable
+      cube = cube.astype(np.float32, copy=True)
+      
       cube = np.transpose(cube, (2, 0, 1)) # (C, H, W)
       
       return torch.from_numpy(cube)
