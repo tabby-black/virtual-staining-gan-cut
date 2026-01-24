@@ -4,6 +4,8 @@ from options.train_options import TrainOptions
 from data import create_dataset
 from models import create_model
 from util.visualizer import Visualizer
+# I have commented this line out as ddp is not needed (or provided by utils.py)
+#from util.util import init_ddp, cleanup_ddp
 
 """General-purpose training script for image-to-image translation.
 
@@ -25,14 +27,6 @@ See options/base_options.py and options/train_options.py for more training optio
 See training and test tips at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/docs/tips.md
 See frequently asked questions at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/docs/qa.md
 """
-
-import time
-from options.train_options import TrainOptions
-from data import create_dataset
-from models import create_model
-from util.visualizer import Visualizer
-# I have commented this line out as ddp is not needed (or provided by utils.py)
-#from util.util import init_ddp, cleanup_ddp
 
 # I have not adapted the rest of this to match the same train.py script as in CycleGAN repo but it should work. cycle_gan_model.py (and rest of files) are the same in both repos so this training script should work 
 
