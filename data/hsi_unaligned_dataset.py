@@ -70,11 +70,19 @@ class HSIUnalignedDataset(BaseDataset):
 
     # add load_hsi and load_rgb functions to separate the loading of these different image types
     # load rgb images in the same way we load hyperspectral images for consistency - e.g. transposee explicitly rather than inside ToTensor()
-    def load_hsi(self, hdr_path):
+    # be explicit about replacing .img with .hdr to ensure that spectral is loading the cube from the .hdr path not the .img path - this won't work
+    def load_hsi(self, img_path):
       """
       Load ENVI hyperspectral cube
       returns tensor (C, H, W) - ie. tensor transposed to meet convention PyTorch expects
       """
+      hdr_path = img_path.replace(".img", ".hdr")
+
+      # add an error message to notify if there is a missing .hdr file
+      if not os.path.exists(hdr_path):
+          raise FileNotFoundError(f"Missing .hdr file for {img_path}")
+          
+        
       cube = spectral.open_image(hdr_path).load()
       cube = np.asarray(cube, dtype=np.float32) # (H, W, C) - needs transposing
       cube = np.transpose(cube, (2, 0, 1)) # (C, H, W)
