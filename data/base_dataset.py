@@ -58,6 +58,9 @@ class BaseDataset(data.Dataset, ABC):
         Returns:
             a dictionary of data with their names. It ususally contains the data itself and its metadata information.
         """
+        # inside __getitem__
+        # verify if cropping is happening
+        print("After transform:", A.shape)
         pass
 
 
