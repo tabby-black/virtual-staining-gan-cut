@@ -99,6 +99,17 @@ class HSIUnalignedDataset(BaseDataset):
       img = np.array(img, dtype=np.float32) / 255.0
       img = np.transpose(img, (2, 0, 1))
       return torch.from_numpy(img)
+
+    # helper function for cropping
+    def random_crop(self, tensor, crop_size):
+        _, h, w = tensor.shape
+        if h < crop_size or w < crop_size:
+            raise ValueError(f"Crop size {crop_size} is larger than image size {(h, w)}")
+
+        top = random.randint(0, h - crop_size)
+        left = random.randint(0, w - crop_size)
+
+        return tensor[:, top:top + crop_size, left:left + crop_size]
   
 
     def __getitem__(self, index):
@@ -128,14 +139,26 @@ class HSIUnalignedDataset(BaseDataset):
 
         # commented this part out for now
         # For CUT/FastCUT mode, if in finetuning phase (learning rate is decaying),
-        # do not perform resize-crop data augmentation of CycleGAN.
+        # always want to crop for CycleGAN
         # is_finetuning = self.opt.isTrain and self.current_epoch > self.opt.n_epochs
         # modified_opt = util.copyconf(self.opt, load_size=self.opt.crop_size if is_finetuning else self.opt.load_size)
         # transform = get_transform(modified_opt)
 
         # replacing transforms with calls to load_hsi() and load_rgb() functions - transforms were carried out in these functions
+        
         A = self.load_hsi(A_path)
         B = self.load_rgb(B_path)
+
+        if self.opt.isTrain:
+            # always crop for CycleGAN
+            crop_size = self.opt.crop_size
+            A = self.random_crop(A, crop_size)
+            B = self.random_crop(B, crop_size)
+
+        # sanity check to check that cropping has happened
+        if index == 0:
+            print("A shape:", A.shape)
+            print("B shape:", B.shape)
 
         return {'A': A,
                 'B': B,
