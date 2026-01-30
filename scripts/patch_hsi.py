@@ -100,8 +100,9 @@ hdr_test_files = ["P12_ROI_01_C10_T_raw_preprocessed.hdr", "P12_ROI_01_C11_T_raw
 #for hdr in hdr_train_files:
     #patch_hsi(hdr)
 
-for hdr in hdr_test_files:
-    patch_hsi(hdr)
+for fname in hdr_test_files:
+    hdr_path = os.path.join(test_directory, fname)
+    patch_hsi(hdr_path)
 
 
 # patch rgb images
