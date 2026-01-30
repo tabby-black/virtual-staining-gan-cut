@@ -8,6 +8,7 @@ import importlib
 import argparse
 from argparse import Namespace
 import torchvision
+from sklearn.decomposition import PCA
 
 
 def str2bool(v):
