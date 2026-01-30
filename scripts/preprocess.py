@@ -295,7 +295,7 @@ def register_hsi_image(rgb_image, hsi_cube):
 
 # All tumor images from P7 should be in trainA
 # The first 6 non-tumor images from P7 ie. ROI 01 C01-06 should be in trainA, the rest in testA
-
+"""
 shutil.move("datasets/preprocessed/P4_ROI_01_C08_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
 shutil.move("datasets/preprocessed/P4_ROI_01_C08_T_raw_preprocessed", "datasets/histology/trainA/")
 shutil.move("datasets/preprocessed/P4_ROI_01_C09_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
@@ -1661,8 +1661,45 @@ shutil.move("datasets/rgb/P8_ROI_02_C15_NT_rgb.png", "datasets/histology/testB/"
 shutil.move("datasets/rgb/P8_ROI_02_C16_NT_rgb.png", "datasets/histology/testB/")
 
 print("RGB non-tumor images moved into testB!")
-
+"""
 #os.remove("/datasets/rgb")
+
+# extras I missed
+shutil.move("datasets/rgb/P1_ROI_01_C09_T_rgb.png", "datasets/histology/trainB/")
+shutil.move("datasets/rgb/P1_ROI_01_C10_T_rgb.png", "datasets/histology/trainB/")
+shutil.move("datasets/rgb/P1_ROI_01_C11_T_rgb.png", "datasets/histology/trainB/")
+shutil.move("datasets/rgb/P1_ROI_01_C12_T_rgb.png", "datasets/histology/trainB/")
+
+shutil.move("datasets/rgb/P8_ROI_01_C01_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_02_C01_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_03_C01_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_04_C01_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_05_C01_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_06_C01_NT_rgb.png", "datasets/histology/testB/")
+
+shutil.move("datasets/preprocessed/P1_ROI_01_C09_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C09_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C10_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C10_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C11_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C11_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+
+shutil.move("datasets/preprocessed/P3_ROI_02_C21_NT_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_02_C21_NT_raw_preprocessed.hdr", "datasets/histology/trainA/")
+
+shutil.move("datasets/preprocessed/P8_ROI_01_C01_NT_raw_preprocessed", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C01_NT_raw_preprocessed.hdr", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C02_NT_raw_preprocessed", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C02_NT_raw_preprocessed.hdr", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C03_NT_raw_preprocessed", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C03_NT_raw_preprocessed.hdr", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C04_NT_raw_preprocessed", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C04_NT_raw_preprocessed.hdr", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C05_NT_raw_preprocessed", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C05_NT_raw_preprocessed.hdr", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C06_NT_raw_preprocessed", "datasets/histology/testA/")
+shutil.move("datasets/preprocessed/P8_ROI_01_C06_NT_raw_preprocessed.hdr", "datasets/histology/testA/")
+
 
 
 print("Data calibration, band reduction, image registration and image split complete!")
