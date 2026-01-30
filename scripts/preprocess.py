@@ -288,25 +288,7 @@ def register_hsi_image(rgb_image, hsi_cube):
 
 # commented out part of this because some files were moved before a bug fix
 
-shutil.move("datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C08_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C08_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C12_T_raw_preprocessed", "datasets/histology/trainA/")
-shutil.move("datasets/preprocessed/P1_ROI_01_C12_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-shutil.move("datasets/rgb/P1_ROI_01_C12_T_raw_preprocessed.png", "datasets/histology/trainB/")
+shutil.move("datasets/rgb/P1_ROI_01_C12_T_raw_preprocessed", "datasets/histology/trainB/")
 
 shutil.move("datasets/preprocessed/P2_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
 shutil.move("datasets/preprocessed/P2_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
