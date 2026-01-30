@@ -1665,17 +1665,21 @@ print("RGB non-tumor images moved into testB!")
 #os.remove("/datasets/rgb")
 
 # extras I missed
+"""
 shutil.move("datasets/rgb/P1_ROI_01_C09_T_rgb.png", "datasets/histology/trainB/")
 shutil.move("datasets/rgb/P1_ROI_01_C10_T_rgb.png", "datasets/histology/trainB/")
 shutil.move("datasets/rgb/P1_ROI_01_C11_T_rgb.png", "datasets/histology/trainB/")
 shutil.move("datasets/rgb/P1_ROI_01_C12_T_rgb.png", "datasets/histology/trainB/")
 
+
 shutil.move("datasets/rgb/P8_ROI_01_C01_NT_rgb.png", "datasets/histology/testB/")
-shutil.move("datasets/rgb/P8_ROI_02_C01_NT_rgb.png", "datasets/histology/testB/")
-shutil.move("datasets/rgb/P8_ROI_03_C01_NT_rgb.png", "datasets/histology/testB/")
-shutil.move("datasets/rgb/P8_ROI_04_C01_NT_rgb.png", "datasets/histology/testB/")
-shutil.move("datasets/rgb/P8_ROI_05_C01_NT_rgb.png", "datasets/histology/testB/")
-shutil.move("datasets/rgb/P8_ROI_06_C01_NT_rgb.png", "datasets/histology/testB/")
+"""
+
+shutil.move("datasets/rgb/P8_ROI_01_C02_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_01_C03_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_01_C04_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_01_C05_NT_rgb.png", "datasets/histology/testB/")
+shutil.move("datasets/rgb/P8_ROI_01_C06_NT_rgb.png", "datasets/histology/testB/")
 
 shutil.move("datasets/preprocessed/P1_ROI_01_C09_T_raw_preprocessed", "datasets/histology/trainA/")
 shutil.move("datasets/preprocessed/P1_ROI_01_C09_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
