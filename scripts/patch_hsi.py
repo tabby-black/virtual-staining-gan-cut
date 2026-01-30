@@ -26,9 +26,9 @@ def patch_hsi(hdr_path, i=0):
     half_w = (W // 2) // 4 * 4
     patches = {
         "top_left": img[0:half_h,   0:half_w, :],
-        "top_right": img[0:half_h,   W-half_W:W, :],
-        "bottom_left": img[H-half_h:H,   0:half_W, :],
-        "bottom_right": img[H-half_h:H,   W-half_W:W, :]
+        "top_right": img[0:half_h,   W-half_w:W, :],
+        "bottom_left": img[H-half_h:H,   0:half_w, :],
+        "bottom_right": img[H-half_h:H,   W-half_w:W, :]
     }
     print("Patches for hyperspectral image", i, "computed!")
 
