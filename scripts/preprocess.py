@@ -169,31 +169,31 @@ def register_hsi_image(rgb_image, hsi_cube):
 
 # commented this out because all cubes have been calibrated and band reduced :)
 #i = 0
-list = ["datasets/raw/P1_ROI_01_C12_T_raw.hdr"]
+#list = ["datasets/raw/P1_ROI_01_C12_T_raw.hdr"]
 #for raw_hdr in sorted(glob(raw_glob)):
-for raw_hdr in list:
+#for raw_hdr in list:
     #i += 1
     # load the correct references for this raw hdr
 
     #CALIBRATION
-    base = os.path.splitext(os.path.basename(raw_hdr))[0]
-    prefix = base.replace("_raw", "")
-    white_hdr = f"datasets/white/{prefix}_whiteReference.hdr"
-    dark_hdr = f"datasets/dark/{prefix}_darkReference.hdr"
+    #base = os.path.splitext(os.path.basename(raw_hdr))[0]
+    #prefix = base.replace("_raw", "")
+    #white_hdr = f"datasets/white/{prefix}_whiteReference.hdr"
+    #dark_hdr = f"datasets/dark/{prefix}_darkReference.hdr"
 
-    white_reference_hs_data, white_wavelengths, white_cube_metadata = load_hyperspectral_cube(white_hdr)
-    dark_reference_hs_data, dark_wavelengths, dark_cube_metadata = load_hyperspectral_cube(dark_hdr)
-    raw_hs_data, raw_wavelengths, raw_cube_metadata = load_hyperspectral_cube(raw_hdr)
+   #white_reference_hs_data, white_wavelengths, white_cube_metadata = load_hyperspectral_cube(white_hdr)
+    #dark_reference_hs_data, dark_wavelengths, dark_cube_metadata = load_hyperspectral_cube(dark_hdr)
+    #raw_hs_data, raw_wavelengths, raw_cube_metadata = load_hyperspectral_cube(raw_hdr)
 
 
     # white and dark cubes are full-size and match shape so use per-pixel calibration
     # If you get an error here, check that cubes match shape and if not broadcast per-band spectrum to image shape
-    numerator = raw_hs_data - dark_reference_hs_data
-    denominator = white_reference_hs_data - dark_reference_hs_data
+    #numerator = raw_hs_data - dark_reference_hs_data
+    #denominator = white_reference_hs_data - dark_reference_hs_data
     # dividing normalises the raw data to a [0-1] reflectance scale
-    calibrated_cube = numerator / denominator
+    #calibrated_cube = numerator / denominator
     # clipping to a sensible range
-    calibrated_cube = np.clip(calibrated_cube, 0, 1)
+    #calibrated_cube = np.clip(calibrated_cube, 0, 1)
 
     # delete /datasets/white and /datasets/dark now that calibration using these reference images has finished
     #os.remove("/datasets/white")
@@ -201,7 +201,7 @@ for raw_hdr in list:
 
 
     # BAND REDUCTION
-    band_reduced_cube, wavelength_reduced = reduce_spectral_dimensions(calibrated_cube, raw_wavelengths, n=3)
+    #band_reduced_cube, wavelength_reduced = reduce_spectral_dimensions(calibrated_cube, raw_wavelengths, n=3)
 
 
     # saves both updated .hdr file and corresponding preprocessed hyperspectral image
@@ -212,18 +212,18 @@ for raw_hdr in list:
     # base = "P1_ROI_3_C01_T_raw"
 
     # change number of bands in metadata before saving new .hdr and cube files
-    reduced_metadata = raw_cube_metadata.metadata.copy()
-    reduced_metadata['bands'] = str(band_reduced_cube.shape[2])
+    #reduced_metadata = raw_cube_metadata.metadata.copy()
+    #reduced_metadata['bands'] = str(band_reduced_cube.shape[2])
 
-    base = os.path.splitext(os.path.basename(raw_hdr))[0]
-    output_hdr = os.path.join(output_dir, base + "_preprocessed.hdr")
+    #base = os.path.splitext(os.path.basename(raw_hdr))[0]
+    #output_hdr = os.path.join(output_dir, base + "_preprocessed.hdr")
     # save calibrated cube to output_hdr
     # use same interleave as original cube's metadate to avoid format mismatch
 
     # is this definitely right that it is using the raw cube interleave? I suppose this hasn't changed
-    interleave = reduced_metadata.get('interleave', 'bill')
-    save_image(output_hdr, band_reduced_cube.astype(np.float32), dtype=np.float32, interleave=interleave, metadata=reduced_metadata, ext='', force=True)
-    print("Extra calibrated and band reduced cube saved!")
+    #interleave = reduced_metadata.get('interleave', 'bill')
+    #save_image(output_hdr, band_reduced_cube.astype(np.float32), dtype=np.float32, interleave=interleave, metadata=reduced_metadata, ext='', force=True)
+    #print("Extra calibrated and band reduced cube saved!")
 
 
 # IMAGE REGISTRATION
@@ -233,17 +233,17 @@ for raw_hdr in list:
 
 # globs - these are lists so we can iterate over them zipped together
 # pattern to match for preprocessed cube headers
-preprocessed_hdr_glob = "datasets/preprocessed/*.hdr"
+#preprocessed_hdr_glob = "datasets/preprocessed/*.hdr"
 # pattern to match for preprocessed cubes
-preprocessed_cube_glob = "datasets/preprocessed/*_preprocessed"
+#preprocessed_cube_glob = "datasets/preprocessed/*_preprocessed"
 # pattern to match for rgb images
-rgb_glob = "datasets/rgb/*.png"
+#rgb_glob = "datasets/rgb/*.png"
 
 
 # sorted sorts the list lexographically
-hdr_files = sorted(glob(preprocessed_hdr_glob))
-cube_files = sorted(glob(preprocessed_cube_glob))
-rgb_files = sorted(glob(rgb_glob))
+#hdr_files = sorted(glob(preprocessed_hdr_glob))
+#cube_files = sorted(glob(preprocessed_cube_glob))
+#rgb_files = sorted(glob(rgb_glob))
 
 # I need to move rgb file back into its datasets/rgb before I can do this - taking raw and raw.hdr from datasets/raw
 
@@ -252,29 +252,29 @@ rgb_files = sorted(glob(rgb_glob))
 #rgb_files = ["datasets/rgb/P1_ROI_01_C12_T_rgb.png"]
 
 #i = 0
-for hdr, cube, rgb in zip(hdr_files, cube_files, rgb_files):
+#for hdr, cube, rgb in zip(hdr_files, cube_files, rgb_files):
     #i += 1
-    hsi_cube, hsi_wavelengths, hsi_metadata = load_hyperspectral_cube(hdr)
+    #hsi_cube, hsi_wavelengths, hsi_metadata = load_hyperspectral_cube(hdr)
     # read rgb image into HxWx3 array before calling register_hsi_image function
-    rgb = np.array(Image.open(rgb))
-    registered_hsi_cube = register_hsi_image(rgb, hsi_cube)
+    #rgb = np.array(Image.open(rgb))
+    #registered_hsi_cube = register_hsi_image(rgb, hsi_cube)
 
     # change H, W, B in metadata before saving new .hdr and cube files
-    registered_metadata = hsi_metadata.metadata.copy()
-    H, W, B = registered_hsi_cube.shape
-    registered_metadata['lines'] = str(H)
-    registered_metadata['samples'] = str(W)
-    registered_metadata['bands'] = str(B)
+    #registered_metadata = hsi_metadata.metadata.copy()
+    #H, W, B = registered_hsi_cube.shape
+    #registered_metadata['lines'] = str(H)
+    #registered_metadata['samples'] = str(W)
+    #registered_metadata['bands'] = str(B)
    
     # store registered cube, overriding non-registered cube 
-    base = os.path.basename(cube)
-    output_hdr = os.path.join(output_dir, base + ".hdr")
+    #base = os.path.basename(cube)
+    #output_hdr = os.path.join(output_dir, base + ".hdr")
     # save registered cube to output_cube (same name as before registration so code below still works)
-    interleave = hsi_metadata.metadata.get('interleave', 'bill')
+    #interleave = hsi_metadata.metadata.get('interleave', 'bill')
     
-    save_image(output_hdr, registered_hsi_cube.astype(np.float32), dtype=np.float32, interleave=interleave, metadata=hsi_metadata.metadata, ext='', force=True)
+    #save_image(output_hdr, registered_hsi_cube.astype(np.float32), dtype=np.float32, interleave=interleave, metadata=hsi_metadata.metadata, ext='', force=True)
 
-print("Extra cube registered and saved!")
+#print("Extra cube registered and saved!")
 
 
 
@@ -288,90 +288,90 @@ print("Extra cube registered and saved!")
 
 # commented out part of this because some files were moved before a bug fix
 
-#shutil.move("datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C08_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P1_ROI_01_C08_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C08_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P1_ROI_01_C08_T_raw_preprocessed", "datasets/histology/trainA/")
 shutil.move("datasets/preprocessed/P1_ROI_01_C12_T_raw_preprocessed", "datasets/histology/trainA/")
 shutil.move("datasets/preprocessed/P1_ROI_01_C12_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
 shutil.move("datasets/rgb/P1_ROI_01_C12_T_raw_preprocessed.png", "datasets/histology/trainB/")
 
-#shutil.move("datasets/preprocessed/P2_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C08_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C08_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C09_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C09_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C10_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C10_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C11_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C11_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C12_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P2_ROI_01_C12_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C08_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C08_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C09_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C09_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C10_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C10_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C11_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C11_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C12_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P2_ROI_01_C12_T_raw_preprocessed", "datasets/histology/trainA/")
 
-#shutil.move("datasets/preprocessed/P3_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C08_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C08_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C09_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C09_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C10_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C10_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C11_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C11_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C12_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P3_ROI_01_C12_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C08_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C08_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C09_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C09_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C10_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C10_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C11_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C11_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C12_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P3_ROI_01_C12_T_raw_preprocessed", "datasets/histology/trainA/")
 
-#shutil.move("datasets/preprocessed/P4_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
-#shutil.move("datasets/preprocessed/P4_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C01_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C01_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C02_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C02_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C03_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C03_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C04_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C04_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C05_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C05_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C06_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C06_T_raw_preprocessed", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C07_T_raw_preprocessed.hdr", "datasets/histology/trainA/")
+shutil.move("datasets/preprocessed/P4_ROI_01_C07_T_raw_preprocessed", "datasets/histology/trainA/")
 
 # removed a bunch of lines - will put back in but these files had already been moved
 
