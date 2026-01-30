@@ -20,17 +20,21 @@ def patch_hsi(hdr_path, i=0):
     basename = os.path.splitext(os.path.basename(hdr_path))[0]
 
     # compute 4 non-overlapping patches
+    # I need to make patch width 500 rather than 502 so it is divisible by 4 for generator
+    # save half heights and widths that are divisble by 4
+    half_h = (H // 2) // 4 * 4
+    half_w = (W // 2) // 4 * 4
     patches = {
-        "top_left": img[0:H//2,   0:W//2, :],
-        "top_right": img[0:H//2,   W//2:W, :],
-        "bottom_left": img[H//2:H,   0:W//2, :],
-        "bottom_right": img[H//2:H,   W//2:W, :]
+        "top_left": img[0:half_h,   0:half_w, :],
+        "top_right": img[0:half_h,   W-half_W:W, :],
+        "bottom_left": img[H-half_h:H,   0:half_W, :],
+        "bottom_right": img[H-half_h:H,   W-half_W:W, :]
     }
     print("Patches for hyperspectral image", i, "computed!")
 
     # change H and W in metadata before saving new hdr and cube files
-    patch_metadata['lines'] = str(H//2)
-    patch_metadata['samples'] = str(W//2)
+    patch_metadata['lines'] = str(half_h)
+    patch_metadata['samples'] = str(half_w)
     print("Hyperspectral image", i, "metadata amended for patches!")
 
     # save the 4 patches with the correct metadata
@@ -56,11 +60,14 @@ def patch_rgb(image_path, i=0):
     basename = os.path.splitext(os.path.basename(image_path))[0]
 
     # compute 4 non-overlapping patches
+    # safe half heights and half widths that are divisible by 4
+    half_h = (H // 2) // 4 * 4
+    half_w = (W // 2) // 4 * 4
     patches = {
-        "top_left": rgb.crop((0,    0,  W//2,   H//2)),
-        "top_right": rgb.crop((W//2, 0,  W,  H//2)),
-        "bottom_left": rgb.crop((0, H//2,   W//2,   H)),
-        "bottom_right": rgb.crop((W//2, H//2,   W,  H))
+        "top_left": rgb.crop((0,    0,  half_w,   half_h)),
+        "top_right": rgb.crop((W-half_w, 0,  W,  half_h)),
+        "bottom_left": rgb.crop((0, H-half_h,   half_w,   H)),
+        "bottom_right": rgb.crop((W-half_w, H-half_h,   W,  H))
     }
 
     print("Patches for rgb image", i, "computed!")
