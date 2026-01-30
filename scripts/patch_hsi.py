@@ -87,12 +87,15 @@ def patch_rgb(image_path, i=0):
 
 # patch hsi images
 # call this function on all images in trainA and testA - using glob
-#train_directory = "datasets/histology/trainA"
+train_directory = "datasets/histology/trainA"
 test_directory = "datasets/histology/testA"
 
-hdr_train_files = sorted(glob.glob(os.path.join(train_directory, "*.hdr")))
+#hdr_train_files = sorted(glob.glob(os.path.join(train_directory, "*.hdr")))
 
-hdr_test_files = sorted(glob.glob(os.path.join(test_directory, "*.hdr")))
+#hdr_test_files = sorted(glob.glob(os.path.join(test_directory, "*.hdr")))
+
+hdr_test_files = ["P12_ROI_01_C10_T_raw_preprocessed.hdr", "P12_ROI_01_C11_T_raw_preprocessed.hdr", "P12_ROI_01_C12_T_raw_preprocessed.hdr", "P13_ROI_01_C01_T_raw_preprocessed.hdr", "P13_ROI_01_C02_T_raw_preprocessed.hdr", "P13_ROI_01_C03_T_raw_preprocessed.hdr", "P13_ROI_01_C04_T_raw_preprocessed.hdr", "P13_ROI_01_C05_T_raw_preprocessed.hdr", "P13_ROI_01_C06_T_raw_preprocessed.hdr", "P13_ROI_01_C07_T_raw_preprocessed.hdr", "P13_ROI_01_C08_T_raw_preprocessed.hdr", "P13_ROI_01_C09_T_raw_preprocessed.hdr", "P13_ROI_01_C10_T_raw_preprocessed.hdr", "P13_ROI_01_C11_T_raw_preprocessed.hdr", "P13_ROI_01_C12_T_raw_preprocessed.hdr", "P7_ROI_01_C07_NT_raw_preprocessed.hdr", "P7_ROI_01_C08_NT_raw_preprocessed.hdr", "P7_ROI_01_C09_NT_raw_preprocessed.hdr", "P7_ROI_01_C10_NT_raw_preprocessed.hdr", "P7_ROI_01_C11_NT_raw_preprocessed.hdr", "P7_ROI_01_C12_NT_raw_preprocessed.hdr", "P7_ROI_02_C01_NT_raw_preprocessed.hdr", "P7_ROI_02_C02_NT_raw_preprocessed.hdr", "P7_ROI_02_C03_NT_raw_preprocessed.hdr", "P7_ROI_02_C04_NT_raw_preprocessed.hdr", "P7_ROI_02_C05_NT_raw_preprocessed.hdr", "P7_ROI_02_C06_NT_raw_preprocessed.hdr", "P7_ROI_02_C07_NT_raw_preprocessed.hdr", "P7_ROI_02_C08_NT_raw_preprocessed.hdr", "P7_ROI_02_C09_NT_raw_preprocessed.hdr", "P7_ROI_02_C10_NT_raw_preprocessed.hdr", "P7_ROI_02_C11_NT_raw_preprocessed.hdr", "P7_ROI_02_C12_NT_raw_preprocessed.hdr", "P7_ROI_02_C13_NT_raw_preprocessed.hdr", "P7_ROI_02_C14_NT_raw_preprocessed.hdr", "P7_ROI_02_C15_NT_raw_preprocessed.hdr", "P7_ROI_02_C16_NT_raw_preprocessed.hdr", "P7_ROI_02_C17_NT_raw_preprocessed.hdr", "P7_ROI_02_C18_NT_raw_preprocessed.hdr", "P7_ROI_02_C19_NT_raw_preprocessed.hdr", "P8_ROI_01_C01_NT_raw_preprocessed.hdr", "P8_ROI_01_C02_NT_raw_preprocessed.hdr", "P8_ROI_01_C03_NT_raw_preprocessed.hdr", "P8_ROI_01_C04_NT_raw_preprocessed.hdr", "P8_ROI_01_C05_NT_raw_preprocessed.hdr", "P8_ROI_01_C06_NT_raw_preprocessed.hdr", "P8_ROI_01_C07_NT_raw_preprocessed.hdr", "P8_ROI_01_C08_NT_raw_preprocessed.hdr", "P8_ROI_01_C09_NT_raw_preprocessed.hdr", "P8_ROI_01_C10_NT_raw_preprocessed.hdr", "P8_ROI_01_C11_NT_raw_preprocessed.hdr", "P8_ROI_01_C12_NT_raw_preprocessed.hdr", "P8_ROI_01_C13_NT_raw_preprocessed.hdr", "P8_ROI_01_C14_NT_raw_preprocessed.hdr", "P8_ROI_01_C15_NT_raw_preprocessed.hdr", "P8_ROI_01_C16_NT_raw_preprocessed.hdr", "P8_ROI_01_C17_NT_raw_preprocessed.hdr", "P8_ROI_01_C18_NT_raw_preprocessed.hdr", "P8_ROI_01_C19_NT_raw_preprocessed.hdr", "P8_ROI_01_C20_NT_raw_preprocessed.hdr", "P8_ROI_02_C01_NT_raw_preprocessed.hdr", "P8_ROI_02_C02_NT_raw_preprocessed.hdr", "P8_ROI_02_C03_NT_raw_preprocessed.hdr", "P8_ROI_02_C04_NT_raw_preprocessed.hdr", "P8_ROI_02_C05_NT_raw_preprocessed.hdr", "P8_ROI_02_C06_NT_raw_preprocessed.hdr", "P8_ROI_02_C07_NT_raw_preprocessed.hdr", "P8_ROI_02_C08_NT_raw_preprocessed.hdr", "P8_ROI_02_C09_NT_raw_preprocessed.hdr", "P8_ROI_02_C10_NT_raw_preprocessed.hdr", "P8_ROI_02_C11_NT_raw_preprocessed.hdr", "P8_ROI_02_C12_NT_raw_preprocessed.hdr", "P8_ROI_02_C13_NT_raw_preprocessed.hdr", "P8_ROI_02_C14_NT_raw_preprocessed.hdr", "P8_ROI_02_C15_NT_raw_preprocessed.hdr", "P8_ROI_02_C16_NT_raw_preprocessed.hdr"]
+
 
 for hdr in hdr_train_files:
     patch_hsi(hdr)
