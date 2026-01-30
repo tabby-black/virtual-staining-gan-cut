@@ -87,7 +87,7 @@ def patch_rgb(image_path, i=0):
 
 # patch hsi images
 # call this function on all images in trainA and testA - using glob
-train_directory = "datasets/histology/trainA"
+#train_directory = "datasets/histology/trainA"
 test_directory = "datasets/histology/testA"
 
 hdr_train_files = sorted(glob.glob(os.path.join(train_directory, "*.hdr")))
