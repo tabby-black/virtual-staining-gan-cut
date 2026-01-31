@@ -149,11 +149,17 @@ class HSIUnalignedDataset(BaseDataset):
         A = self.load_hsi(A_path)
         B = self.load_rgb(B_path)
 
-        if self.opt.isTrain:
+        try:
             # always crop for CycleGAN
-            crop_size = self.opt.crop_size
-            A = self.random_crop(A, crop_size)
-            B = self.random_crop(B, crop_size)
+            if self.opt.isTrain:
+                crop_size = self.opt.crop_size
+                A = self.random_crop(A, crop_size)
+                B = self.random_crop(B, crop_size)
+        except Exception as e:
+            print(f"Bad sample: A_path={A_path}, B_path={B_path}, error={e}")
+            # resample a different index
+            new_index = random.randint(0, self.__len__() - 1)
+            return self.__getitem__(new_index)
 
         # sanity check to check that cropping has happened
         if index == 0:
