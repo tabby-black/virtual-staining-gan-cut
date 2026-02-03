@@ -100,7 +100,7 @@ class HSIUnalignedDataset(BaseDataset):
       img = np.transpose(img, (2, 0, 1))
       return torch.from_numpy(img)
 
-    # helper function for cropping
+    # helper function for random cropping for training
     def random_crop(self, tensor, crop_size):
         _, h, w = tensor.shape
         if h < crop_size or w < crop_size:
@@ -111,6 +111,15 @@ class HSIUnalignedDataset(BaseDataset):
 
         return tensor[:, top:top + crop_size, left:left + crop_size]
   
+    # helper function for centre cropping for testing
+    def centre_crop(self, tensor, crop_size):
+    _, h, w = tensor.shape
+    if h < crop_size or w < crop_size:
+        raise ValueError(f"Crop size {crop_size} is larger than image size {(h, w)}")
+
+    top = (h - crop_size) // 2
+    left = (w - crop_size) // 2
+    return tensor[:, top:top + crop_size, left:left + crop_size]
 
     def __getitem__(self, index):
         """Return a data point and its metadata information.
@@ -149,12 +158,15 @@ class HSIUnalignedDataset(BaseDataset):
         A = self.load_hsi(A_path)
         B = self.load_rgb(B_path)
 
+        crop_size = self.opt.crop_size
+
         try:
-            # always crop for CycleGAN
             if self.opt.isTrain:
-                crop_size = self.opt.crop_size
                 A = self.random_crop(A, crop_size)
                 B = self.random_crop(B, crop_size)
+            else:
+                A = self.center_crop(A, crop_size)
+                B = self.center_crop(B, crop_size)
         except Exception as e:
             print(f"Bad sample: A_path={A_path}, B_path={B_path}, error={e}")
             # resample a different index
