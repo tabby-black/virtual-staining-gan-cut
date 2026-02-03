@@ -113,9 +113,9 @@ class HSIUnalignedDataset(BaseDataset):
   
     # helper function for centre cropping for testing
     def centre_crop(self, tensor, crop_size):
-    _, h, w = tensor.shape
-    if h < crop_size or w < crop_size:
-        raise ValueError(f"Crop size {crop_size} is larger than image size {(h, w)}")
+        _, h, w = tensor.shape
+        if h < crop_size or w < crop_size:
+            raise ValueError(f"Crop size {crop_size} is larger than image size {(h, w)}")
 
     top = (h - crop_size) // 2
     left = (w - crop_size) // 2
