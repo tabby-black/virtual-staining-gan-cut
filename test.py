@@ -66,7 +66,10 @@ if __name__ == '__main__':
         model.eval()
     for i, data in enumerate(dataset):
         if i == 0:
-            model.data_dependent_initialize(data)
+            # added selection statement in here - only CUT / FastCUT training need a data-dependent initialisation step, not CycleGAN
+            # same fix as in train.py
+            if opt.model in ['cut', 'fastcut']:
+                model.data_dependent_initialize(data)
             model.setup(opt)               # regular setup: load and print networks; create schedulers
             model.parallelize()
             if opt.eval:
