@@ -167,8 +167,8 @@ class HSIUnalignedDataset(BaseDataset):
                 A = self.random_crop(A, crop_size)
                 B = self.random_crop(B, crop_size)
             else:
-                A = self.center_crop(A, crop_size)
-                B = self.center_crop(B, crop_size)
+                A = self.centre_crop(A, crop_size)
+                B = self.centre_crop(B, crop_size)
         except Exception as e:
             print(f"Bad sample: A_path={A_path}, B_path={B_path}, error={e}")
             # resample a different index
