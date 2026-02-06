@@ -1,3 +1,6 @@
+# don't need this script - have adapted its contents in jupyter notebook for visualisation and evaluation
+
+
 # calculates the ssim and psnr values for each of the output images in an experiment, and then averages over these
 # ssim = Structural Similarity Index
 # psnr = Peak Signal-Noise Ratio
