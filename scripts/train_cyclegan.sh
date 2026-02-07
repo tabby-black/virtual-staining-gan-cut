@@ -3,7 +3,7 @@ set -ex
 # have commented out CycleGAN training command for now to check if CUT training is error free
 # have disabled visdom for now
 # have removed --num_threads 0 because training wouldn't start
-python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan --continue_train --epoch 20 --model cycle_gan --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --update_html_freq 1000 --save_epoch_freq 5 --no_html
+python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan --continue_train --epoch 20 --model cycle_gan --gpu_ids 3 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --update_html_freq 1000 --save_epoch_freq 5 --no_html
 
 # have commented out CUT training command for now - trying to train CycleGAN model
 #python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_CUT --CUT_mode CUT --nce_idt 0 --pool_size 50 --no_dropout
