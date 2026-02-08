@@ -69,15 +69,27 @@ class CUTModel(BaseModel):
             self.visual_names += ['idt_B']
 
         if self.isTrain:
-            self.model_names = ['G', 'F', 'D']
-        else:  # during test time, only load G
-            self.model_names = ['G']
+            # added E_B (RGB encoder)
+            self.model_names = ['G', 'F', 'D', 'E_B']
+        else:  # during test time, only load G and the RGB encoder
+            self.model_names = ['G', 'E_B']
 
         # define networks (both generator and discriminator)
         # input_nc = input number of channels -> should be set to 275 for HistologyHSI-GB input
         # output_nc = output number of channels -> should stay at 3 for rgb output
         self.netG = networks.define_G(opt.input_nc, opt.output_nc, opt.ngf, opt.netG, opt.normG, not opt.no_dropout, opt.init_type, opt.init_gain, opt.no_antialias, opt.no_antialias_up, self.gpu_ids, opt)
         self.netF = networks.define_F(opt.input_nc, opt.netF, opt.normG, not opt.no_dropout, opt.init_type, opt.init_gain, opt.no_antialias, self.gpu_ids, opt)
+
+        # added a new RGB encoder to extract features from RGB images for PatchNCE
+        # reused same structure so layer shapes match
+        # can refactor to a shared trunk later where netE_B shares weights with netG
+        
+        # netE_B must support the same calling convention as netG
+        # reuse the same generator class as define_G but ignore the decoder
+        # define_G builds the same architecture type (resnet_9blocks etc.) but the only difference is first layer now expects 3 channels instead of 275
+        # this call returns encoder features at those layers, which is what PatchNCE needs
+        self.netE_B = networks.define_G(opt.output_nc, opt.output_nc, opt.ngf, opt.netG, opt.normG, not opt.no_dropout, opt.init_type, opt.init_gain, opt.no_antialias, opt.no_antialias_up, self.gpu_ids, opt)
+
 
         if self.isTrain:
             # input number of channels into discriminator = output number of channels out of generator = 3
@@ -91,7 +103,13 @@ class CUTModel(BaseModel):
                 self.criterionNCE.append(PatchNCELoss(opt).to(self.device))
 
             self.criterionIdt = torch.nn.L1Loss().to(self.device)
-            self.optimizer_G = torch.optim.Adam(self.netG.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
+            
+            # build the Adam optimiser over both parameter sets - netG and netE_B
+            # i.e. combine parameters from the translator generator and the extra RGB encoder
+            # self.optimizer_G = torch.optim.Adam(self.netG.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
+            params_G = list(self.netG.parameters()) + list(self.netE_B.parameters())
+            self.optimizer_G = torch.optim.Adam(params_G, lr=opt.lr, betas=(opt.beta1, opt.beta2))
+
             self.optimizer_D = torch.optim.Adam(self.netD.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
             self.optimizers.append(self.optimizer_G)
             self.optimizers.append(self.optimizer_D)
@@ -150,6 +168,8 @@ class CUTModel(BaseModel):
 
     def forward(self):
         """Run forward pass; called by both functions <optimize_parameters> and <test>."""
+        # want to edit this function so that it never concatenates A and B - domain aware
+        
         self.real = torch.cat((self.real_A, self.real_B), dim=0) if self.opt.nce_idt and self.opt.isTrain else self.real_A
         if self.opt.flip_equivariance:
             self.flipped_for_equivariance = self.opt.isTrain and (np.random.random() < 0.5)
@@ -158,6 +178,9 @@ class CUTModel(BaseModel):
 
         self.fake = self.netG(self.real)
         self.fake_B = self.fake[:self.real_A.size(0)]
+        
+        # don't compute idt_B for now - does not work across different domains
+        # this selection statement will fail
         if self.opt.nce_idt:
             self.idt_B = self.fake[self.real_A.size(0):]
 
@@ -200,14 +223,26 @@ class CUTModel(BaseModel):
         self.loss_G = self.loss_G_GAN + loss_NCE_both
         return self.loss_G
 
+    # adapt to use different encoders for RGB and HSI (source and target images)
     def calculate_NCE_loss(self, src, tgt):
         n_layers = len(self.nce_layers)
-        feat_q = self.netG(tgt, self.nce_layers, encode_only=True)
+        
+        #tgt is RGB (fake_B or idt_B) so extract features with RGB encoder
+        #feat_q = self.netG(tgt, self.nce_layers, encode_only=True)
+        feat_q = self.netE_B(tgt, self.nce_layers, encode_only=True)
 
         if self.opt.flip_equivariance and self.flipped_for_equivariance:
             feat_q = [torch.flip(fq, [3]) for fq in feat_q]
 
+        # src is HSI (real_A) so extract features with the HSI encoder inside netG
         feat_k = self.netG(src, self.nce_layers, encode_only=True)
+        
+        # sanity check - after a forward pass, print shapes
+        # shapes should match at every layer for dual encoder to be structurally sound
+        for fk, fq in zip(feat_k, feat_q):
+            print(fk.shape, fq.shape)
+        
+        
         feat_k_pool, sample_ids = self.netF(feat_k, self.opt.num_patches, None)
         feat_q_pool, _ = self.netF(feat_q, self.opt.num_patches, sample_ids)
 

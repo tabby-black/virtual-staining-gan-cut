@@ -268,6 +268,8 @@ def define_G(input_nc, output_nc, ngf, netG, norm='batch', use_dropout=False, in
         raise NotImplementedError('Generator model name [%s] is not recognized' % netG)
     return init_net(net, init_type, init_gain, gpu_ids, initialize_weights=('stylegan2' not in netG))
 
+# netE_B must support the same calling convention as netG
+# reuse the same generator class as define_G but ignore the decoder
 
 def define_F(input_nc, netF, norm='batch', use_dropout=False, init_type='normal', init_gain=0.02, no_antialias=False, gpu_ids=[], opt=None):
     if netF == 'global_pool':
@@ -986,6 +988,8 @@ class ResnetGenerator(nn.Module):
         self.model = nn.Sequential(*model)
 
     def forward(self, input, layers=[], encode_only=False):
+        # sort layers so forward() does not stop early
+        layers = sorted(list(layers))
         if -1 in layers:
             layers.append(len(self.model))
         if len(layers) > 0:
