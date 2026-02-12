@@ -5,6 +5,6 @@ set -ex
 #python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run2.1 --model cycle_gan --gpu_ids 3 --lr_policy linear --n_epochs 5 --n_epochs_decay 15 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --update_html_freq 1000 --save_epoch_freq 5 --no_html
 
 # have commented out CUT training command for now - trying to train CycleGAN model
-python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_CUT --CUT_mode CUT --nce_idt False --nce_layers 4,8,12,16 --pool_size 50 --no_dropout
+python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_CUT --CUT_mode CUT --nce_idt False --gpu_ids 1 --nce_layers 4,8,12,16 --pool_size 50 --no_dropout
 
 ```
