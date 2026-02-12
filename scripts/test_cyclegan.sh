@@ -2,4 +2,4 @@ set -ex
 #python test.py --dataroot ./datasets/histology --name hsi_to_he_cyclegan --model cycle_gan --phase test --no_dropout
 
 # test command to test model with weights from 5th epoch
-python test.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run2.1 --model cycle_gan --gpu_ids 1 --epoch 5 --preprocess resize_and_crop --load_size 286 --crop_size 256 --no_dropout
+python test.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run2.1 --model cycle_gan --gpu_ids 3 --epoch 5 --preprocess resize_and_crop --load_size 286 --crop_size 256 --no_dropout
