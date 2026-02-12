@@ -239,8 +239,14 @@ class CUTModel(BaseModel):
         
         # sanity check - after a forward pass, print shapes
         # shapes should match at every layer for dual encoder to be structurally sound
-        for fk, fq in zip(feat_k, feat_q):
-            print(fk.shape, fq.shape)
+        # only print message every 100 calls
+        if not hasattr(self, "debug_nce_count"):
+            self.debug_nce_count = 0
+            self.debug_nce_count += 1
+
+        if self.debug_nce_count % 100 == 0:  # every 100 calls
+            for fk, fq in zip(feat_k, feat_q):
+                print("NCE feat shapes:", fk.shape, fq.shape)
         
         
         feat_k_pool, sample_ids = self.netF(feat_k, self.opt.num_patches, None)
