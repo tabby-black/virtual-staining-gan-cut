@@ -105,11 +105,11 @@ class CycleGANModel(BaseModel):
             self.optimizers.append(self.optimizer_D)
 
             # initialise amp
-            (self.netG_A, self.netG_B, self.netD_A, self.netD_B), (self.optimizer_G, self.optimizer_D) = amp.initialize(
-                [self.netG_A, self.netG_B, self.netD_A, self.netD_B],
-                [self.optimizer_G, self.optimizer_D],
-                opt_level="O1"
-            )
+            #(self.netG_A, self.netG_B, self.netD_A, self.netD_B), (self.optimizer_G, self.optimizer_D) = amp.initialize(
+                #[self.netG_A, self.netG_B, self.netD_A, self.netD_B],
+                #[self.optimizer_G, self.optimizer_D],
+                #opt_level="O1"
+            #)
 
 
             # enable AMP
