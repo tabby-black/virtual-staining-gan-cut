@@ -245,35 +245,34 @@ class CycleGANModel(BaseModel):
 
     # amp friendly optimize_parameters()
     def optimize_parameters(self):
-    #"""Calculate losses, gradients, and update network weights; called in every training iteration"""
+        #"""Calculate losses, gradients, and update network weights; called in every training iteration"""
+        autocast_ctx = torch.cuda.amp.autocast(enabled=self.use_amp)
 
-    autocast_ctx = torch.cuda.amp.autocast(enabled=self.use_amp)
+        # 1: forward pass (under autocast)
+        with autocast_ctx:
+            self.forward()
 
-    # 1: forward pass (under autocast)
-    with autocast_ctx:
-       self.forward()
+        # 2: update generators
+        self.set_requires_grad([self.netD_A, self.netD_B], False)
+        self.optimizer_G.zero_grad(set_to_none=True)
 
-    # 2: update generators
-    self.set_requires_grad([self.netD_A, self.netD_B], False)
-    self.optimizer_G.zero_grad(set_to_none=True)
+        with autocast_ctx:
+            loss_G = self.compute_G_loss()   # refactored from backward_G
 
-    with autocast_ctx:
-       loss_G = self.compute_G_loss()   # refactored from backward_G
+        self.scaler.scale(loss_G).backward()
+        self.scaler.step(self.optimizer_G)
 
-    self.scaler.scale(loss_G).backward()
-    self.scaler.step(self.optimizer_G)
+        # 3: update discriminators
+        self.set_requires_grad([self.netD_A, self.netD_B], True)
+        self.optimizer_D.zero_grad(set_to_none=True)
 
-    # 3: update discriminators
-    self.set_requires_grad([self.netD_A, self.netD_B], True)
-    self.optimizer_D.zero_grad(set_to_none=True)
+        with autocast_ctx:
+            loss_D_A = self.compute_D_A_loss()  # <- refactored from backward_D_A
+            loss_D_B = self.compute_D_B_loss()  # <- refactored from backward_D_B
+            loss_D = loss_D_A + loss_D_B        # backward once is cleaner
 
-    with autocast_ctx:
-        loss_D_A = self.compute_D_A_loss()  # <- refactored from backward_D_A
-        loss_D_B = self.compute_D_B_loss()  # <- refactored from backward_D_B
-        loss_D = loss_D_A + loss_D_B        # backward once is cleaner
+        self.scaler.scale(loss_D).backward()
+        self.scaler.step(self.optimizer_D)
 
-    self.scaler.scale(loss_D).backward()
-    self.scaler.step(self.optimizer_D)
-
-    # only call update() once per iteration (after all scaler.step calls)
-    self.scaler.update()
+        # only call update() once per iteration (after all scaler.step calls)
+        self.scaler.update()
