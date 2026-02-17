@@ -39,8 +39,8 @@ if __name__ == '__main__':
     if opt.use_wandb:
         wandb_run = wandb.init(
             project=opt.wandb_project_name,
-            entity=opt.wandb_entity,
-            name=opt.wandb_run_name if opt.wandb_run_name else opt.name,
+            #entity=opt.wandb_entity,
+            #name=opt.wandb_run_name if opt.wandb_run_name else opt.name,
             config=vars(opt),
             resume="allow"
         )
