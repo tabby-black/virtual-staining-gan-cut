@@ -107,6 +107,14 @@ class CycleGANModel(BaseModel):
             self.optimizers.append(self.optimizer_G)
             self.optimizers.append(self.optimizer_D)
 
+            # initialise amp
+            (self.netG_A, self.netG_B, self.netD_A, self.netD_B), (self.optimizer_G, self.optimizer_D) = amp.initialize(
+                [self.netG_A, self.netG_B, self.netD_A, self.netD_B],
+                [self.optimizer_G, self.optimizer_D],
+                opt_level="O1"
+            )
+
+
             # enable AMP
             #self.use_amp = getattr(opt, "amp", False) and torch.cuda.is_available()
             #self.scaler = torch.cuda.amp.GradScaler(enabled=self.use_amp)
