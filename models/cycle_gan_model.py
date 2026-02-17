@@ -107,6 +107,11 @@ class CycleGANModel(BaseModel):
             self.optimizers.append(self.optimizer_G)
             self.optimizers.append(self.optimizer_D)
 
+            # enable AMP
+            self.use_amp = getattr(opt, "amp", False) and torch.cuda.is_available()
+            self.scaler = torch.cuda.amp.GradScaler(enabled=self.use_amp)
+
+
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps.
 
@@ -190,11 +195,15 @@ class CycleGANModel(BaseModel):
         self.loss_cycle_B = self.criterionCycle(self.rec_B, self.real_B) * lambda_B
         # combined loss and calculate gradients
         self.loss_G = self.loss_G_A + self.loss_G_B + self.loss_cycle_A + self.loss_cycle_B + self.loss_idt_A + self.loss_idt_B
-        if self.opt.amp:
-            with amp.scale_loss(self.loss_G, self.optimizer_G) as scaled_loss:
-                scaled_loss.backward()
-        else:
-            self.loss_G.backward()
+        
+        # moved .backward() logic outside function for amp
+        #if self.opt.amp:
+            #with amp.scale_loss(self.loss_G, self.optimizer_G) as scaled_loss:
+                #scaled_loss.backward()
+        #else:
+            #self.loss_G.backward()
+        
+        return self.loss_G
 
     def data_dependent_initialize(self):
         return
@@ -211,18 +220,55 @@ class CycleGANModel(BaseModel):
                 raise ValueError("mode %s is not recognized" % mode)
             return visuals
 
-    def optimize_parameters(self):
-        """Calculate losses, gradients, and update network weights; called in every training iteration"""
+    # pre-amp optimize_parameters()
+    #def optimize_parameters(self):
+        #"""Calculate losses, gradients, and update network weights; called in every training iteration"""
         # forward
-        self.forward()      # compute fake images and reconstruction images.
+        #self.forward()      # compute fake images and reconstruction images.
         # G_A and G_B
-        self.set_requires_grad([self.netD_A, self.netD_B], False)  # Ds require no gradients when optimizing Gs
-        self.optimizer_G.zero_grad()  # set G_A and G_B's gradients to zero
-        self.backward_G()             # calculate gradients for G_A and G_B
-        self.optimizer_G.step()       # update G_A and G_B's weights
+        #self.set_requires_grad([self.netD_A, self.netD_B], False)  # Ds require no gradients when optimizing Gs
+        #self.optimizer_G.zero_grad()  # set G_A and G_B's gradients to zero
+        #self.backward_G()             # calculate gradients for G_A and G_B
+        #self.optimizer_G.step()       # update G_A and G_B's weights
         # D_A and D_B
-        self.set_requires_grad([self.netD_A, self.netD_B], True)
-        self.optimizer_D.zero_grad()   # set D_A and D_B's gradients to zero
-        self.backward_D_A()      # calculate gradients for D_A
-        self.backward_D_B()      # calculate graidents for D_B
-        self.optimizer_D.step()  # update D_A and D_B's weights
+        #self.set_requires_grad([self.netD_A, self.netD_B], True)
+        #self.optimizer_D.zero_grad()   # set D_A and D_B's gradients to zero
+        #self.backward_D_A()      # calculate gradients for D_A
+        #self.backward_D_B()      # calculate graidents for D_B
+        #self.optimizer_D.step()  # update D_A and D_B's weights
+
+
+    # amp friendly optimize_parameters()
+    def optimize_parameters(self):
+    """Calculate losses, gradients, and update network weights; called in every training iteration"""
+
+    autocast_ctx = torch.cuda.amp.autocast(enabled=self.use_amp)
+
+    # 1: forward pass (under autocast)
+    with autocast_ctx:
+        self.forward()
+
+    # 2: update generators
+    self.set_requires_grad([self.netD_A, self.netD_B], False)
+    self.optimizer_G.zero_grad(set_to_none=True)
+
+    with autocast_ctx:
+        loss_G = self.compute_G_loss()   # refactored from backward_G
+
+    self.scaler.scale(loss_G).backward()
+    self.scaler.step(self.optimizer_G)
+
+    # 3: update discriminators
+    self.set_requires_grad([self.netD_A, self.netD_B], True)
+    self.optimizer_D.zero_grad(set_to_none=True)
+
+    with autocast_ctx:
+        loss_D_A = self.compute_D_A_loss()  # <- refactored from backward_D_A
+        loss_D_B = self.compute_D_B_loss()  # <- refactored from backward_D_B
+        loss_D = loss_D_A + loss_D_B        # backward once is cleaner
+
+    self.scaler.scale(loss_D).backward()
+    self.scaler.step(self.optimizer_D)
+
+    # only call update() once per iteration (after all scaler.step calls)
+    self.scaler.update()
