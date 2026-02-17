@@ -4,6 +4,7 @@ from options.train_options import TrainOptions
 from data import create_dataset
 from models import create_model
 from util.visualizer import Visualizer
+import wandb
 # I have commented this line out as ddp is not needed (or provided by utils.py)
 #from util.util import init_ddp, cleanup_ddp
 
@@ -32,6 +33,17 @@ See frequently asked questions at: https://github.com/junyanz/pytorch-CycleGAN-a
 
 if __name__ == '__main__':
     opt = TrainOptions().parse()   # get training options
+
+    # initialise wandb
+    wandb_run = None
+    if opt.use_wandb:
+        wandb_run = wandb.init(
+            project=opt.wandb_project,
+            entity=opt.wandb_entity,
+            name=opt.wandb_run_name if opt.wandb_run_name else opt.name,
+            config=vars(opt),
+            resume="allow"
+        )
     dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
     dataset_size = len(dataset)    # get the number of images in the dataset.
 
@@ -78,13 +90,25 @@ if __name__ == '__main__':
             if total_iters % opt.display_freq == 0:   # display images on visdom and save images to a HTML file
                 save_result = total_iters % opt.update_html_freq == 0
                 model.compute_visuals()
-                visualizer.display_current_results(model.get_current_visuals(), epoch, save_result)
+                visuals = model.get_current_visuals()
+                visualizer.display_current_results(visuals, epoch, save_result)
+                # log images each iteration in wandb
+                if opt.use_wandb:
+                    wandb_images = {}
+                    for label, image in visuals.items():
+                        image_numpy = util.tensor2im(image)
+                        wandb_images[label] = wandb.Image(image_numpy)
+                        wandb.log(wandb_images, step=total_iters)
 
             if total_iters % opt.print_freq == 0:    # print training losses and save logging information to the disk
                 losses = model.get_current_losses()
                 visualizer.print_current_losses(epoch, epoch_iter, losses, optimize_time, t_data)
                 if opt.display_id is None or opt.display_id > 0:
                     visualizer.plot_current_losses(epoch, float(epoch_iter) / dataset_size, losses)
+                # log all generator/discriminator losses each iteration in wandb
+                if opt.use_wandb:
+                    wandb.log(losses, step = total_iters)
+
 
             if total_iters % opt.save_latest_freq == 0:   # cache our latest model every <save_latest_freq> iterations
                 print('saving the latest model (epoch %d, total_iters %d)' % (epoch, total_iters))

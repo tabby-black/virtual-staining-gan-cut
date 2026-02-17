@@ -42,5 +42,15 @@ class TrainOptions(BaseOptions):
         parser.add_argument('--amp', action='store_true',
                     help='use automatic mixed precision')
 
+        # Weights & Biases logging parameters
+        parser.add_argument('--use_wandb', action='store_true', 
+                    help='enable Weights & Biases logging')
+        parser.add_argument('--wandb_project', type=str, default='cycleGAN',
+                    help='wandb project name')
+        parser.add_argument('--wandb_entity', type=str, default=None,
+                    help='wandb entity (username or team name)')
+        parser.add_argument('--wandb_run_name', type=str, default=None,
+                    help='wandb run name (defaults to opt.name if None)')
+
         self.isTrain = True
         return parser
