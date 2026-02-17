@@ -156,24 +156,30 @@ class CycleGANModel(BaseModel):
         loss_D_fake = self.criterionGAN(pred_fake, False)
         # Combined loss and calculate gradients
         loss_D = (loss_D_real + loss_D_fake) * 0.5
-        if self.opt.amp:
-            with amp.scale_loss(loss_D, self.optimizer_D) as scaled_loss:
-                scaled_loss.backward()
-        else:
-            loss_D.backward()
+        
+        #if self.opt.amp:
+            #with amp.scale_loss(loss_D, self.optimizer_D) as scaled_loss:
+                #scaled_loss.backward()
+        #else:
+            #loss_D.backward()
+        
         return loss_D
 
-    def backward_D_A(self):
+    # previously backward_D_A
+    def compute_D_A_loss(self):
         """Calculate GAN loss for discriminator D_A"""
         fake_B = self.fake_B_pool.query(self.fake_B)
         self.loss_D_A = self.backward_D_basic(self.netD_A, self.real_B, fake_B)
+        return self.loss_D_A
 
-    def backward_D_B(self):
+    # previously backward_D_B
+    def compute_D_B_loss(self):
         """Calculate GAN loss for discriminator D_B"""
         fake_A = self.fake_A_pool.query(self.fake_A)
         self.loss_D_B = self.backward_D_basic(self.netD_B, self.real_A, fake_A)
+        return self.loss_D_B
 
-    # was previously backward_G
+    # previously backward_G
     def compute_G_loss(self):
         """Calculate the loss for generators G_A and G_B"""
         lambda_idt = self.opt.lambda_identity
@@ -268,9 +274,9 @@ class CycleGANModel(BaseModel):
         self.optimizer_D.zero_grad(set_to_none=True)
 
         with autocast_ctx:
-            loss_D_A = self.compute_D_A_loss()  # <- refactored from backward_D_A
-            loss_D_B = self.compute_D_B_loss()  # <- refactored from backward_D_B
-            loss_D = loss_D_A + loss_D_B        # backward once is cleaner
+            loss_D_A = self.compute_D_A_loss()  # refactored from backward_D_A
+            loss_D_B = self.compute_D_B_loss()  # refactored from backward_D_B
+            loss_D = self.compute_D_A_loss() + self.compute_D_B_loss() # refactored from both
 
         self.scaler.scale(loss_D).backward()
         self.scaler.step(self.optimizer_D)
