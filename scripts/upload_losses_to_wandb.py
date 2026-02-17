@@ -4,7 +4,7 @@ import re
 
 project_name = "hyperspectral_image_reconstruction"
 run_name = "hsi_to_rgb_cyclegan_run2"
-loss_file_path = "checkpoints/hsi_to_rgb_run2/loss_log.txt"
+loss_file_path = "checkpoints/hsi_to_rgb_cyclegan_run2/loss_log.txt"
 
 wandb.init(project=project_name, name=run_name)
 
