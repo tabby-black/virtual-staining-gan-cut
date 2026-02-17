@@ -44,8 +44,5 @@ class TrainOptions(BaseOptions):
 
         # don't need wandb parameters defined here because they are already in base_options.py
 
-        # amp parameter
-        parser.add_argument('--amp', action='store_true', help='use automatic mixed precision')
-
         self.isTrain = True
         return parser
