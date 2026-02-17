@@ -3,7 +3,7 @@ import itertools
 from util.image_pool import ImagePool
 from .base_model import BaseModel
 from . import networks
-import amp
+#import amp
 
 
 class CycleGANModel(BaseModel):
