@@ -113,8 +113,8 @@ class CycleGANModel(BaseModel):
 
 
             # enable AMP
-            #self.use_amp = getattr(opt, "amp", False) and torch.cuda.is_available()
-            #self.scaler = torch.cuda.amp.GradScaler(enabled=self.use_amp)
+            self.use_amp = getattr(opt, "amp", False) and torch.cuda.is_available()
+            self.scaler = torch.cuda.amp.GradScaler(enabled=self.use_amp)
 
 
     def set_input(self, input):
@@ -202,13 +202,13 @@ class CycleGANModel(BaseModel):
         self.loss_G = self.loss_G_A + self.loss_G_B + self.loss_cycle_A + self.loss_cycle_B + self.loss_idt_A + self.loss_idt_B
         
         # moved .backward() logic outside function for amp
-        if self.opt.amp:
-            with amp.scale_loss(self.loss_G, self.optimizer_G) as scaled_loss:
-                scaled_loss.backward()
-        else:
-            self.loss_G.backward()
+        #if self.opt.amp:
+            #with amp.scale_loss(self.loss_G, self.optimizer_G) as scaled_loss:
+                #scaled_loss.backward()
+        #else:
+            #self.loss_G.backward()
         
-        #return self.loss_G
+        return self.loss_G
 
     def data_dependent_initialize(self):
         return
