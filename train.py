@@ -4,6 +4,7 @@ from options.train_options import TrainOptions
 from data import create_dataset
 from models import create_model
 from util.visualizer import Visualizer
+from util import util
 import wandb
 # I have commented this line out as ddp is not needed (or provided by utils.py)
 #from util.util import init_ddp, cleanup_ddp
