@@ -96,10 +96,18 @@ if __name__ == '__main__':
                 # log images each iteration in wandb
                 if opt.use_wandb:
                     wandb_images = {}
-                    for label, image in visuals.items():
-                        image_numpy = util.tensor2im(image)
-                        wandb_images[label] = wandb.Image(image_numpy)
-                        wandb.log(wandb_images, step=total_iters)
+
+                for label, image in visuals.items():
+                    image_numpy = util.tensor2im(image)
+
+                    # if I ever get H,C,W (e.g. 224,3,224), convert to H,W,C to prevent tensor shape error I had before
+                    if isinstance(image_numpy, np.ndarray) and image_numpy.ndim == 3 and image_numpy.shape[1] in (1, 3):
+                        image_numpy = np.transpose(image_numpy, (0, 2, 1))  # H,C,W -> H,W,C
+
+                    wandb_images[label] = wandb.Image(image_numpy)
+
+                # log once per visuals batch
+                wandb.log(wandb_images, step=total_iters)
 
             if total_iters % opt.print_freq == 0:    # print training losses and save logging information to the disk
                 losses = model.get_current_losses()
