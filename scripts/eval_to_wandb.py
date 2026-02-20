@@ -87,7 +87,7 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
         "--epoch", str(epoch),
         "--results_dir", str(results_dir),
         "--num_test", "inf",
-        "--phase", "train"
+        "--phase", "train",
         "--no_dropout",
         "--preprocess", "resize_and_crop",
         "--load_size", "286",
