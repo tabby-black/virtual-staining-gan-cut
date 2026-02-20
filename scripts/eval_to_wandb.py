@@ -105,7 +105,8 @@ if __name__ == "__main__":
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
-    epochs = list(range(5, 101, 5))
+    # max epoch for run2 = 85
+    epochs = list(range(5, 86, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
