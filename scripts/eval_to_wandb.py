@@ -111,7 +111,7 @@ if __name__ == "__main__":
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
-    wandb_run_id = "5fwmv8jx?nw"
+    wandb_run_id = "5fwmv8jx"
 
     wandb.init(
         project=wandb_project,
