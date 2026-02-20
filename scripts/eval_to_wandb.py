@@ -2,6 +2,7 @@ import os
 import re
 import subprocess
 from pathlib import Path
+from PIL import Image
 
 import numpy as np
 import imageio.v2 as imageio
