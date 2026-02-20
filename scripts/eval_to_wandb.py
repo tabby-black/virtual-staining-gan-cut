@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
     for ep in epochs:
         # 1: generate outputs (skip if already exists)
-        out_images_dir = results_root / f"test_{ep}" / "images"
+        out_images_dir = results_root / f"train_{ep}" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             expected = ckpt_dir / f"{ep}_net_G.pth"  # adjust if your generator file name differs
