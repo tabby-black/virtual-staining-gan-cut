@@ -276,7 +276,7 @@ class CycleGANModel(BaseModel):
         with autocast_ctx:
             loss_D_A = self.compute_D_A_loss()  # refactored from backward_D_A
             loss_D_B = self.compute_D_B_loss()  # refactored from backward_D_B
-            loss_D = self.compute_D_A_loss() + self.compute_D_B_loss() # refactored from both
+            loss_D = self.compute_D_A_loss() + self.compute_D_B_loss() # refactored from
 
         self.scaler.scale(loss_D).backward()
         self.scaler.step(self.optimizer_D)
