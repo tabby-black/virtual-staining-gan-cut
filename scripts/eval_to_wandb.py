@@ -133,8 +133,6 @@ if __name__ == "__main__":
         print(ep, metrics)
 
         # 3: visualise and log
-        metrics = evaluate_epoch(results_dir)
-        wandb.log(metrics, step=epoch)
-        log_sample_images(results_dir, epoch)
+        log_sample_images(str(out_images_dir), ep, num_samples=5)
 
     wandb.finish()
