@@ -126,6 +126,11 @@ if __name__ == "__main__":
         # 1: generate outputs (skip if already exists)
         out_images_dir = results_root / f"test_{ep}" / "images"
         if not out_images_dir.exists():
+            ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
+            expected = ckpt_dir / f"{ep}_net_G.pth"  # adjust if your generator file name differs
+            if not expected.exists():
+                print(f"Checkpoint missing for epoch {ep} ({expected.name}); skipping.")
+                continue
             run_test_py(repo_root, experiment_name, dataroot, ep, results_dir=str(results_root.parent))
         else:
             print(f"Found existing outputs for epoch {ep}, skipping test.py")
