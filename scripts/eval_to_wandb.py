@@ -101,7 +101,7 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
 
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
-    experiment_name = "hsi_to_rgb_cyclegan_run2"
+    experiment_name = "hsi_to_rgb_cyclegan_run2.1"
     # so run this from /scripts
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
