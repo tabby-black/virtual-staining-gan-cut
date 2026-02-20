@@ -39,11 +39,11 @@ def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
     # return the average of the metrics for this epoch to be logged in wandb
     # replace eval_val with eval_train when testing on training dataset
     return {
-        "eval_train/n_images": int(len(ssim_scores)),
-        "eval_train/ssim_mean": float(np.mean(ssim_scores)) if ssim_scores else float("nan"),
-        "eval_train/ssim_std": float(np.std(ssim_scores)) if ssim_scores else float("nan"),
-        "eval_train/psnr_mean": float(np.mean(psnr_scores)) if psnr_scores else float("nan"),
-        "eval_train/psnr_std": float(np.std(psnr_scores)) if psnr_scores else float("nan"),
+        "eval/n_images": int(len(ssim_scores)),
+        "eval/ssim_mean": float(np.mean(ssim_scores)) if ssim_scores else float("nan"),
+        "eval/ssim_std": float(np.std(ssim_scores)) if ssim_scores else float("nan"),
+        "eval/psnr_mean": float(np.mean(psnr_scores)) if psnr_scores else float("nan"),
+        "eval/psnr_std": float(np.std(psnr_scores)) if psnr_scores else float("nan"),
     }
 
 def log_sample_images(results_dir, epoch, num_samples=5):
@@ -74,8 +74,7 @@ def log_sample_images(results_dir, epoch, num_samples=5):
 
     # log 5 sample real vs generated image pairs for each epoch
     # same 5 real images each time for fair comparison
-    # replace eval_val_samples_epoch with eval_train_samples when testing on training dataset
-    wandb.log({f"eval_train_samples_epoch_{epoch}": table}, step=epoch)
+    wandb.log({f"eval_samples_epoch_{epoch}": table}, step=epoch)
 
 def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
     # add --phase train to this command too to get results of testing on training set alongside validation set
@@ -92,7 +91,7 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
         "--preprocess", "resize_and_crop",
         "--load_size", "286",
         # crop size is 256 usually, 224 for batch size 4
-        "--crop_size", "224",
+        "--crop_size", "256",
     ]
     if extra_args:
         cmd += extra_args
