@@ -6,6 +6,8 @@ from models import create_model
 from util.visualizer import Visualizer
 from util import util
 import wandb
+import numpy as np
+
 # I have commented this line out as ddp is not needed (or provided by utils.py)
 #from util.util import init_ddp, cleanup_ddp
 
