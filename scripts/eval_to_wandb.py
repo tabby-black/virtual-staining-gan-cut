@@ -86,7 +86,7 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
         "--dataset_mode", "hsi_unaligned",
         "--epoch", str(epoch),
         "--results_dir", str(results_dir),
-        "--num_test", "inf",
+        # "--num_test", "inf",
         "--no_dropout",
         "--preprocess", "resize_and_crop",
         "--load_size", "286",
