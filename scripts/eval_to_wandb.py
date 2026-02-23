@@ -91,7 +91,7 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
         "--preprocess", "resize_and_crop",
         "--load_size", "286",
         # crop size is 256 usually, 224 for batch size 4
-        "--crop_size", "256",
+        "--crop_size", "224",
     ]
     if extra_args:
         cmd += extra_args
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
     # max epoch for runbs4 = 30
-    epochs = list(range(0, 31, 5))
+    epochs = list(range(5, 31, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -126,9 +126,14 @@ if __name__ == "__main__":
         out_images_dir = results_root / f"test_{ep}" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
-            expected = ckpt_dir / f"{ep}_net_G.pth"  # adjust if your generator file name differs
-            if not expected.exists():
-                print(f"Checkpoint missing for epoch {ep} ({expected.name}); skipping.")
+            expected_files = [
+                ckpt_dir / f"{ep}_net_G_A.pth",
+                ckpt_dir / f"{ep}_net_G_B.pth",
+            ]
+
+            missing = [p.name for p in expected_files if not p.exists()]
+            if missing:
+                print(f"Checkpoint missing for epoch {ep}: {missing}; skipping.")
                 continue
             run_test_py(repo_root, experiment_name, dataroot, ep, results_dir=str(results_root.parent))
         else:
