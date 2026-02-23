@@ -92,7 +92,7 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
         "--preprocess", "resize_and_crop",
         "--load_size", "286",
         # crop size is 256 usually, 224 for batch size 4
-        "--crop_size", "224",
+        "--crop_size", "256",
     ]
     if extra_args:
         cmd += extra_args
@@ -102,13 +102,13 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
 
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
-    experiment_name = "hsi_to_rgb_cyclegan_bs4"
+    experiment_name = "hsi_to_rgb_cyclegan_bs3"
     # so run this from /scripts
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
-    # max epoch for runbs4 = 30
-    epochs = list(range(5, 31, 5))
+    # max epoch for runbs3 = 45
+    epochs = list(range(5, 46, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
