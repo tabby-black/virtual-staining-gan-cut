@@ -108,7 +108,7 @@ if __name__ == "__main__":
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
     # max epoch for runbs3 = 45
-    epochs = list(range(50, 86, 5))
+    epochs = list(range(5, 86, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
