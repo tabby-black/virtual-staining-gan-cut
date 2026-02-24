@@ -141,7 +141,8 @@ if __name__ == "__main__":
 
         # 2: evaluate and log
         metrics = evaluate_epoch(str(out_images_dir))
-        wandb.log(metrics, step=ep)
+        metrics["epoch"] = ep
+        wandb.log(metrics)  
         print(ep, metrics)
 
         # 3: visualise and log
