@@ -46,7 +46,7 @@ if __name__ == '__main__':
             #name=opt.wandb_run_name if opt.wandb_run_name else opt.name,
             id = "om88iqhb",
             config=vars(opt),
-            resume="allow"
+            #resume="allow"
         )
     dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
     dataset_size = len(dataset)    # get the number of images in the dataset.
