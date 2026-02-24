@@ -113,7 +113,7 @@ if __name__ == '__main__':
                 if opt.use_wandb:
                     wandb.log(
                         {
-                            wandb_images,
+                            **wandb_images,
                             "epoch": epoch
                         },
                         step=total_iters
@@ -128,7 +128,7 @@ if __name__ == '__main__':
                 if opt.use_wandb:
                     wandb.log(
                         {
-                            losses,
+                            **losses,
                             "epoch": epoch
                         },
                         step=total_iters
