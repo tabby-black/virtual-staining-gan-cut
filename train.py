@@ -110,7 +110,14 @@ if __name__ == '__main__':
                     wandb_images[label] = wandb.Image(image_numpy)
 
                 # log once per visuals batch
-                wandb.log(wandb_images, step=total_iters)
+                if opt.use_wandb:
+                    wandb.log(
+                        {
+                            wandb_images,
+                            "epoch": epoch
+                        },
+                        step=total_iters
+                    )
 
             if total_iters % opt.print_freq == 0:    # print training losses and save logging information to the disk
                 losses = model.get_current_losses()
@@ -119,7 +126,13 @@ if __name__ == '__main__':
                     visualizer.plot_current_losses(epoch, float(epoch_iter) / dataset_size, losses)
                 # log all generator/discriminator losses each iteration in wandb
                 if opt.use_wandb:
-                    wandb.log(losses, step = total_iters)
+                    wandb.log(
+                        {
+                            losses,
+                            "epoch": epoch
+                        },
+                        step=total_iters
+                    )
 
 
             if total_iters % opt.save_latest_freq == 0:   # cache our latest model every <save_latest_freq> iterations
