@@ -43,7 +43,7 @@ if __name__ == '__main__':
         wandb_run = wandb.init(
             project=opt.wandb_project_name,
             #entity=opt.wandb_entity,
-            #name=opt.wandb_run_name if opt.wandb_run_name else opt.name,
+            name=opt.name,
             id = "om88iqhb",
             config=vars(opt),
             #resume="allow"
