@@ -107,8 +107,8 @@ if __name__ == "__main__":
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
-    # max epoch for bs3 = 60
-    epochs = list(range(5, 61, 5))
+    # max epoch for run2 = 85
+    epochs = list(range(5, 86, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -118,8 +118,8 @@ if __name__ == "__main__":
     wandb.init(
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
-        id=wandb_run_id,
-        resume = None
+        #id="s9hui43n",
+        #resume = True
     )
 
     for ep in epochs:
