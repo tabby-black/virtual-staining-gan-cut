@@ -92,7 +92,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--no_dropout",
         "--preprocess", "resize_and_crop",
         "--load_size", "286",
-        "--crop_size", "224",
+        "--crop_size", "256",
     ]
 
     print("\n[run_test_py] Running:", " ".join(cmd))  # <-- proves we’re in this function
