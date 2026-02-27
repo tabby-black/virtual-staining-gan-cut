@@ -102,15 +102,15 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
 
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
+    # CHANGE THIS LINE
     experiment_name = "hsi_to_rgb_cyclegan_bs3"
     # so run this from /scripts
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
-    # max epoch for bs3 = 60
+    # max epoch for bs3 = 60, resuming from epoch 45
     # CHANGE THIS LINE
-    epochs = list(range(5, 61, 5))
-    # CHANGE THIS LINE
+    epochs = list(range(45, 61, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -120,8 +120,8 @@ if __name__ == "__main__":
     wandb.init(
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
-        #id="s9hui43n",
-        #resume = True
+        id="kdpvx96y",
+        resume = True
     )
 
     for ep in epochs:
