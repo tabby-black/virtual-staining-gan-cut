@@ -76,11 +76,11 @@ def log_sample_images(results_dir, epoch, num_samples=5):
     # same 5 real images each time for fair comparison
     wandb.log({f"eval_samples_epoch_{epoch}": table}, step=epoch)
 
-
+     
 def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
-     # add --phase train to this command too to get results of testing on training set alongside validation set
+    # add --phase train to this command too to get results of testing on training set alongside validation set
     cmd = [
-        "python", "-u", "test.py",              # <- -u helps unbuffer output
+        "python", "-u", "test.py",
         "--name", experiment_name,
         "--dataroot", dataroot,
         "--model", "cycle_gan",
@@ -93,34 +93,23 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--crop_size", "256",
     ]
 
-    try:
-        result = subprocess.run(
-            cmd,
-            cwd=repo_root,
-            check=True,
-            text=True,
-            capture_output=True,
-        )
-        # If you want, you can print normal output:
-        # print(result.stdout)
-        return result
+    print("\n[run_test_py] Running:", " ".join(cmd))  # <-- proves we’re in this function
 
-    except subprocess.CalledProcessError as e:
-        print("\n=== test.py FAILED ===")
-        print("Epoch:", ep)
-        print("Command:", " ".join(cmd))
-        print("\n--- STDOUT ---\n", e.stdout if e.stdout else "(empty)")
-        print("\n--- STDERR ---\n", e.stderr if e.stderr else "(empty)")
-        raise
-
-    #subprocess.run(cmd, cwd=repo_root, check=True)
     try:
-        subprocess.run(cmd, cwd=repo_root, check=True, text=True, capture_output=True)
-    except subprocess.CalledProcessError as e:
-        print("\n=== test.py FAILED ===")
-        print("Command:", " ".join(cmd))
-        print("\n--- STDOUT ---\n", e.stdout)
-        print("\n--- STDERR ---\n", e.stderr)
+        res = subprocess.run(cmd, cwd=repo_root, text=True, capture_output=True)
+        print("[run_test_py] Return code:", res.returncode)
+        if res.stdout:
+            print("\n--- STDOUT ---\n", res.stdout)
+        if res.stderr:
+            print("\n--- STDERR ---\n", res.stderr)
+
+        if res.returncode != 0:
+            raise RuntimeError(f"test.py failed with return code {res.returncode}")
+
+        return res
+
+    except Exception as e:
+        print("\n[run_test_py] Exception raised:", repr(e))
         raise
 
 
