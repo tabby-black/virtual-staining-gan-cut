@@ -76,26 +76,42 @@ def log_sample_images(results_dir, epoch, num_samples=5):
     # same 5 real images each time for fair comparison
     wandb.log({f"eval_samples_epoch_{epoch}": table}, step=epoch)
 
-def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
-    # add --phase train to this command too to get results of testing on training set alongside validation set
+
+def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
+     # add --phase train to this command too to get results of testing on training set alongside validation set
     cmd = [
-        "python", "test.py",
-        "--name", name,
+        "python", "-u", "test.py",              # <- -u helps unbuffer output
+        "--name", experiment_name,
         "--dataroot", dataroot,
         "--model", "cycle_gan",
         "--dataset_mode", "hsi_unaligned",
-        "--epoch", str(epoch),
+        "--epoch", str(ep),
         "--results_dir", str(results_dir),
-        # "--num_test", "inf",
-        #"--phase", "train",
         "--no_dropout",
         "--preprocess", "resize_and_crop",
         "--load_size", "286",
-        # crop size is 256 usually, 224 for batch size 4
         "--crop_size", "256",
     ]
-    if extra_args:
-        cmd += extra_args
+
+    try:
+        result = subprocess.run(
+            cmd,
+            cwd=repo_root,
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+        # If you want, you can print normal output:
+        # print(result.stdout)
+        return result
+
+    except subprocess.CalledProcessError as e:
+        print("\n=== test.py FAILED ===")
+        print("Epoch:", ep)
+        print("Command:", " ".join(cmd))
+        print("\n--- STDOUT ---\n", e.stdout if e.stdout else "(empty)")
+        print("\n--- STDERR ---\n", e.stderr if e.stderr else "(empty)")
+        raise
 
     #subprocess.run(cmd, cwd=repo_root, check=True)
     try:
