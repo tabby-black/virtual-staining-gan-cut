@@ -97,7 +97,15 @@ def run_test_py(repo_root, name, dataroot, epoch, results_dir, extra_args=None):
     if extra_args:
         cmd += extra_args
 
-    subprocess.run(cmd, cwd=repo_root, check=True)
+    #subprocess.run(cmd, cwd=repo_root, check=True)
+    try:
+        subprocess.run(cmd, cwd=repo_root, check=True, text=True, capture_output=True)
+    except subprocess.CalledProcessError as e:
+        print("\n=== test.py FAILED ===")
+        print("Command:", " ".join(cmd))
+        print("\n--- STDOUT ---\n", e.stdout)
+        print("\n--- STDERR ---\n", e.stderr)
+        raise
 
 
 if __name__ == "__main__":
@@ -110,7 +118,7 @@ if __name__ == "__main__":
     # max epoch 100
     # max epoch for bs3 = 60, resuming from epoch 45
     # CHANGE THIS LINE
-    epochs = list(range(55, 61, 5))
+    epochs = list(range(50, 61, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
