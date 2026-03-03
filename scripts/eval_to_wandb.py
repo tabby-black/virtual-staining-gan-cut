@@ -1,3 +1,18 @@
+print("A: script start", flush=True)
+import os
+print("B: after os import", flush=True)
+
+import wandb
+print("C: after wandb import", flush=True)
+
+print("D: about to wandb.init", flush=True)
+run = wandb.init(
+    project="hyperspectral_image_reconstruction",
+    id="8xtrbsng",
+    resume="allow",
+)
+print("E: after wandb.init", flush=True)
+
 import os
 import re
 import subprocess
@@ -9,6 +24,7 @@ import imageio.v2 as imageio
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import peak_signal_noise_ratio as psnr
 import wandb
+
 
 def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
     fake_dir = os.path.join(results_dir, "fake_B")
