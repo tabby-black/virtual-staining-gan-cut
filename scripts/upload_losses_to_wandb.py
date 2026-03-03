@@ -4,8 +4,8 @@ from pathlib import Path
 
 
 project_name = "hyperspectral_image_reconstruction"
-run_name = "hsi_to_rgb_cyclegan_run2.1"
-loss_file_path = "checkpoints/hsi_to_rgb_cyclegan_run2.1/loss_log.txt"
+run_name = "hsi_to_rgb_cyclegan_bs3"
+loss_file_path = "checkpoints/hsi_to_rgb_cyclegan_bs3/loss_log.txt"
 entity = None
 
 wandb.init(project=project_name, entity=entity, name=run_name)
