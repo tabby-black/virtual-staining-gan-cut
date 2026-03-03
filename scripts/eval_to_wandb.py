@@ -1,17 +1,17 @@
-print("A: script start", flush=True)
-import os
-print("B: after os import", flush=True)
+#print("A: script start", flush=True)
+#import os
+#print("B: after os import", flush=True)
 
-import wandb
-print("C: after wandb import", flush=True)
+#import wandb
+#print("C: after wandb import", flush=True)
 
-print("D: about to wandb.init", flush=True)
-run = wandb.init(
-    project="hyperspectral_image_reconstruction",
-    id="8xtrbsng",
-    resume="allow",
-)
-print("E: after wandb.init", flush=True)
+#print("D: about to wandb.init", flush=True)
+#run = wandb.init(
+   #project="hyperspectral_image_reconstruction",
+    #id="8xtrbsng",
+    #resume="allow",
+#)
+#print("E: after wandb.init", flush=True)
 
 import os
 import re
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         id="8xtrbsng",
-        resume = True
+        resume = "allow"
     )
 
     for ep in epochs:
