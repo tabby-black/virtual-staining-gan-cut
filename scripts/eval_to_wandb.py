@@ -132,7 +132,7 @@ if __name__ == "__main__":
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
     # set to None to avoid non-monotonical step issue
-    wandb_run_id = None
+    #wandb_run_id = None
 
     wandb.init(
         project=wandb_project,
