@@ -85,7 +85,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--dataroot", dataroot,
         "--model", "cycle_gan",
         "--dataset_mode", "hsi_unaligned",
-        "--gpu_ids", "3",
+        "--gpu_ids", "0",
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
@@ -125,9 +125,9 @@ if __name__ == "__main__":
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
-    # max epoch for bs3 = 80
+    # fill in for epochs 85 - 110 in bs4
     # CHANGE THIS LINE
-    epochs = list(range(5, 81, 5))
+    epochs = list(range(85, 111, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -137,8 +137,8 @@ if __name__ == "__main__":
     wandb.init(
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
-        #id="kdpvx96y",
-        #resume = True
+        id="8xtrbsng",
+        resume = True
     )
 
     for ep in epochs:
