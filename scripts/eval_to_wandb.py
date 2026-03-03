@@ -105,7 +105,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
-        "--phase", "train",
+        #"--phase", "train",
         "--results_dir", str(results_dir),
         "--no_dropout",
         "--preprocess", "resize_and_crop",
@@ -153,14 +153,14 @@ if __name__ == "__main__":
     wandb.init(
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
-        id="c3adcttn",
+        id="kdpvx96y",
         resume = "allow"
     )
 
     for ep in epochs:
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
-        out_images_dir = results_root / f"train_{ep}" / "images"
+        out_images_dir = results_root / f"test_{ep}" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             expected_files = [
