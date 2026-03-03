@@ -105,7 +105,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
-        #"--phase", "train",
+        "--phase", "train",
         "--results_dir", str(results_dir),
         "--no_dropout",
         "--preprocess", "resize_and_crop",
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
-    # fill in for epochs 100 - 120 in bs4
+    # fill in for epochs 100 - 120 in bs3
     # CHANGE THIS LINE
     epochs = list(range(100, 121, 5))
     wandb_project = "hyperspectral_image_reconstruction"
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     for ep in epochs:
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
-        out_images_dir = results_root / f"test_{ep}" / "images"
+        out_images_dir = results_root / f"train_{ep}" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             expected_files = [
