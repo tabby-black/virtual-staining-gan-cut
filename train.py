@@ -44,7 +44,7 @@ if __name__ == '__main__':
             project=opt.wandb_project_name,
             #entity=opt.wandb_entity,
             name=opt.name,
-            id = "qw4y3bhb",
+            id = "991m1836",
             config=vars(opt),
             resume="allow"
         )
