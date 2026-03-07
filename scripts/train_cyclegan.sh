@@ -8,4 +8,4 @@ set -ex
 
 # get initial CUT training underway!
 # expecting some debugging to get dual encoder to work
-python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_CUT1 --CUT_mode CUT --continue_train --epoch 75 --epoch_count 76 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --nce_idt False --gpu_ids 2 --nce_layers 4,8,12,16 --pool_size 50 --no_dropout --print_freq 100 --display_id -1 --num_threads 0 --no_html
+python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_CUT1 --CUT_mode CUT --continue_train --epoch 75 --epoch_count 76 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --nce_idt False --gpu_ids 0 --nce_layers 4,8,12,16 --pool_size 50 --no_dropout --print_freq 100 --display_id -1 --num_threads 0 --no_html
