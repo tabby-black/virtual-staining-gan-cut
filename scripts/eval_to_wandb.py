@@ -163,9 +163,17 @@ if __name__ == "__main__":
         out_images_dir = results_root / f"test_{ep}" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
+            # expected files for CycleGAN
+            #expected_files = [
+                #ckpt_dir / f"{ep}_net_G_A.pth",
+                #ckpt_dir / f"{ep}_net_G_B.pth",
+            #]
+            # expected files for CUT
             expected_files = [
-                ckpt_dir / f"{ep}_net_G_A.pth",
-                ckpt_dir / f"{ep}_net_G_B.pth",
+                ckpt_dir / f"{ep}_net_D.pth",
+                ckpt_dir / f"{ep}_net_E.pth",
+                ckpt_dir / f"{ep}_net_F.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
             ]
 
             missing = [p.name for p in expected_files if not p.exists()]
