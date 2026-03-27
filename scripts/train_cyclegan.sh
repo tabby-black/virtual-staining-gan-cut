@@ -4,7 +4,7 @@ set -ex
 # have disabled visdom for now
 #python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run6 --model cycle_gan --continue_train --epoch 20 --epoch_count 21 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 2 --num_threads 0  --pool_size 50 --no_dropout --lambda_identity 0 --lr 0.0001 --batch_size 3 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 5 --no_html --amp
 # new cycleGAN run6 command - learning rate reduced by one order of magnitude
-python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run6.1 --model cycle_gan --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 2 --num_threads 0 --lr 0.00002 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 3 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 5 --no_html --amp
+python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run6.1 --model cycle_gan --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 2 --num_threads 0 --lr 0.00002 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 3 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
 
 # have commented out CUT training command for now - trying to train CycleGAN model
 # --lr 0.0001
