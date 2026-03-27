@@ -86,6 +86,9 @@ if __name__ == '__main__':
                 model.setup(opt)               # regular setup: load and print networks; create schedulers
                 model.parallelize()
             model.set_input(data)  # unpack data from dataset and apply preprocessing
+            # print to see tensor shapes to see if crop size is being applied correctly
+            print("real_A shape:", model.real_A.shape)
+            print("real_B shape:", model.real_B.shape)
             model.optimize_parameters()   # calculate loss functions, get gradients, update network weights
             if len(opt.gpu_ids) > 0:
                 torch.cuda.synchronize()
