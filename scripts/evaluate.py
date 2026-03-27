@@ -1,4 +1,4 @@
-# don't need this script - have adapted its contents in jupyter notebook for visualisation and evaluation
+# old evaluation script that I moved into Jupyter notebook
 
 
 # calculates the ssim and psnr values for each of the output images in an experiment, and then averages over these

@@ -99,9 +99,9 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "python", "-u", "test.py",
         "--name", experiment_name,
         "--dataroot", dataroot,
-        "--model", "cycle_gan",
+        "--CUT_mode", "CUT",
         "--dataset_mode", "hsi_unaligned",
-        "--gpu_ids", "0",
+        "--gpu_ids", "1",
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
@@ -136,14 +136,14 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_run5"
+    experiment_name = "hsi_to_rgb_CUT1"
     # so run this from /scripts
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
-    # run5 epochs: 0-48
+    # CUT1 epochs: 0-100
     # CHANGE THIS LINE
-    epochs = list(range(5, 46, 5))
+    epochs = list(range(5, 100, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
