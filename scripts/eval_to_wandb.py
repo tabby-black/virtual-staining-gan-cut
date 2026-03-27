@@ -143,7 +143,7 @@ if __name__ == "__main__":
     # max epoch 100
     # CUT1 epochs: 0-100
     # CHANGE THIS LINE
-    epochs = list(range(5, 100, 5))
+    epochs = list(range(95, 105, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
