@@ -153,8 +153,8 @@ if __name__ == "__main__":
     wandb.init(
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
-        #id="z76qsew9",
-        #resume = "allow"
+        id="kneqgth7",
+        resume = "allow"
     )
 
     for ep in epochs:
