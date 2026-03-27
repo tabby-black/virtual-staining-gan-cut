@@ -171,7 +171,7 @@ if __name__ == "__main__":
             # expected files for CUT
             expected_files = [
                 ckpt_dir / f"{ep}_net_D.pth",
-                ckpt_dir / f"{ep}_net_E.pth",
+                ckpt_dir / f"{ep}_net_E_B.pth",
                 ckpt_dir / f"{ep}_net_F.pth",
                 ckpt_dir / f"{ep}_net_G.pth",
             ]
