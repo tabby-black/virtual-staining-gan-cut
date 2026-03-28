@@ -1,0 +1,47 @@
+# this script will eventually be combined into preprocess.py
+
+# this script is to segment background pixels out of an image
+# I may then go to average this over tiles, depending on my new patching strategy
+# I will discuss my new patching strategy with Tiago
+
+import numpy as np
+from PIL import Image
+
+def create_tissue_mask(image):
+    """
+    image: H x W x 3 (RGB), values in [0, 255]
+    returns: H x W binary mask (1 = tissue, 0 = background)
+    """
+
+    # convert to grayscale using standard luminance formula
+    gray = (
+        0.299 * image[:, :, 0] +
+        0.587 * image[:, :, 1] +
+        0.114 * image[:, :, 2]
+    )
+
+    # normalize to [0, 1]
+    gray = gray / 255.0
+
+    # threshold
+    # grayscale white value = 1
+    # any pixels with grayscale values < 0.85 will be classified as tissue
+    # any pixels with grayscale values >= 0.85 are light, so background
+    threshold = 0.85
+
+    # tissue = darker pixels = closer to 0
+    mask = (gray < threshold).astype(np.uint8)
+
+    # pixelwise binary mask classifying every pixel in the image as either
+    # tissue or background
+    return mask
+
+# can check the tissue proportions of images
+# replace inside "" with relative path to an image
+img = np.array(Image.open("../../imgs/"))
+mask = create_tissue_mask(img)
+
+print(mask.shape)  # (H, W)
+print(mask.mean())
+
+# then visualise the mask applied to some RGB images to check this looks right
