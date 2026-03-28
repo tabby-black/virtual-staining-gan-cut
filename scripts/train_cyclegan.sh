@@ -2,11 +2,15 @@ set -ex
 # --pool_size and --no_dropout flags have been added to example structure of training command
 # have commented out CycleGAN training command for now to check if CUT training is error free
 # have disabled visdom for now
-#python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run6 --model cycle_gan --continue_train --epoch 20 --epoch_count 21 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 2 --num_threads 0  --pool_size 50 --no_dropout --lambda_identity 0 --lr 0.0001 --batch_size 3 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 5 --no_html --amp
-# new cycleGAN run6 command - learning rate reduced by one order of magnitude
+
+# new cycleGAN run6.1 command - learning rate reduced by one order of magnitude
+python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run6.1 --model cycle_gan --continue_train --epoch 6 --epoch_count 7 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 1 --num_threads 0  --pool_size 50 --no_dropout --lambda_identity 0 --lr 0.00002 --batch_size 3 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
+
+# cyclegan bs8 run command
 #python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_bs8 --model cycle_gan --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 1 --num_threads 0 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 8 --preprocess resize_and_crop --load_size 286 --crop_size 160 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
 
-python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run7 --model cycle_gan --continue_train --epoch 5 --epoch_count 6 --lr_policy linear --n_epochs 100 --n_epochs_decay 100 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 0 --num_threads 0 --lr 0.0002 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
+# cyclegan decay2 run command
+#python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run7 --model cycle_gan --continue_train --epoch 5 --epoch_count 6 --lr_policy linear --n_epochs 100 --n_epochs_decay 100 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 0 --num_threads 0 --lr 0.0002 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
 
 # have commented out CUT training command for now - trying to train CycleGAN model
 # --lr 0.0001
