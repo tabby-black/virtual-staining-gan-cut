@@ -6,6 +6,7 @@
 
 import numpy as np
 from PIL import Image
+import matplotlib.pyplot as plt
 
 def create_tissue_mask(image):
     """
@@ -33,15 +34,27 @@ def create_tissue_mask(image):
     mask = (gray < threshold).astype(np.uint8)
 
     # pixelwise binary mask classifying every pixel in the image as either
-    # tissue or background
+    # tissue (1) or background (0)
     return mask
 
 # can check the tissue proportions of images
-# replace inside "" with relative path to an image
-img = np.array(Image.open("../../imgs/"))
+# inside "" should be a relative path to an image
+img = np.array(Image.open("../../../../datasets/HistologyHSI-GB/P1/ROI_01_C01"))
 mask = create_tissue_mask(img)
 
-print(mask.shape)  # (H, W)
-print(mask.mean())
+#print(mask.shape)  # (H, W)
+#print(mask.mean())
 
 # then visualise the mask applied to some RGB images to check this looks right
+# better to visualise here or in a Jupyter notebook?
+plt.figure(figsize=(10,5))
+
+plt.subplot(1,2,1)
+plt.imshow(img)
+plt.title("Original")
+
+plt.subplot(1,2,2)
+plt.imshow(mask, cmap='gray')
+plt.title("Tissue mask")
+
+plt.show()
