@@ -38,8 +38,9 @@ def create_tissue_mask(image):
     return mask
 
 # can check the tissue proportions of images
-# inside "" should be a relative path to an image
-img = np.array(Image.open("../../../../datasets/HistologyHSI-GB/P1/ROI_01_C01"))
+# inside "" is an absolute path to an image
+# trainB because this contains RGB images
+img = np.array(Image.open("/local/scratch-3/projects/virtual-staining-gan-cut/datasets/histology/trainB/P4_ROI_02_C31_NT_rgb.png/"))
 mask = create_tissue_mask(img)
 
 #print(mask.shape)  # (H, W)
