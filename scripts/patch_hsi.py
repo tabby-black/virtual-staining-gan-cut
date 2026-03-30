@@ -40,6 +40,8 @@ def patch_hsi(hdr_path, i=0):
     # save the 4 patches with the correct metadata
     for key, patch in patches.items():
         out_hdr = os.path.join(dirname, f"{basename}_{key}.hdr")
+        # this automatically saves the patches with .img extensions even though 
+        # the original hyperspectral images don't have extensions
         envi.save_image(out_hdr, patch.astype(np.float32), dtype=np.float32, force=True, interleave='bsq', metadata=patch_metadata)
 
     print("Patches for hyperspectral image", i, "saved!")
