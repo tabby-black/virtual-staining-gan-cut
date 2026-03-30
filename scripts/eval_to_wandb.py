@@ -137,7 +137,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_initial"
+    experiment_name = "hsi_to_rgb_cyclegan_run2"
     # so run this from /scripts
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
@@ -167,6 +167,8 @@ if __name__ == "__main__":
             # CHANGE THIS LINE
             # expected files for CycleGAN
             expected_files = [
+                ckpt_dir / f"{ep}_net_D_A.pth",
+                ckpt_dir / f"{ep}_net_D_B.pth"
                 ckpt_dir / f"{ep}_net_G_A.pth",
                 ckpt_dir / f"{ep}_net_G_B.pth",
             ]
