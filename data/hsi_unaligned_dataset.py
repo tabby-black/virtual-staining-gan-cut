@@ -100,9 +100,8 @@ class HSIUnalignedDataset(BaseDataset):
       img = np.transpose(img, (2, 0, 1))
       return torch.from_numpy(img)
 
-    # helper function to get random crop coords for training
-    # these coords will then be used to crop both A and B
-    def get_random_crop_coords(self, tensor, crop_size):
+    # helper function to random crop patches for training
+    def random_crop(self, tensor, crop_size):
         _, h, w = tensor.shape
 
         if h < crop_size or w < crop_size:
@@ -110,7 +109,7 @@ class HSIUnalignedDataset(BaseDataset):
 
         top = random.randint(0, h - crop_size)
         left = random.randint(0, w - crop_size)
-        return top, left
+        return tensor[:, top:top + crop_size, left:left + crop_size]
 
     # helper function to get centre crop coords for testing
     # these coords will then be used to crop both A and B
@@ -124,8 +123,7 @@ class HSIUnalignedDataset(BaseDataset):
         left = (w - crop_size) // 2
         
         return top, left
-    # helper function to apply either a random crop for training
-    # or a centre crop for testing
+    # helper function to apply a centre crop for testing
     # allows same coordinates to be used to crop A and B patches
     def apply_crop(self, tensor, top, left, crop_size):
         return tensor[:, top:top + crop_size, left:left + crop_size]
@@ -146,16 +144,16 @@ class HSIUnalignedDataset(BaseDataset):
         A_path = self.A_paths[index % self.A_size]
         # use this B_path because I have paired (even if not perfectly) data
         # rather than totally unpaired data
-        B_path = self.B_paths[index % self.B_size]
+        # B_path = self.B_paths[index % self.B_size]
 
         # make sure index is within range
-        #if self.opt.serial_batches:
-            #index_B = index % self.B_size
-        #else:
+        if self.opt.serial_batches:
+            index_B = index % self.B_size
+        else:
              # randomize the index for domain B to avoid fixed pairs
-            #index_B = random.randint(0, self.B_size - 1)
+            index_B = random.randint(0, self.B_size - 1)
         
-        #B_path = self.B_paths[index_B]
+        B_path = self.B_paths[index_B]
 
 
         # commented this part out for now
@@ -174,15 +172,17 @@ class HSIUnalignedDataset(BaseDataset):
 
         try:
             # safety check to make sure patches A and B are the same size
-            if A.shape[1:] != B.shape[1:]:
-                raise ValueError(f"A and B have different spatial sizes: {A.shape} vs {B.shape}")
+            #if A.shape[1:] != B.shape[1:]:
+                #raise ValueError(f"A and B have different spatial sizes: {A.shape} vs {B.shape}")
             if self.opt.isTrain:
-                top, left = self.get_random_crop_coords(A, crop_size)
+                A = self.random_crop(A, crop_size)
+                B = self.random_crop(B, crop_size)
             else:
+                # for testing we need to crop the same part of the hsi and rgb image pairs
                 top, left = self.get_centre_crop_coords(A, crop_size)
-            
-            A = self.apply_crop(A, top, left, crop_size)
-            B = self.apply_crop(B, top, left, crop_size)
+                
+                A = self.apply_crop(A, top, left, crop_size)
+                B = self.apply_crop(B, top, left, crop_size)
 
         except Exception as e:
             print(f"Bad sample: A_path={A_path}, B_path={B_path}, error={e}")
