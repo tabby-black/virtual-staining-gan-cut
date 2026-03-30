@@ -106,7 +106,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
-        "--phase", "train",
+        #"--phase", "train",
         "--results_dir", str(results_dir),
         "--no_dropout",
         "--preprocess", "resize_and_crop",
@@ -144,7 +144,7 @@ if __name__ == "__main__":
     # max epoch 100
     # CUT1 epochs: 0-100
     # CHANGE THIS LINE
-    epochs = list(range(5, 86, 5))
+    epochs = list(range(0, 87, 1))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     for ep in epochs:
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
-        out_images_dir = results_root / f"train_{ep}" / "images"
+        out_images_dir = results_root / f"test_{ep}" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
