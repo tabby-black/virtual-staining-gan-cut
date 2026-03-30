@@ -168,7 +168,7 @@ if __name__ == "__main__":
             # expected files for CycleGAN
             expected_files = [
                 ckpt_dir / f"{ep}_net_D_A.pth",
-                ckpt_dir / f"{ep}_net_D_B.pth"
+                ckpt_dir / f"{ep}_net_D_B.pth",
                 ckpt_dir / f"{ep}_net_G_A.pth",
                 ckpt_dir / f"{ep}_net_G_B.pth",
             ]
