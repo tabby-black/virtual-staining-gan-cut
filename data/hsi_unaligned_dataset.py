@@ -157,8 +157,8 @@ class HSIUnalignedDataset(BaseDataset):
 
 
         # commented this part out for now
-        # For CUT/FastCUT mode, if in finetuning phase (learning rate is decaying),
-        # always want to crop for CycleGAN
+        # reducing late-stage randomness in CUT/CycleGAN, if in finetuning phase (learning rate is decaying)
+
         # is_finetuning = self.opt.isTrain and self.current_epoch > self.opt.n_epochs
         # modified_opt = util.copyconf(self.opt, load_size=self.opt.crop_size if is_finetuning else self.opt.load_size)
         # transform = get_transform(modified_opt)
