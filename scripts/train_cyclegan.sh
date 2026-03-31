@@ -7,7 +7,7 @@ set -ex
 #python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run6.1 --model cycle_gan --continue_train --epoch 20 --epoch_count 21 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 1 --num_threads 0  --pool_size 50 --no_dropout --lambda_identity 0 --lr 0.00002 --batch_size 3 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
 
 # cyclegan bs8 run command
-python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_bs8 --model cycle_gan --continue_train --epoch 36 --epoch_count 37 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 0 --num_threads 0 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 8 --preprocess resize_and_crop --load_size 286 --crop_size 160 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
+#python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_bs8 --model cycle_gan --continue_train --epoch 36 --epoch_count 37 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 0 --num_threads 0 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 8 --preprocess resize_and_crop --load_size 286 --crop_size 160 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
 
 # cyclegan decay2 run command
 #python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run7 --model cycle_gan --continue_train --epoch 21 --epoch_count 22 --lr_policy linear --n_epochs 100 --n_epochs_decay 100 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 3 --num_threads 0 --lr 0.0002 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
@@ -17,5 +17,5 @@ python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --n
 
 # get initial CUT training underway!
 # expecting some debugging to get dual encoder to work
-#python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_CUT1 --CUT_mode CUT --continue_train --epoch 95 --epoch_count 96 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --nce_idt False --gpu_ids 2 --nce_layers 4,8,12,16 --pool_size 50 --no_dropout --print_freq 100 --display_id -1 --num_threads 0 --no_html
+python train.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_CUT2 --CUT_mode CUT --use_wandb --wandb_project_name hyperspectral_image_reconstruction --nce_idt False --gpu_ids 1 --nce_layers 4,8,12,16 --pool_size 50 --no_dropout --print_freq 100 --display_id -1 --num_threads 0 --no_html
 # --continue_train --epoch 75 --epoch_count 76

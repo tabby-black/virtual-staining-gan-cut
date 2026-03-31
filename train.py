@@ -44,9 +44,9 @@ if __name__ == '__main__':
             project=opt.wandb_project_name,
             #entity=opt.wandb_entity,
             name=opt.name,
-            id = "vnviocwk",
+            #id = "vnviocwk",
             config=vars(opt),
-            resume="allow"
+            #resume="allow"
         )
     dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
     dataset_size = len(dataset)    # get the number of images in the dataset.
