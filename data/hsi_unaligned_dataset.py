@@ -16,7 +16,8 @@ import util.util as util
 # extra imports for custom data loader
 import numpy as np
 import torch
-import spectral
+from spectral import open_image, envi
+import glob
 
 # need to make sure I use this new class instead of UnalignedDataset in the rest of my code / specify in training
 class HSIUnalignedDataset(BaseDataset):
@@ -128,6 +129,105 @@ class HSIUnalignedDataset(BaseDataset):
     def apply_crop(self, tensor, top, left, crop_size):
         return tensor[:, top:top + crop_size, left:left + crop_size]
 
+    # compute overlapping 256x256 patches
+    def patch_hsi(hdr_path, i=0):
+        i+= 1
+        # load hyperspectral cube
+        img = open_image(hdr_path).load()
+        H, W, B = img.shape
+        patch_metadata = img.metadata.copy()
+
+        dirname = os.path.dirname(hdr_path)
+        basename = os.path.splitext(os.path.basename(hdr_path))[0]
+
+        # compute 20 overlapping patches
+        # 256 x 256
+        patches = {
+            1 : img[0:256,   0:256, :],
+            2 : img[0:256,   187:443, :],
+            3 : img[0:256,   374:630, :],
+            4 : img[0:256,   561:817, :],
+            5 : img[0:256,   748:1004, :],
+            6 : img[181:437,   0:256, :],
+            7 : img[181:437,   187:443, :],
+            8 : img[181:437,   374:630, :],
+            9 : img[181:437,   561:817, :],
+            10 : img[181:437,   748:1004, :],
+            11 : img[362:618,   0:256, :],
+            12 : img[362:618,   187:443, :],
+            13 : img[362:618,   374:630, :],
+            14 : img[362:618,   561:817, :],
+            15 : img[362:618,   748:1004, :],
+            16 : img[543:799,   0:256, :],
+            17 : img[543:799,   187:443, :],
+            18 : img[543:799,   374:630, :],
+            19 : img[543:799,   561:817, :],
+            20 : img[543:799,   748:1004, :]
+        }
+        print("Patches for hyperspectral image", i, "computed!")
+
+        # change H and W in metadata before saving new hdr and cube files
+        patch_metadata['lines'] = str(256)
+        patch_metadata['samples'] = str(256)
+        print("Hyperspectral image", i, "metadata amended for patches!")
+
+        # save the 20 patches with the correct metadata
+        for key, patch in patches.items():
+            out_hdr = os.path.join(dirname, f"{basename}_{key}.hdr")
+            # this automatically saves the patches with .img extensions even though 
+            # the original hyperspectral images don't have extensions
+            envi.save_image(out_hdr, patch.astype(np.float32), dtype=np.float32, force=True, interleave='bsq', metadata=patch_metadata)
+
+        print("Patches for hyperspectral image", i, "saved!")
+
+
+    def patch_rgb(image_path, i=0):
+        i += 1
+        rgb = Image.open(image_path)
+        W, H = rgb.size
+
+        dirname = os.path.dirname(image_path)
+        basename = os.path.splitext(os.path.basename(image_path))[0]
+
+        # compute 20 overlapping patches
+        # 256 x 256
+
+        patches = {
+            1 : rgb.crop((0,   0,   256,   256)),
+            2 : rgb.crop((0, 187, 443, 256)),
+            3 : rgb.crop((0, 374, 630, 256)),
+            4 : rgb.crop((0, 561, 817, 256)),
+            5 : rgb.crop((0, 748, 1004, 256)),
+            6 : rgb.crop((181, 0, 256, 437)),
+            7 : rgb.crop((181, 187, 443, 437)),
+            8 : rgb.crop((181, 374, 630, 437)),
+            9 : rgb.crop((181, 561, 817, 437)),
+            10 : rgb.crop((181, 748, 1004, 437)),
+            11 : rgb.crop((362, 0, 256, 618)),
+            12 : rgb.crop((362, 187, 443, 618)),
+            13 : rgb.crop((362, 374, 630, 618)),
+            14 : rgb.crop((362, 561, 817, 618)),
+            15 : rgb.crop((362, 748, 1004, 618)),
+            16 : rgb.crop((543, 0, 256, 799)),
+            17 : rgb.crop((543, 187, 443, 799)),
+            18 : rgb.crop((543, 374, 630, 799)),
+            19 : rgb.crop((543, 561, 817, 799)),
+            20 : rgb.crop((543, 748, 1004, 799))
+        }
+
+        # (1:4, 2:3)
+        # 1 2 3 4
+
+        print("Patches for rgb image", i, "computed!")
+
+        # save the 4 patches
+        for key, patch in patches.items():
+            out_png = os.path.join(dirname, f"{basename}_{key}.png")
+            patch.save(out_png)
+
+        print("Patches for rgb image", i, "saved!")
+
+
     def __getitem__(self, index):
         """Return a data point and its metadata information.
 
@@ -141,6 +241,10 @@ class HSIUnalignedDataset(BaseDataset):
             B_paths (str)    -- image paths
         """
         # make sure index is within range
+        
+        
+        # TODO: Change A and B paths to point to dataset of
+        # whole images rather than pre-patched
         A_path = self.A_paths[index % self.A_size]
         # use this B_path because I have paired (even if not perfectly) data
         # rather than totally unpaired data
@@ -175,8 +279,20 @@ class HSIUnalignedDataset(BaseDataset):
             #if A.shape[1:] != B.shape[1:]:
                 #raise ValueError(f"A and B have different spatial sizes: {A.shape} vs {B.shape}")
             if self.opt.isTrain:
-                A = self.random_crop(A, crop_size)
-                B = self.random_crop(B, crop_size)
+
+                if self.opt.patch_mode == 'overlapping':
+                    # extract overlapping patches online
+                    # insert patch_hsi.py logic in here
+                    # compute dictionary of 20 patches of hsi (A) and rgb (B)
+                    # will know what to do with these once I have heard back from Tiago
+                    # don't need to save them all to disk each time likein patch script?
+                    pass
+
+                else:
+                    # insert random crop logic here
+                    A = self.random_crop(A, crop_size)
+                    B = self.random_crop(B, crop_size)
+
             else:
                 # for testing we need to crop the same part of the hsi and rgb image pairs
                 top, left = self.get_centre_crop_coords(A, crop_size)
