@@ -130,102 +130,108 @@ class HSIUnalignedDataset(BaseDataset):
         return tensor[:, top:top + crop_size, left:left + crop_size]
 
     # compute overlapping 256x256 patches
-    def patch_hsi(hdr_path, i=0):
-        i+= 1
-        # load hyperspectral cube
-        img = open_image(hdr_path).load()
-        H, W, B = img.shape
-        patch_metadata = img.metadata.copy()
+    # called on both hsi and rgb images
+    def get_overlapping_patch(tensor, patch_num=None):
 
-        dirname = os.path.dirname(hdr_path)
-        basename = os.path.splitext(os.path.basename(hdr_path))[0]
+        # tensor has been transposed so: (C, H, W) rather than (H, W, C)
 
-        # compute 20 overlapping patches
+        # randomly select the index of the overlapping patch to use if not provided i.e. in training
+        if patch_num is None:
+            patch_num = random.randint(1, 20)
+
+        # compute the relevant patch
         # 256 x 256
-        patches = {
-            1 : img[0:256,   0:256, :],
-            2 : img[0:256,   187:443, :],
-            3 : img[0:256,   374:630, :],
-            4 : img[0:256,   561:817, :],
-            5 : img[0:256,   748:1004, :],
-            6 : img[181:437,   0:256, :],
-            7 : img[181:437,   187:443, :],
-            8 : img[181:437,   374:630, :],
-            9 : img[181:437,   561:817, :],
-            10 : img[181:437,   748:1004, :],
-            11 : img[362:618,   0:256, :],
-            12 : img[362:618,   187:443, :],
-            13 : img[362:618,   374:630, :],
-            14 : img[362:618,   561:817, :],
-            15 : img[362:618,   748:1004, :],
-            16 : img[543:799,   0:256, :],
-            17 : img[543:799,   187:443, :],
-            18 : img[543:799,   374:630, :],
-            19 : img[543:799,   561:817, :],
-            20 : img[543:799,   748:1004, :]
-        }
-        print("Patches for hyperspectral image", i, "computed!")
+        if patch_num == 1:
+            patch = tensor[:, 0:256,   0:256]
+        elif patch_num == 2:
+            patch = tensor[:, 0:256,   187:443]
+        elif patch_num == 3:
+            patch = tensor[:, 0:256,   374:630]
+        elif patch_num == 4:
+            patch = tensor[:, 0:256,   561:817]
+        elif patch_num == 5:
+            patch = tensor[:, 0:256,   748:1004]
+        elif patch_num == 6:
+            patch = tensor[:, 181:437,   0:256]
+        elif patch_num == 7:
+            patch = tensor[:, 181:437,   187:443]
+        elif patch_num == 8:
+            patch = tensor[:, 181:437,   374:630]
+        elif patch_num == 9:
+            patch = tensor[:, 181:437,   561:817]
+        elif patch_num == 10:
+            patch = tensor[:, 181:437,   748:1004]
+        elif patch_num == 11:
+            patch = tensor[:, 362:618,   0:256]
+        elif patch_num == 12:
+            patch = tensor[:, 362:618,   187:443]
+        elif patch_num == 13:
+            patch = tensor[:, 362:618,   374:630]
+        elif patch_num == 14:
+            patch = tensor[:, 362:618,   561:817]
+        elif patch_num == 15:
+            patch = tensor[:, 362:618,   748:1004]
+        elif patch_num == 16:
+            patch = tensor[:, 543:799,   0:256]
+        elif patch_num == 17:
+            patch = tensor[:, 543:799,   187:443]
+        elif patch_num == 18:
+            patch = tensor[:, 543:799,   374:630]
+        elif patch_num == 19:
+            patch = tensor[:, 543:799,   561:817]
+        else:
+            patch = tensor[:, 543:799,   748:1004]
+        
 
-        # change H and W in metadata before saving new hdr and cube files
-        patch_metadata['lines'] = str(256)
-        patch_metadata['samples'] = str(256)
-        print("Hyperspectral image", i, "metadata amended for patches!")
-
-        # save the 20 patches with the correct metadata
-        for key, patch in patches.items():
-            out_hdr = os.path.join(dirname, f"{basename}_{key}.hdr")
-            # this automatically saves the patches with .img extensions even though 
-            # the original hyperspectral images don't have extensions
-            envi.save_image(out_hdr, patch.astype(np.float32), dtype=np.float32, force=True, interleave='bsq', metadata=patch_metadata)
-
-        print("Patches for hyperspectral image", i, "saved!")
+        # return this tensor patch
+        return patch
 
 
-    def patch_rgb(image_path, i=0):
-        i += 1
-        rgb = Image.open(image_path)
-        W, H = rgb.size
+    def create_tissue_mask(image):
+        """
+        image: H x W x 3 (RGB), values in [0, 255]
+        returns: H x W binary mask (1 = tissue, 0 = background)
+        """
 
-        dirname = os.path.dirname(image_path)
-        basename = os.path.splitext(os.path.basename(image_path))[0]
+        # TODO: fix tensor compatibility
 
-        # compute 20 overlapping patches
-        # 256 x 256
+        # convert rgb image to grayscale using standard luminance formula
+        gray = (
+            0.299 * image[:, :, 0] +
+            0.587 * image[:, :, 1] +
+            0.114 * image[:, :, 2]
+        )
 
-        patches = {
-            1 : rgb.crop((0,   0,   256,   256)),
-            2 : rgb.crop((0, 187, 443, 256)),
-            3 : rgb.crop((0, 374, 630, 256)),
-            4 : rgb.crop((0, 561, 817, 256)),
-            5 : rgb.crop((0, 748, 1004, 256)),
-            6 : rgb.crop((181, 0, 256, 437)),
-            7 : rgb.crop((181, 187, 443, 437)),
-            8 : rgb.crop((181, 374, 630, 437)),
-            9 : rgb.crop((181, 561, 817, 437)),
-            10 : rgb.crop((181, 748, 1004, 437)),
-            11 : rgb.crop((362, 0, 256, 618)),
-            12 : rgb.crop((362, 187, 443, 618)),
-            13 : rgb.crop((362, 374, 630, 618)),
-            14 : rgb.crop((362, 561, 817, 618)),
-            15 : rgb.crop((362, 748, 1004, 618)),
-            16 : rgb.crop((543, 0, 256, 799)),
-            17 : rgb.crop((543, 187, 443, 799)),
-            18 : rgb.crop((543, 374, 630, 799)),
-            19 : rgb.crop((543, 561, 817, 799)),
-            20 : rgb.crop((543, 748, 1004, 799))
-        }
+        # normalize to [0, 1]
+        gray = gray / 255.0
 
-        # (1:4, 2:3)
-        # 1 2 3 4
+        # threshold
+        # grayscale white value = 1
+        # any pixels with grayscale values < 0.85 will be classified as tissue
+        # any pixels with grayscale values >= 0.85 are light, so background
+        threshold = 0.85
 
-        print("Patches for rgb image", i, "computed!")
+        # tissue = darker pixels = closer to 0
+        mask = (gray < threshold).astype(np.uint8)
 
-        # save the 4 patches
-        for key, patch in patches.items():
-            out_png = os.path.join(dirname, f"{basename}_{key}.png")
-            patch.save(out_png)
+        # pixelwise binary mask classifying every pixel in the image as either
+        # tissue (1) or background (0)
+        # i.e. tissue is white, background is black
+        # mask is an array of 1s and 0s
+        return mask
 
-        print("Patches for rgb image", i, "saved!")
+
+    # called on hsi and rgb images
+    def segment_image(mask, image):
+
+        # TODO: work out if wanting to apply mask to images or use to filter random patch choice
+
+        # tissue pixels are unchanged
+        # background pixels are multiplied by 0 so become black
+        masked_image = image * mask[:, :, None]
+
+        # return segmented image
+        return masked_image
 
 
     def __getitem__(self, index):
@@ -259,6 +265,9 @@ class HSIUnalignedDataset(BaseDataset):
         
         B_path = self.B_paths[index_B]
 
+        # use load_hsi function because this includes transposing tensors from (H, W, C) to (C, H, W) so it is compatable with PyTorch
+        A = self.load_hsi(A_path)
+        B = self.load_hsi(B_path)
 
         # commented this part out for now
         # reducing late-stage randomness in CUT/CycleGAN, if in finetuning phase (learning rate is decaying)
@@ -267,34 +276,33 @@ class HSIUnalignedDataset(BaseDataset):
         # modified_opt = util.copyconf(self.opt, load_size=self.opt.crop_size if is_finetuning else self.opt.load_size)
         # transform = get_transform(modified_opt)
 
-        # replacing transforms with calls to load_hsi() and load_rgb() functions - transforms were carried out in these functions
         
-        A = self.load_hsi(A_path)
-        B = self.load_rgb(B_path)
-
         crop_size = self.opt.crop_size
 
         try:
-            # safety check to make sure patches A and B are the same size
-            #if A.shape[1:] != B.shape[1:]:
-                #raise ValueError(f"A and B have different spatial sizes: {A.shape} vs {B.shape}")
+            # training - get patches independently from A and B for unpaired training
             if self.opt.isTrain:
 
                 if self.opt.patch_mode == 'overlapping':
-                    # extract overlapping patches online
-                    # insert patch_hsi.py logic in here
-                    # compute dictionary of 20 patches of hsi (A) and rgb (B)
-                    # will know what to do with these once I have heard back from Tiago
-                    # don't need to save them all to disk each time likein patch script?
-                    pass
+                    A = self.overlapping_patch(A)
+                    B = self.get_overlapping_patch(B)
 
                 else:
+                    # insert background segmentation logic here
+                    # write a helper function to segment out the background of an image and return the foreground
+                    # need to work out background mask on rgb image and then apply to hsi too
                     # insert random crop logic here
+                    # need to add logic to random crop function to only take crops when whole patch size is filled
+                    # i.e. not from parts of the image segmented out
                     A = self.random_crop(A, crop_size)
                     B = self.random_crop(B, crop_size)
 
+                    # can include in here to use centre_crop in decay phase of training
+
             else:
-                # for testing we need to crop the same part of the hsi and rgb image pairs
+                # testing
+                # patch the same part of the hsi and rgb image pairs
+                # which patching strategy am I using here?
                 top, left = self.get_centre_crop_coords(A, crop_size)
                 
                 A = self.apply_crop(A, top, left, crop_size)
@@ -311,6 +319,7 @@ class HSIUnalignedDataset(BaseDataset):
             print("A shape:", A.shape)
             print("B shape:", B.shape)
 
+        # A is the hsi patch tensor - cropped part of a loaded hsi image
         return {'A': A,
                 'B': B,
                 'A_paths': A_path,
