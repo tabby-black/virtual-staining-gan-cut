@@ -101,8 +101,10 @@ class HSIUnalignedDataset(BaseDataset):
       img = np.transpose(img, (2, 0, 1))
       return torch.from_numpy(img)
 
+
     # helper function to random crop patches for training
     def random_crop(self, tensor, crop_size):
+        # PyTorch compatible tensor is (C, H, W)
         _, h, w = tensor.shape
 
         if h < crop_size or w < crop_size:
@@ -110,7 +112,19 @@ class HSIUnalignedDataset(BaseDataset):
 
         top = random.randint(0, h - crop_size)
         left = random.randint(0, w - crop_size)
-        return tensor[:, top:top + crop_size, left:left + crop_size]
+        patch = tensor[:, top:top + crop_size, left:left + crop_size]
+
+        # use tissue mask to check if patch is >= 80% tissue
+        mask = self.create_tissue_mask(patch)
+
+        tissue_ratio = mask.mean()
+
+        if tissue_ratio < 0.8:
+            patch = self.random_crop(tensor, crop_size)
+
+        # return a patch that is >= 80% tissue
+        return patch
+
 
     # helper function to get centre crop coords for testing
     # these coords will then be used to crop both A and B
@@ -124,6 +138,8 @@ class HSIUnalignedDataset(BaseDataset):
         left = (w - crop_size) // 2
         
         return top, left
+    
+    
     # helper function to apply a centre crop for testing
     # allows same coordinates to be used to crop A and B patches
     def apply_crop(self, tensor, top, left, crop_size):
@@ -189,17 +205,17 @@ class HSIUnalignedDataset(BaseDataset):
 
     def create_tissue_mask(image):
         """
-        image: H x W x 3 (RGB), values in [0, 255]
+        image: 3 x H x W (RGB), values in [0, 255]
         returns: H x W binary mask (1 = tissue, 0 = background)
         """
 
-        # TODO: fix tensor compatibility
+        # tensor is (C, H, W)
 
         # convert rgb image to grayscale using standard luminance formula
         gray = (
-            0.299 * image[:, :, 0] +
-            0.587 * image[:, :, 1] +
-            0.114 * image[:, :, 2]
+            0.299 * image[0, :, :] +
+            0.587 * image[1, :, :] +
+            0.114 * image[2, :, :]
         )
 
         # normalize to [0, 1]
@@ -219,19 +235,6 @@ class HSIUnalignedDataset(BaseDataset):
         # i.e. tissue is white, background is black
         # mask is an array of 1s and 0s
         return mask
-
-
-    # called on hsi and rgb images
-    def segment_image(mask, image):
-
-        # TODO: work out if wanting to apply mask to images or use to filter random patch choice
-
-        # tissue pixels are unchanged
-        # background pixels are multiplied by 0 so become black
-        masked_image = image * mask[:, :, None]
-
-        # return segmented image
-        return masked_image
 
 
     def __getitem__(self, index):
@@ -284,16 +287,13 @@ class HSIUnalignedDataset(BaseDataset):
             if self.opt.isTrain:
 
                 if self.opt.patch_mode == 'overlapping':
+                    # randomly choose 1 of 20 overlapping patches per image
                     A = self.overlapping_patch(A)
                     B = self.get_overlapping_patch(B)
 
                 else:
-                    # insert background segmentation logic here
-                    # write a helper function to segment out the background of an image and return the foreground
-                    # need to work out background mask on rgb image and then apply to hsi too
-                    # insert random crop logic here
-                    # need to add logic to random crop function to only take crops when whole patch size is filled
-                    # i.e. not from parts of the image segmented out
+                    # segment out background and randomly crop a patch from the tissue
+                    # random_crop calls create_tissue_mask to ensure the random patch it returns is >= 80% tissue
                     A = self.random_crop(A, crop_size)
                     B = self.random_crop(B, crop_size)
 
@@ -302,7 +302,9 @@ class HSIUnalignedDataset(BaseDataset):
             else:
                 # testing
                 # patch the same part of the hsi and rgb image pairs
-                # which patching strategy am I using here?
+                # use overlapping patching strategy and test on all overlapping pairs
+
+                
                 top, left = self.get_centre_crop_coords(A, crop_size)
                 
                 A = self.apply_crop(A, top, left, crop_size)
