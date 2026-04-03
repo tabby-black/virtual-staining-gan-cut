@@ -91,7 +91,7 @@ hdr_test_files = sorted(glob.glob(os.path.join(test_directory, "*.hdr")))
 
 for fname in hdr_test_files:
     #hdr_path = os.path.join(test_directory, fname)
-    patch_hsi(hdr_test_files)
+    patch_hsi(fname)
 
 
 # patch rgb images
