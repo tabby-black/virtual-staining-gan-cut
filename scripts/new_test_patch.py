@@ -86,7 +86,7 @@ def patch_rgb(image_path, i=0):
 
 # patch hsi images
 # call this function on all images in testA - using glob
-test_directory = "datasets/histology/testA"
+test_directory = "datasets/histology_full/testA"
 hdr_test_files = sorted(glob.glob(os.path.join(test_directory, "*.hdr")))
 
 for fname in hdr_test_files:
@@ -96,7 +96,7 @@ for fname in hdr_test_files:
 
 # patch rgb images
 # call this function on all images in testB - using glob
-test_directory = "datasets/histology/testB"
+test_directory = "datasets/histology_full/testB"
 png_test_files = sorted(glob.glob(os.path.join(test_directory, "*.png")))
 
 for png in png_test_files:
