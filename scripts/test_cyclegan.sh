@@ -3,5 +3,5 @@ set -ex
 
 # test command to test model with weights from 5th epoch
 # CHANGE THIS LINE
-python test.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_bs8 --gpu_ids 0 --epoch str(ep) --num_threads 0 --preprocess resize_and_crop --load_size 286 --batch_size 1 --crop_size 256 --no_dropout
+python test.py --dataroot ./datasets/histology --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run1 --gpu_ids 1 --epoch str(ep) --num_threads 0 --preprocess resize_and_crop --load_size 286 --batch_size 1 --crop_size 256 --no_dropout
 # --CUT_mode CUT
