@@ -19,17 +19,19 @@ def patch_hsi(hdr_path, i=0):
     dirname = os.path.dirname(hdr_path)
     basename = os.path.splitext(os.path.basename(hdr_path))[0]
 
+    # H, W, C
+
     # compute 12 non-overlapping patches
     patches = {
-        1 : img[0:256, 0:256, :],
-        2 : img[0:256, 256:512, :],
-        3 : img[0:256, 512:778, :],
-        4 : img[0:256, 778:1004, :],
-        5: img[256:512, 0:256, :],
-        6: img[256:512, 256:512, :],
-        7: img[256:512, 512:778, :],
-        8: img[256:512, 778:1004, :],
-        9: img[512:778, 0:256, :]
+        1 : img[16:272, 118:374, :],
+        2 : img[16:272, 374:630, :],
+        3 : img[16:272, 630:886, :],
+        4 : img[272:528, 118:374, :],
+        5: img[272:528, 374:630, :],
+        6: img[272:528, 630:886, :],
+        7: img[528:784, 118:374, :],
+        8: img[528:784, 374:630, :],
+        9: img[528:784, 630:886, :]
     }
 
   
@@ -60,15 +62,15 @@ def patch_rgb(image_path, i=0):
     # compute 12 non-overlapping patches
     # (left, upper, right, lower)
     patches = {
-        1 : rgb.crop((0, 0, 256, 256)),
-        2 : rgb.crop((256, 0, 512, 256)),
-        3 : rgb.crop((512, 0, 768, 256)),
-        4 : rgb.crop((0, 256, 256, 512, )),
-        5: rgb.crop((256, 256, 512, 512)),
-        6: rgb.crop((512, 256, 768, 512)),
-        7: rgb.crop((0, 512, 256, 768)),
-        8: rgb.crop((256, 512, 512, 768)),
-        9: rgb.crop((512, 512, 768, 768))
+        1 : rgb.crop((118, 16, 374, 272)),
+        2 : rgb.crop((374, 16, 630, 272)),
+        3 : rgb.crop((630, 16, 886, 272)),
+        4 : rgb.crop((118, 272, 374, 528, )),
+        5: rgb.crop((374, 272, 630, 528)),
+        6: rgb.crop((630, 272, 886, 528)),
+        7: rgb.crop((118, 528, 374, 784)),
+        8: rgb.crop((374, 528, 630, 784)),
+        9: rgb.crop((630, 528, 886, 784))
     }
 
     print("Patches for rgb image", i, "computed!")
