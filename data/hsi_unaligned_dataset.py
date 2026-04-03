@@ -102,6 +102,40 @@ class HSIUnalignedDataset(BaseDataset):
       return torch.from_numpy(img)
 
 
+    def create_tissue_mask(image):
+        """
+        image: 3 x H x W (RGB), values in [0, 255]
+        returns: H x W binary mask (1 = tissue, 0 = background)
+        """
+
+        # tensor is (C, H, W)
+
+        # convert rgb image to grayscale using standard luminance formula
+        gray = (
+            0.299 * image[0, :, :] +
+            0.587 * image[1, :, :] +
+            0.114 * image[2, :, :]
+        )
+
+        # normalize to [0, 1]
+        gray = gray / 255.0
+
+        # threshold
+        # grayscale white value = 1
+        # any pixels with grayscale values < 0.85 will be classified as tissue
+        # any pixels with grayscale values >= 0.85 are light, so background
+        threshold = 0.85
+
+        # tissue = darker pixels = closer to 0
+        mask = (gray < threshold).astype(np.uint8)
+
+        # pixelwise binary mask classifying every pixel in the image as either
+        # tissue (1) or background (0)
+        # i.e. tissue is white, background is black
+        # mask is an array of 1s and 0s
+        return mask
+
+
     # helper function to random crop patches for training
     def random_crop(self, tensor, crop_size):
         # PyTorch compatible tensor is (C, H, W)
@@ -147,7 +181,7 @@ class HSIUnalignedDataset(BaseDataset):
 
     # compute overlapping 256x256 patches
     # called on both hsi and rgb images
-    def get_overlapping_patch(tensor, patch_num=None):
+    def get_overlapping_patch(self, tensor, patch_num=None):
 
         # tensor has been transposed so: (C, H, W) rather than (H, W, C)
 
@@ -198,43 +232,16 @@ class HSIUnalignedDataset(BaseDataset):
         else:
             patch = tensor[:, 543:799,   748:1004]
         
+        # use tissue mask to check if patch is >= 80% tissue
+        mask = self.create_tissue_mask(patch)
+
+        tissue_ratio = mask.mean()
+
+        if tissue_ratio < 0.8:
+            patch = self.get_overlapping_patch(tensor)
 
         # return this tensor patch
         return patch
-
-
-    def create_tissue_mask(image):
-        """
-        image: 3 x H x W (RGB), values in [0, 255]
-        returns: H x W binary mask (1 = tissue, 0 = background)
-        """
-
-        # tensor is (C, H, W)
-
-        # convert rgb image to grayscale using standard luminance formula
-        gray = (
-            0.299 * image[0, :, :] +
-            0.587 * image[1, :, :] +
-            0.114 * image[2, :, :]
-        )
-
-        # normalize to [0, 1]
-        gray = gray / 255.0
-
-        # threshold
-        # grayscale white value = 1
-        # any pixels with grayscale values < 0.85 will be classified as tissue
-        # any pixels with grayscale values >= 0.85 are light, so background
-        threshold = 0.85
-
-        # tissue = darker pixels = closer to 0
-        mask = (gray < threshold).astype(np.uint8)
-
-        # pixelwise binary mask classifying every pixel in the image as either
-        # tissue (1) or background (0)
-        # i.e. tissue is white, background is black
-        # mask is an array of 1s and 0s
-        return mask
 
 
     def __getitem__(self, index):
@@ -288,7 +295,8 @@ class HSIUnalignedDataset(BaseDataset):
 
                 if self.opt.patch_mode == 'overlapping':
                     # randomly choose 1 of 20 overlapping patches per image
-                    A = self.overlapping_patch(A)
+                    # get_overlapping_patch calls create_tissue_mask to ensure the random patch it returns is >= 80% tissue
+                    A = self.get_overlapping_patch(A)
                     B = self.get_overlapping_patch(B)
 
                 else:
@@ -304,7 +312,7 @@ class HSIUnalignedDataset(BaseDataset):
                 # patch the same part of the hsi and rgb image pairs
                 # use overlapping patching strategy and test on all overlapping pairs
 
-                
+
                 top, left = self.get_centre_crop_coords(A, crop_size)
                 
                 A = self.apply_crop(A, top, left, crop_size)
