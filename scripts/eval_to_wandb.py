@@ -100,7 +100,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--name", experiment_name,
         "--dataroot", dataroot,
         "--CUT_mode", "CUT",
-        "--model", "cycle_gan",
+        #"--model", "cycle_gan",
         "--dataset_mode", "hsi_unaligned",
         "--gpu_ids", "1",
         "--epoch", str(ep),
