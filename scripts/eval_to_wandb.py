@@ -99,7 +99,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "python", "-u", "test.py",
         "--name", experiment_name,
         "--dataroot", dataroot,
-        #"--CUT_mode", "CUT",
+        "--CUT_mode", "CUT",
         "--model", "cycle_gan",
         "--dataset_mode", "hsi_unaligned",
         "--gpu_ids", "1",
