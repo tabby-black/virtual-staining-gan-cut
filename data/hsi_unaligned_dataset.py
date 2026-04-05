@@ -286,71 +286,6 @@ class HSIUnalignedDataset(BaseDataset):
 
         # return this tensor patch
         return best_hsi
-    
-
-    def overlapping_patch_rgb(self, rgb_tensor, patch_num=None):
-
-        # tensor has been transposed so: (C, H, W) rather than (H, W, C)
-
-        # randomly select the index of the overlapping patch to use if not provided i.e. in training
-        if patch_num is None:
-            patch_num = random.randint(1, 20)
-
-
-
-        # compute the relevant patch
-        # 256 x 256
-        if patch_num == 1:
-            rgb_patch = rgb_tensor[:, 0:256,   0:256]
-        elif patch_num == 2:
-            rgb_patch = rgb_tensor[:, 0:256,   187:443]
-        elif patch_num == 3:
-            rgb_patch = rgb_tensor[:, 0:256,   374:630]
-        elif patch_num == 4:
-            rgb_patch = rgb_tensor[:, 0:256,   561:817]
-        elif patch_num == 5:
-            rgb_patch = rgb_tensor[:, 0:256,   748:1004]
-        elif patch_num == 6:
-            rgb_patch = rgb_tensor[:, 181:437,   0:256]
-        elif patch_num == 7:
-            rgb_patch = rgb_tensor[:, 181:437,   187:443]
-        elif patch_num == 8:
-            rgb_patch = rgb_tensor[:, 181:437,   374:630]
-        elif patch_num == 9:
-            rgb_patch = rgb_tensor[:, 181:437,   561:817]
-        elif patch_num == 10:
-            rgb_patch = rgb_tensor[:, 181:437,   748:1004]
-        elif patch_num == 11:
-            rgb_patch = rgb_tensor[:, 362:618,   0:256]
-        elif patch_num == 12:
-            rgb_patch = rgb_tensor[:, 362:618,   187:443]
-        elif patch_num == 13:
-            rgb_patch = rgb_tensor[:, 362:618,   374:630]
-        elif patch_num == 14:
-            rgb_patch = rgb_tensor[:, 362:618,   561:817]
-        elif patch_num == 15:
-            rgb_patch = rgb_tensor[:, 362:618,   748:1004]
-        elif patch_num == 16:
-            rgb_patch = rgb_tensor[:, 543:799,   0:256]
-        elif patch_num == 17:
-            rgb_patch = rgb_tensor[:, 543:799,   187:443]
-        elif patch_num == 18:
-            rgb_patch = rgb_tensor[:, 543:799,   374:630]
-        elif patch_num == 19:
-            rgb_patch = rgb_tensor[:, 543:799,   561:817]
-        else:
-            rgb_patch = rgb_tensor[:, 543:799,   748:1004]
-        
-        # use tissue mask on RGB to check if patch is >= 80% tissue
-        mask = self.create_tissue_mask(rgb_patch)
-
-        tissue_ratio = mask.mean()
-
-        if tissue_ratio < 0.8:
-            rgb_patch = self.overlapping_patch_rgb(rgb_tensor)
-
-        # return this tensor patch
-        return rgb_patch
 
 
     def overlapping_patch_rgb(self, rgb_tensor, patch_num=None, max_tries=50):
@@ -408,7 +343,7 @@ class HSIUnalignedDataset(BaseDataset):
        
         # use the index of the overlapping patch to use if provided i.e. in late training
         if patch_num is not None:
-            _, hsi_patch = extract_patch(patch_num)
+            rgb_patch = extract_patch(patch_num)
 
         # bounded retry loop instead of recursion
         for i in range(max_tries):
