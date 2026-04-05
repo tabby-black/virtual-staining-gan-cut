@@ -267,6 +267,7 @@ class HSIUnalignedDataset(BaseDataset):
         # use the index of the overlapping patch to use if provided i.e. in late training
         if patch_num is not None:
             _, hsi_patch = extract_patch(patch_num)
+            return hsi_patch
 
         # bounded retry loop instead of recursion
         for i in range(max_tries):
@@ -344,6 +345,7 @@ class HSIUnalignedDataset(BaseDataset):
         # use the index of the overlapping patch to use if provided i.e. in late training
         if patch_num is not None:
             rgb_patch = extract_patch(patch_num)
+            return rgb_patch
 
         # bounded retry loop instead of recursion
         for i in range(max_tries):
