@@ -140,31 +140,37 @@ class HSIUnalignedDataset(BaseDataset):
 
 
     # helper function to random crop patches for training
-    def get_random_crop_coords(self, tensor, crop_size):
-        # PyTorch compatible tensor is (C, H, W)
+    def get_random_crop_coords(self, tensor, crop_size, threshold=0.8, max_tries=50):
         _, h, w = tensor.shape
 
         if h < crop_size or w < crop_size:
             raise ValueError(f"Crop size {crop_size} is larger than image size {(h, w)}")
 
-        top = random.randint(0, h - crop_size)
-        left = random.randint(0, w - crop_size)
-        patch = tensor[:, top:top + crop_size, left:left + crop_size]
+        best_top, best_left = None, None
+        best_ratio = -1.0
 
-        # use tissue mask to check if patch is >= 80% tissue
-        mask = self.create_tissue_mask(patch)
+        for _ in range(max_tries):
+            top = random.randint(0, h - crop_size)
+            left = random.randint(0, w - crop_size)
+            patch = tensor[:, top:top + crop_size, left:left + crop_size]
 
-        tissue_ratio = mask.mean()
+            mask = self.create_tissue_mask(patch)
+            tissue_ratio = mask.mean().item()
 
-        if tissue_ratio < 0.8:
-            top, left = self.get_random_crop_coords(tensor, crop_size)
+            if tissue_ratio > best_ratio:
+                best_ratio = tissue_ratio
+                best_top, best_left = top, left
 
-        # return coordinates that give a RGB patch that is >= 80% tissue
-        return top, left
+            if tissue_ratio >= threshold:
+                return top, left
+
+        # fallback: return the best patch found
+        return best_top, best_left
 
 
     # helper function to get centre crop coords for testing
     # these coords will then be used to crop both A and B
+    # may need to prevent recursion errors in here too
     def get_centre_crop_coords(self, tensor, crop_size):
         _, h, w = tensor.shape
         
@@ -185,87 +191,101 @@ class HSIUnalignedDataset(BaseDataset):
 
     # compute overlapping 256x256 patches
     # called on both hsi and rgb images
-    def overlapping_patch_hsi(self, hsi_tensor, rgb_tensor, patch_num=None):
+    def overlapping_patch_hsi(self, hsi_tensor, rgb_tensor, patch_num=None, max_tries=50):
 
         # tensor has been transposed so: (C, H, W) rather than (H, W, C)
-
-        # randomly select the index of the overlapping patch to use if not provided i.e. in training
-        if patch_num is None:
-            patch_num = random.randint(1, 20)
-
-        # compute the relevant patch
-        # 256 x 256
-        if patch_num == 1:
-            rgb_patch = rgb_tensor[:, 0:256,   0:256]
-            hsi_patch = hsi_tensor[:, 0:256,   0:256]
-        elif patch_num == 2:
-            rgb_patch = rgb_tensor[:, 0:256,   187:443]
-            hsi_patch = hsi_tensor[:, 0:256,   187:443]
-        elif patch_num == 3:
-            rgb_patch = rgb_tensor[:, 0:256,   374:630]
-            hsi_patch = hsi_tensor[:, 0:256,   374:630]
-        elif patch_num == 4:
-            rgb_patch = rgb_tensor[:, 0:256,   561:817]
-            hsi_patch = hsi_tensor[:, 0:256,   561:817]
-        elif patch_num == 5:
-            rgb_patch = rgb_tensor[:, 0:256,   748:1004]
-            hsi_patch = hsi_tensor[:, 0:256,   748:1004]
-        elif patch_num == 6:
-            rgb_patch = rgb_tensor[:, 181:437,   0:256]
-            hsi_patch = hsi_tensor[:, 181:437,   0:256]
-        elif patch_num == 7:
-            rgb_patch = rgb_tensor[:, 181:437,   187:443]
-            hsi_patch = hsi_tensor[:, 181:437,   187:443]
-        elif patch_num == 8:
-            rgb_patch = rgb_tensor[:, 181:437,   374:630]
-            hsi_patch = hsi_tensor[:, 181:437,   374:630]
-        elif patch_num == 9:
-            rgb_patch = rgb_tensor[:, 181:437,   561:817]
-            hsi_patch = hsi_tensor[:, 181:437,   561:817]
-        elif patch_num == 10:
-            rgb_patch = rgb_tensor[:, 181:437,   748:1004]
-            hsi_patch = hsi_tensor[:, 181:437,   748:1004]
-        elif patch_num == 11:
-            rgb_patch = rgb_tensor[:, 362:618,   0:256]
-            hsi_patch = hsi_tensor[:, 362:618,   0:256]
-        elif patch_num == 12:
-            rgb_patch = rgb_tensor[:, 362:618,   187:443]
-            hsi_patch = hsi_tensor[:, 362:618,   187:443]
-        elif patch_num == 13:
-            rgb_patch = rgb_tensor[:, 362:618,   374:630]
-            hsi_patch = hsi_tensor[:, 362:618,   374:630]
-        elif patch_num == 14:
-            rgb_patch = rgb_tensor[:, 362:618,   561:817]
-            hsi_patch = hsi_tensor[:, 362:618,   561:817]
-        elif patch_num == 15:
-            rgb_patch = rgb_tensor[:, 362:618,   748:1004]
-            hsi_patch = hsi_tensor[:, 362:618,   748:1004]
-        elif patch_num == 16:
-            rgb_patch = rgb_tensor[:, 543:799,   0:256]
-            hsi_patch = hsi_tensor[:, 543:799,   0:256]
-        elif patch_num == 17:
-            rgb_patch = rgb_tensor[:, 543:799,   187:443]
-            hsi_patch = hsi_tensor[:, 543:799,   187:443]
-        elif patch_num == 18:
-            rgb_patch = rgb_tensor[:, 543:799,   374:630]
-            hsi_patch = hsi_tensor[:, 543:799,   374:630]
-        elif patch_num == 19:
-            rgb_patch = rgb_tensor[:, 543:799,   561:817]
-            hsi_patch = hsi_tensor[:, 543:799,   561:817]
-        else:
-            rgb_patch = rgb_tensor[:, 543:799,   748:1004]
-            hsi_patch = hsi_tensor[:, 543:799,   748:1004]
         
-        # use tissue mask on RGB to check if patch is >= 80% tissue
-        mask = self.create_tissue_mask(rgb_patch)
+        def extract_patch(num):
+            # compute the relevant patch
+            # 256 x 256
+            if num == 1:
+                rgb_patch = rgb_tensor[:, 0:256,   0:256]
+                hsi_patch = hsi_tensor[:, 0:256,   0:256]
+            elif num == 2:
+                rgb_patch = rgb_tensor[:, 0:256,   187:443]
+                hsi_patch = hsi_tensor[:, 0:256,   187:443]
+            elif num == 3:
+                rgb_patch = rgb_tensor[:, 0:256,   374:630]
+                hsi_patch = hsi_tensor[:, 0:256,   374:630]
+            elif num == 4:
+                rgb_patch = rgb_tensor[:, 0:256,   561:817]
+                hsi_patch = hsi_tensor[:, 0:256,   561:817]
+            elif num == 5:
+                rgb_patch = rgb_tensor[:, 0:256,   748:1004]
+                hsi_patch = hsi_tensor[:, 0:256,   748:1004]
+            elif num == 6:
+                rgb_patch = rgb_tensor[:, 181:437,   0:256]
+                hsi_patch = hsi_tensor[:, 181:437,   0:256]
+            elif num == 7:
+                rgb_patch = rgb_tensor[:, 181:437,   187:443]
+                hsi_patch = hsi_tensor[:, 181:437,   187:443]
+            elif num == 8:
+                rgb_patch = rgb_tensor[:, 181:437,   374:630]
+                hsi_patch = hsi_tensor[:, 181:437,   374:630]
+            elif num == 9:
+                rgb_patch = rgb_tensor[:, 181:437,   561:817]
+                hsi_patch = hsi_tensor[:, 181:437,   561:817]
+            elif num == 10:
+                rgb_patch = rgb_tensor[:, 181:437,   748:1004]
+                hsi_patch = hsi_tensor[:, 181:437,   748:1004]
+            elif num == 11:
+                rgb_patch = rgb_tensor[:, 362:618,   0:256]
+                hsi_patch = hsi_tensor[:, 362:618,   0:256]
+            elif num == 12:
+                rgb_patch = rgb_tensor[:, 362:618,   187:443]
+                hsi_patch = hsi_tensor[:, 362:618,   187:443]
+            elif num == 13:
+                rgb_patch = rgb_tensor[:, 362:618,   374:630]
+                hsi_patch = hsi_tensor[:, 362:618,   374:630]
+            elif num == 14:
+                rgb_patch = rgb_tensor[:, 362:618,   561:817]
+                hsi_patch = hsi_tensor[:, 362:618,   561:817]
+            elif num == 15:
+                rgb_patch = rgb_tensor[:, 362:618,   748:1004]
+                hsi_patch = hsi_tensor[:, 362:618,   748:1004]
+            elif num == 16:
+                rgb_patch = rgb_tensor[:, 543:799,   0:256]
+                hsi_patch = hsi_tensor[:, 543:799,   0:256]
+            elif num == 17:
+                rgb_patch = rgb_tensor[:, 543:799,   187:443]
+                hsi_patch = hsi_tensor[:, 543:799,   187:443]
+            elif num == 18:
+                rgb_patch = rgb_tensor[:, 543:799,   374:630]
+                hsi_patch = hsi_tensor[:, 543:799,   374:630]
+            elif num == 19:
+                rgb_patch = rgb_tensor[:, 543:799,   561:817]
+                hsi_patch = hsi_tensor[:, 543:799,   561:817]
+            else:
+                rgb_patch = rgb_tensor[:, 543:799,   748:1004]
+                hsi_patch = hsi_tensor[:, 543:799,   748:1004]
+            
+            return rgb_patch, hsi_patch
+        
+        best_hsi = None
+        best_ratio = -1.0
+       
+        # use the index of the overlapping patch to use if provided i.e. in late training
+        if patch_num is not None:
+            _, hsi_patch = extract_patch(patch_num)
 
-        tissue_ratio = mask.mean()
+        # bounded retry loop instead of recursion
+        for i in range(max_tries):
+            num = random.randint(1, 20)
+            rgb_patch, hsi_patch = extract_patch(num)
 
-        if tissue_ratio < 0.8:
-            hsi_patch = self.overlapping_patch_hsi(hsi_tensor, rgb_tensor)
+            # use tissue mask on RGB to check if patch is >= 80% tissue
+            mask = self.create_tissue_mask(rgb_patch)
+            tissue_ratio = mask.mean()
+
+            if tissue_ratio > best_ratio:
+                best_ratio = tissue_ratio
+                best_hsi = hsi_patch
+
+            if tissue_ratio < 0.8:
+                return hsi_patch
 
         # return this tensor patch
-        return hsi_patch
+        return best_hsi
     
 
     def overlapping_patch_rgb(self, rgb_tensor, patch_num=None):
