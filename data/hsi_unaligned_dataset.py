@@ -55,10 +55,11 @@ class HSIUnalignedDataset(BaseDataset):
 
         # load images from '/path/to/data/trainA'
         # don't use make_dataset() because this only loads certain file types
+        # this might need to be redone for testing
         self.A_paths = sorted([
             os.path.join(self.dir_A, f)
             for f in os.listdir(self.dir_A)
-            if f.endswith(".img")
+            if not f.endswith(".hdr") and not f.startswith(".")
         ])
         # load images from '/path/to/data/trainB'
         self.B_paths = sorted(make_dataset(self.dir_B, opt.max_dataset_size))
@@ -73,23 +74,28 @@ class HSIUnalignedDataset(BaseDataset):
     # load rgb images in the same way we load hyperspectral images for consistency - e.g. transposee explicitly rather than inside ToTensor()
     # be explicit about replacing .img with .hdr to ensure that spectral is loading the cube from the .hdr path not the .img path - this won't work
     def load_hsi(self, img_path):
-      """
-      Load ENVI hyperspectral cube
-      returns tensor (C, H, W) - ie. tensor transposed to meet convention PyTorch expects
-      """
-      hdr_path = img_path.replace(".img", ".hdr")
+        """
+        Load ENVI hyperspectral cube
+        returns tensor (C, H, W) - ie. tensor transposed to meet convention PyTorch expects
+        """
+        # in the case of pre-patched test images
+        if img_path.endswith(".img"):
+            hdr_path = img_path.replace(".img", ".hdr")
+        # in the case of whole training images
+        else:
+            hdr_path = img_path + ".hdr"
 
-      # add an error message to notify if there is a missing .hdr file
-      if not os.path.exists(hdr_path):
-          raise FileNotFoundError(f"Missing .hdr file for {img_path}")
+        # add an error message to notify if there is a missing .hdr file
+        if not os.path.exists(hdr_path):
+            raise FileNotFoundError(f"Missing .hdr file for {img_path}")
           
-      cube = open_image(hdr_path).load()
-      # make cube float and writable
-      cube = cube.astype(np.float32, copy=True)
+        cube = open_image(hdr_path).load()
+        # make cube float and writable
+        cube = cube.astype(np.float32, copy=True)
       
-      cube = np.transpose(cube, (2, 0, 1)) # (C, H, W)
+        cube = np.transpose(cube, (2, 0, 1)) # (C, H, W)
       
-      return torch.from_numpy(cube)
+        return torch.from_numpy(cube)
       
 
     def load_rgb(self, path):
