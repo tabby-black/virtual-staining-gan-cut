@@ -421,7 +421,7 @@ class HSIUnalignedDataset(BaseDataset):
 
             if tissue_ratio > best_ratio:
                 best_ratio = tissue_ratio
-                best_rgb = hsi_patch
+                best_rgb = rgb_patch
 
             if tissue_ratio < 0.8:
                 return rgb_patch
