@@ -191,7 +191,7 @@ class HSIUnalignedDataset(BaseDataset):
 
     # compute overlapping 256x256 patches
     # called on both hsi and rgb images
-    def overlapping_patch_hsi(self, hsi_tensor, rgb_tensor, patch_num=None, max_tries=5):
+    def overlapping_patch_hsi(self, hsi_tensor, rgb_tensor, patch_num=None, max_tries=50):
 
         # tensor has been transposed so: (C, H, W) rather than (H, W, C)
         
@@ -289,7 +289,7 @@ class HSIUnalignedDataset(BaseDataset):
         return best_hsi
 
 
-    def overlapping_patch_rgb(self, rgb_tensor, patch_num=None, max_tries=5):
+    def overlapping_patch_rgb(self, rgb_tensor, patch_num=None, max_tries=50):
 
         # tensor has been transposed so: (C, H, W) rather than (H, W, C)
         
