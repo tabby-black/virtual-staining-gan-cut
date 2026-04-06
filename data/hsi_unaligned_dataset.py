@@ -365,6 +365,18 @@ class HSIUnalignedDataset(BaseDataset):
 
         # return this tensor patch
         return best_rgb
+    
+
+    # at the moment using the same standard deviation as in a paper I found
+    def add_gaussian_noise(image, sigma=0.0001):
+        # image = (C, H, W)
+
+        noise = np.random.normal(loc=0.0, scale=sigma, size=image.shape)
+        noisy = image + noise
+        # clip back to range [0,1] to match data out of calibration
+        noisy = np.clip(noisy, 0.0, 1.0)
+
+        return noisy
 
 
     def __getitem__(self, index):
@@ -450,15 +462,16 @@ class HSIUnalignedDataset(BaseDataset):
                 # these augmentations are only sometimes applied
 
                 # random rotation - apply to both hsi and rgb 
+                # commented out for now because working on runs without augmentation
                 #k = np.random.randint(0,4)
                 #A = np.rot90(A, k)
                 #B = np.rot90(B, k)
 
                 # gaussian noise - apply to hsi only
                 # 50% chance that gaussian noise is applied
-                if np.random.rand() < 0.5:
-                    # need to implement a gaussian noise function
-                    A = add_gaussian_noise(A, sigma=0.001)
+                # commented out for now because working on runs without augmentation
+                #if np.random.rand() < 0.5:
+                    #A = self.add_gaussian_noise(A, sigma=0.001)
 
 
 

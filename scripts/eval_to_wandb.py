@@ -36,7 +36,7 @@ def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
 
     fake_names = sorted(os.listdir(fake_dir))
     
-    # amend calculation of evaluation metrics
+    # amended calculation of evaluation metrics
     # there are now 12 patches per testing image
     # evaluate ssim and psnr per image, then average to get scores for the dataset
     # store patch metrics grouped by original image
