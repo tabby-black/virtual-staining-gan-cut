@@ -31,7 +31,7 @@ class TrainOptions(BaseOptions):
 
         # training parameters
         # these are the parameters I want to optimise for the run I report on
-        # where is lambda_A and lambda_B
+        # where is lambda_A and lambda_B, and lambda_NCE
         parser.add_argument('--n_epochs', type=int, default=200, help='number of epochs with the initial learning rate')
         parser.add_argument('--n_epochs_decay', type=int, default=200, help='number of epochs to linearly decay learning rate to zero')
         parser.add_argument('--beta1', type=float, default=0.5, help='momentum term of adam')
