@@ -412,6 +412,7 @@ class HSIUnalignedDataset(BaseDataset):
 
         try:
             # training - get patches independently from A and B for unpaired training
+            # data augmentation is only applied to training patches
             if self.opt.isTrain:
                 
                 # reduce randomness in late stage training
@@ -444,6 +445,21 @@ class HSIUnalignedDataset(BaseDataset):
                         A = self.apply_crop(A, top, left, 256)
                         top, left = self.get_random_crop_coords(B, 256)
                         B = self.apply_crop(B, top, left, 256)
+
+                # implement data augmentation
+                # these augmentations are only sometimes applied
+
+                # random rotation - apply to both hsi and rgb 
+                #k = np.random.randint(0,4)
+                #A = np.rot90(A, k)
+                #B = np.rot90(B, k)
+
+                # gaussian noise - apply to hsi only
+                # 50% chance that gaussian noise is applied
+                if np.random.rand() < 0.5:
+                    # need to implement a gaussian noise function
+                    A = add_gaussian_noise(A, sigma=0.001)
+
 
 
             # testing
