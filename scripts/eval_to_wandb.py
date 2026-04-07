@@ -65,7 +65,7 @@ def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
         # group by original image
         # e.g. name = P12_ROI_01_C10_T_raw_preprocessed_7.img
         # e.g. stem = P12_ROI_01_C10_T_raw_preprocessed_7
-        stem = os.patch.splitext(name)[0]
+        stem = os.path.splitext(name)[0]
         # e.g. image_id = P12_ROI_01_C10_T_raw_preprocessed
         image_id = stem.rsplit("_", 1)[0]
 
