@@ -58,8 +58,9 @@ def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
             continue
         
         # compute patch-level metrics
-        patch_ssim = ssim(fake_img, real_img, channel_axis=channel_axis, data_range=data_range)
-        patch_psnr = psnr(fake_img, real_img, channel_axis=channel_axis, data_range=data_range)
+        # removed channel_axis arguments
+        patch_ssim = ssim(fake_img, real_img, data_range=data_range)
+        patch_psnr = psnr(fake_img, real_img, data_range=data_range)
 
         # group by original image
         # e.g. name = P12_ROI_01_C10_T_raw_preprocessed_7.img
