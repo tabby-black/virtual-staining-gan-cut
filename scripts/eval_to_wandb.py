@@ -37,7 +37,7 @@ def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
     fake_names = sorted(os.listdir(fake_dir))
     
     # amended calculation of evaluation metrics
-    # there are now 12 patches per testing image
+    # there are now 9 patches per testing image
     # evaluate ssim and psnr per image, then average to get scores for the dataset
     # store patch metrics grouped by original image
     image_ssim = defaultdict(list)
@@ -168,14 +168,14 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_bs4"
+    experiment_name = "hsi_to_rgb_cyclegan_run2"
     # so run this from /scripts
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
     # max epoch 100
     # CUT1 epochs: 0-100
     # CHANGE THIS LINE
-    epochs = list(range(0, 112, 5))
+    epochs = list(range(0, 86, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
