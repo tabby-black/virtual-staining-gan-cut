@@ -130,8 +130,8 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "python", "-u", "test.py",
         "--name", experiment_name,
         "--dataroot", dataroot,
-        #"--CUT_mode", "CUT",
-        "--model", "cycle_gan",
+        "--CUT_mode", "CUT",
+        #"--model", "cycle_gan",
         "--dataset_mode", "hsi_unaligned",
         "--gpu_ids", "1",
         "--epoch", str(ep),
@@ -168,14 +168,13 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_run6.1"
+    experiment_name = "hsi_to_rgb_CUT1"
     # so run this from /scripts
     dataroot = "./datasets/histology/"
     results_root = Path(repo_root) / "results" / experiment_name
-    # max epoch 100
-    # CUT1 epochs: 0-100
+    # CUT1 epochs: 0-101
     # CHANGE THIS LINE
-    epochs = list(range(0, 21, 5))
+    epochs = list(range(0, 101, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -197,19 +196,19 @@ if __name__ == "__main__":
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
             # expected files for CycleGAN
-            expected_files = [
-                ckpt_dir / f"{ep}_net_D_A.pth",
-                ckpt_dir / f"{ep}_net_D_B.pth",
-                ckpt_dir / f"{ep}_net_G_A.pth",
-                ckpt_dir / f"{ep}_net_G_B.pth",
-            ]
-            # expected files for CUT
             #expected_files = [
-                #ckpt_dir / f"{ep}_net_D.pth",
-                #ckpt_dir / f"{ep}_net_E_B.pth",
-                #ckpt_dir / f"{ep}_net_F.pth",
-                #ckpt_dir / f"{ep}_net_G.pth",
+                #ckpt_dir / f"{ep}_net_D_A.pth",
+                #ckpt_dir / f"{ep}_net_D_B.pth",
+                #ckpt_dir / f"{ep}_net_G_A.pth",
+                #ckpt_dir / f"{ep}_net_G_B.pth",
             #]
+            # expected files for CUT
+            expected_files = [
+                ckpt_dir / f"{ep}_net_D.pth",
+                ckpt_dir / f"{ep}_net_E_B.pth",
+                ckpt_dir / f"{ep}_net_F.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
+            ]
 
             missing = [p.name for p in expected_files if not p.exists()]
             if missing:
