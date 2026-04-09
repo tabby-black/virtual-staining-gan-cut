@@ -140,7 +140,7 @@ class HSIUnalignedDataset(BaseDataset):
 
 
     # helper function to random crop patches for training
-    def get_random_crop_coords(self, tensor, crop_size, threshold=0.8, max_tries=50):
+    def get_random_crop_coords(self, tensor, crop_size, threshold=0.7, max_tries=50):
         _, h, w = tensor.shape
 
         if h < crop_size or w < crop_size:
@@ -170,18 +170,34 @@ class HSIUnalignedDataset(BaseDataset):
 
     # helper function to get centre crop coords for testing
     # these coords will then be used to crop both A and B
-    # may need to prevent recursion errors in here too
-    def get_centre_crop_coords(self, tensor, crop_size):
+    # have prevented recursion errors in here too
+    def get_centre_crop_coords(self, tensor, crop_size, threshold=0.7, max_tries=50):
         _, h, w = tensor.shape
         
         if h < crop_size or w < crop_size:
             raise ValueError(f"Crop size {crop_size} is larger than image size {(h, w)}")
         
-        top = (h - crop_size) // 2
-        left = (w - crop_size) // 2
+        
+        best_top, best_left = None, None
+        best_ratio = -1.0
 
-        # return coordinates that give a RGB patch that is >= 80% tissue
-        return top, left
+        for _ in range(max_tries):
+            top = (h - crop_size) // 2
+            left = (w - crop_size) // 2
+            patch = tensor[:, top:top + crop_size, left:left + crop_size]
+
+            mask = self.create_tissue_mask(patch)
+            tissue_ratio = mask.mean().item()
+
+            if tissue_ratio > best_ratio:
+                best_ratio = tissue_ratio
+                best_top, best_left = top, left
+
+            if tissue_ratio >= threshold:
+                return top, left
+
+        # fallback: return the best patch found
+        return best_top, best_left
 
     
     # helper function to apply a centre crop for testing
@@ -282,7 +298,7 @@ class HSIUnalignedDataset(BaseDataset):
                 best_ratio = tissue_ratio
                 best_hsi = hsi_patch
 
-            if tissue_ratio >= 0.8:
+            if tissue_ratio >= 0.7:
                 return hsi_patch
 
         # return this tensor patch
@@ -360,7 +376,7 @@ class HSIUnalignedDataset(BaseDataset):
                 best_ratio = tissue_ratio
                 best_rgb = rgb_patch
 
-            if tissue_ratio >= 0.8:
+            if tissue_ratio >= 0.7:
                 return rgb_patch
 
         # return this tensor patch
