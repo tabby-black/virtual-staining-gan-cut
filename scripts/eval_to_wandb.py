@@ -43,19 +43,27 @@ def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
     image_ssim = defaultdict(list)
     image_psnr = defaultdict(list)
     
-    #dataset_ssim, dataset_psnr = [], []
+    # adding in debug counters to see why testing is only using 30 not 50 images like before
+    missing_real = 0
+    shape_mismatch = 0
+    used_patches = 0
 
     for name in fake_names:
         fake_path = os.path.join(fake_dir, name)
         real_path = os.path.join(real_dir, name)
+        
         if not os.path.exists(real_path):
+            missing_real += 1
             continue
 
         fake_img = imageio.imread(fake_path).astype(np.float32)
         real_img = imageio.imread(real_path).astype(np.float32)
 
         if fake_img.shape != real_img.shape:
+            shape_mismatch += 1
             continue
+
+        used_patches += 1
         
         # compute patch-level metrics
         # removed channel_axis argument from PSNR
@@ -77,6 +85,10 @@ def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
     # average patch metrics within each image
     ssim_scores = [float(np.mean(scores)) for scores in image_ssim.values() if scores]
     psnr_scores = [float(np.mean(scores)) for scores in image_psnr.values() if scores]
+
+    print("Missing real:", missing_real)
+    print("Shape mismatch:", shape_mismatch)
+    print("Used patches:", used_patches)
 
     # average over images to get dataset-level average metrics
     # return the average of the metrics for this epoch to be logged in wandb
