@@ -480,8 +480,8 @@ class HSIUnalignedDataset(BaseDataset):
                 # random rotation - apply to both hsi and rgb 
                 # commented out for now because working on runs without augmentation
                 k = np.random.randint(0,4)
-                A = np.rot90(A, k).copy()
-                B = np.rot90(B, k).copy()
+                A = np.rot90(A, k, axes=(1, 2)).copy()
+                B = np.rot90(B, k, axes=(1, 2)).copy()
 
                 # gaussian noise - apply to hsi only
                 # 50% chance that gaussian noise is applied
