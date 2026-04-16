@@ -392,7 +392,7 @@ class HSIUnalignedDataset(BaseDataset):
         # clip back to range [0,1] to match data out of calibration
         noisy = np.clip(noisy, 0.0, 1.0)
 
-        return noisy
+        return noisy.astype(np.float32)
 
 
     def __getitem__(self, index):
