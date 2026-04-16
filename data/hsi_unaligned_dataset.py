@@ -384,7 +384,7 @@ class HSIUnalignedDataset(BaseDataset):
     
 
     # at the moment using the same standard deviation as in a paper I found
-    def add_gaussian_noise(image, sigma=0.0001):
+    def add_gaussian_noise(self, image, sigma=0.0001):
         # image = (C, H, W)
 
         noise = np.random.normal(loc=0.0, scale=sigma, size=image.shape)
