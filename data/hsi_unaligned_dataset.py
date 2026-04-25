@@ -71,7 +71,7 @@ class HSIUnalignedDataset(BaseDataset):
         assert self.B_size > 0, f"No RGB files found in {self.dir_B}"
 
     # add load_hsi and load_rgb functions to separate the loading of these different image types
-    # load rgb images in the same way we load hyperspectral images for consistency - e.g. transposee explicitly rather than inside ToTensor()
+    # load rgb images in the same way we load hyperspectral images for consistency - e.g. transpose explicitly rather than inside ToTensor()
     # be explicit about replacing .img with .hdr to ensure that spectral is loading the cube from the .hdr path not the .img path - this won't work
     def load_hsi(self, img_path):
         """

@@ -131,7 +131,7 @@ def log_sample_images(results_dir, epoch, num_samples=5):
             #wandb.Image(rec)
         )
 
-    # log 5 sample real vs generated image pairs for each epoch
+    # log 5 sample real vs generated image pairs every 5 epochs
     # same 5 real images each time for fair comparison
     wandb.log({f"eval_samples_epoch_{epoch}": table}, step=epoch)
 
