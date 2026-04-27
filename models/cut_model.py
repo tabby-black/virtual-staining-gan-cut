@@ -43,7 +43,8 @@ class CUTModel(BaseModel):
         # Set default parameters for CUT and FastCUT
         # lambdax = 1 for CUT
         if opt.CUT_mode.lower() == "cut":
-            parser.set_defaults(nce_idt=True, lambda_NCE=1.0)
+            # nce_idt = False because identity loss does not work across domains
+            parser.set_defaults(nce_idt=False, lambda_NCE=1.0)
         # lambdax = 10 for FastCUT
         elif opt.CUT_mode.lower() == "fastcut":
             parser.set_defaults(
