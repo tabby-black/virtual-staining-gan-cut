@@ -32,7 +32,7 @@ from options.test_options import TestOptions
 from data import create_dataset
 from models import create_model
 #from util.visualizer import save_images
-#from util import html
+from util import html
 import util.util as util
 import torch
 
@@ -58,24 +58,24 @@ if __name__ == '__main__':
     #train_dataset = create_dataset(util.copyconf(opt, phase="train"))
     model = create_model(opt)      # create a model given opt.model and other options
     # create a webpage for viewing the results
-    #web_dir = os.path.join(opt.results_dir, opt.name, '{}_{}'.format(opt.phase, opt.epoch))  # define the website directory
-    #print('creating web directory', web_dir)
-    #webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.epoch))
+    web_dir = os.path.join(opt.results_dir, opt.name, '{}_{}'.format(opt.phase, opt.epoch))  # define the website directory
+    print('creating web directory', web_dir)
+    webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.epoch))
 
     # added code to manually handle where the generated output images get saved now I have removed the
     # html pipeline
     # directory for saved test images
-    results_dir = os.path.join(
-        opt.results_dir,
-        opt.name,
-        f'{opt.phase}_{opt.epoch}'
-    )
+    #results_dir = os.path.join(
+        #opt.results_dir,
+        #opt.name,
+        #f'{opt.phase}_{opt.epoch}'
+    #)
 
     # 'images' subfolder inside each epoch's test folder
-    images_dir = os.path.join(results_dir, "images")
+    #images_dir = os.path.join(results_dir, "images")
     
-    util.mkdirs(images_dir)
-    print('Saving test results to', images_dir)
+    #util.mkdirs(images_dir)
+    #print('Saving test results to', images_dir)
 
     if opt.eval:
         model.eval()
@@ -106,13 +106,12 @@ if __name__ == '__main__':
         img_path = model.get_image_paths()     # get image paths
         
         # debug statement to check that we have all 4 dictionaries for visualiser
-        #visuals = model.get_current_visuals()
         print("visual keys:", visuals.keys())
 
         if i % 5 == 0:  # save images to an HTML file
             print('processing (%04d)-th image... %s' % (i, img_path))
         # aspect_ratio from cycleGAN repo
-        #save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
+        save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
         
         # added code to save output images directly, without html
         # keep full original filename
@@ -124,21 +123,23 @@ if __name__ == '__main__':
 
         # explicitly only save real_B and fake_B images to avoid running into problems with 
         # hyperspectral image dimensions
-        for label in ['real_B', 'fake_B']:
-            if label not in visuals:
-                continue
+        #for label in ['real_B', 'fake_B']:
+            #if label not in visuals:
+                #continue
 
-            image = visuals[label]
-            image_numpy = util.tensor2im(image)
+            #image = visuals[label]
+            #image_numpy = util.tensor2im(image)
 
-            label_dir = os.path.join(results_dir, "images", label)
-            util.mkdirs(label_dir)
+            #label_dir = os.path.join(results_dir, "images", label)
+            #util.mkdirs(label_dir)
 
-            save_path = os.path.join(label_dir, img_name)
+            #save_path = os.path.join(label_dir, img_name)
 
-            print(f"[DEBUG] Saving {label} -> {save_path}")
-            util.save_image(image_numpy, save_path, aspect_ratio=opt.aspect_ratio)
+            #print(f"[DEBUG] Saving {label} -> {save_path}")
+            #util.save_image(image_numpy, save_path, aspect_ratio=opt.aspect_ratio)
 
-            assert os.path.exists(save_path), f"File not saved: {save_path}"
+            #assert os.path.exists(save_path), f"File not saved: {save_path}"
 
-    #webpage.save()  # save the HTML
+    webpage.save()  # save the HTML
+
+
