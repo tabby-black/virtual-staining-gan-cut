@@ -28,12 +28,11 @@ See frequently asked questions at: https://github.com/junyanz/pytorch-CycleGAN-a
 """
 
 import os
-from pathlib import Path
 from options.test_options import TestOptions
 from data import create_dataset
 from models import create_model
 #from util.visualizer import save_images
-from util import html
+#from util import html
 import util.util as util
 import torch
 
@@ -53,41 +52,79 @@ if __name__ == '__main__':
     opt.batch_size = 1    # test code only supports batch_size = 1
     opt.serial_batches = True  # disable data shuffling; comment this line if results on randomly chosen images are needed.
     opt.no_flip = True    # no flip; comment this line if results on flipped images are needed.
-    opt.display_id = -1   # no visdom display; the test code saves the results to a HTML file.
+    #opt.display_id = -1   # no visdom display; the test code saves the results to a HTML file.
     dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
     # this line is not used later in the code!
     #train_dataset = create_dataset(util.copyconf(opt, phase="train"))
     model = create_model(opt)      # create a model given opt.model and other options
     # create a webpage for viewing the results
-    web_dir = os.path.join(opt.results_dir, opt.name, '{}_{}'.format(opt.phase, opt.epoch))  # define the website directory
-    print('creating web directory', web_dir)
-    webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.epoch))
+    #web_dir = os.path.join(opt.results_dir, opt.name, '{}_{}'.format(opt.phase, opt.epoch))  # define the website directory
+    #print('creating web directory', web_dir)
+    #webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.epoch))
+
+    # added code to manually handle where the generated output images get saved now I have removed the
+    # html pipeline
+    # directory for saved test images
+    results_dir = os.path.join(
+        opt.results_dir,
+        opt.name,
+        f'{opt.phase}_{opt.epoch}'
+    )
+
+    # 'images' subfolder inside each epoch's test folder
+    images_dir = os.path.join(results_dir, "images")
+    
+    util.mkdirs(images_dir)
+    print('Saving test results to', images_dir)
 
     if opt.eval:
         model.eval()
+    
     for i, data in enumerate(dataset):
         if i == 0:
             # added selection statement in here - only CUT / FastCUT training need a data-dependent initialisation step, not CycleGAN
             # same fix as in train.py
             if opt.model in ['cut', 'fastcut']:
                 model.data_dependent_initialize(data)
+            
             model.setup(opt)               # regular setup: load and print networks; create schedulers
             model.parallelize()
+            
             if opt.eval:
                 model.eval()
+        
         if i >= opt.num_test:  # only apply our model to opt.num_test images.
             break
+        
         model.set_input(data)  # unpack data from data loader
         model.test()           # run inference
+        
+        # this is needed for saving images, not just for visualizer
         visuals = model.get_current_visuals()  # get image results
         img_path = model.get_image_paths()     # get image paths
         
         # debug statement to check that we have all 4 dictionaries for visualiser
-        visuals = model.get_current_visuals()
+        #visuals = model.get_current_visuals()
         print("visual keys:", visuals.keys())
 
         if i % 5 == 0:  # save images to an HTML file
             print('processing (%04d)-th image... %s' % (i, img_path))
         # aspect_ratio from cycleGAN repo
-        save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
-    webpage.save()  # save the HTML
+        #save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
+        
+        # added code to save output images directly, without html
+        # keep full original filename
+        img_name = os.path.basename(img_path[0])
+
+        for label, image in visuals.items():
+            image_numpy = util.tensor2im(image)
+
+            # create subdirectory per label e.g. real_B
+            label_dir = os.path.join(results_dir, "images", label)
+            util.mkdirs(label_dir)
+
+            save_path = os.path.join(label_dir, img_name)
+
+            util.save_image(image_numpy, save_path, aspect_ratio=opt.aspect_ratio)
+
+    #webpage.save()  # save the HTML
