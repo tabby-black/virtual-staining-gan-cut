@@ -116,14 +116,16 @@ if __name__ == '__main__':
         # keep full original filename
         img_name = os.path.basename(img_path[0])
 
-        for label, image in visuals.items():
-            image_numpy = util.tensor2im(image)
+        img_name = os.path.basename(img_path[0])
 
-            # skip hyperspectral/multi-band outputs that cannot be saved as PNG
-            if isinstance(image_numpy, np.ndarray):
-                if image_numpy.ndim == 3 and image_numpy.shape[2] not in [1, 3, 4]:
-                    print(f"[SKIP] {label}: cannot save shape {image_numpy.shape} as PNG")
-                    continue
+        # explicitly only save real_B and fake_B images to avoid running into problems with 
+        # hyperspectral image dimensions
+        for label in ['real_B', 'fake_B']:
+            if label not in visuals:
+                continue
+
+            image = visuals[label]
+            image_numpy = util.tensor2im(image)
 
             label_dir = os.path.join(results_dir, "images", label)
             util.mkdirs(label_dir)
