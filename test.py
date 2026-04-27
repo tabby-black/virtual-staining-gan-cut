@@ -119,12 +119,20 @@ if __name__ == '__main__':
         for label, image in visuals.items():
             image_numpy = util.tensor2im(image)
 
-            # create subdirectory per label e.g. real_B
+            # skip hyperspectral/multi-band outputs that cannot be saved as PNG
+            if isinstance(image_numpy, np.ndarray):
+                if image_numpy.ndim == 3 and image_numpy.shape[2] not in [1, 3, 4]:
+                    print(f"[SKIP] {label}: cannot save shape {image_numpy.shape} as PNG")
+                    continue
+
             label_dir = os.path.join(results_dir, "images", label)
             util.mkdirs(label_dir)
 
             save_path = os.path.join(label_dir, img_name)
 
+            print(f"[DEBUG] Saving {label} -> {save_path}")
             util.save_image(image_numpy, save_path, aspect_ratio=opt.aspect_ratio)
+
+            assert os.path.exists(save_path), f"File not saved: {save_path}"
 
     #webpage.save()  # save the HTML
