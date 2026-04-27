@@ -96,7 +96,7 @@ if __name__ == '__main__':
             optimize_time = (time.time() - optimize_start_time) / batch_size * 0.005 + 0.995 * optimize_time
 
             if total_iters % opt.display_freq == 0:   # display images on visdom and save images to a HTML file
-                save_result = total_iters % opt.update_html_freq == 0
+                #save_result = total_iters % opt.update_html_freq == 0
                 model.compute_visuals()
                 visuals = model.get_current_visuals()
                 #visualizer.display_current_results(visuals, epoch, save_result)
@@ -126,6 +126,14 @@ if __name__ == '__main__':
             if total_iters % opt.print_freq == 0:    # print training losses and save logging information to the disk
                 losses = model.get_current_losses()
                 #visualizer.print_current_losses(epoch, epoch_iter, losses, optimize_time, t_data)
+                
+                #replaced vizualiser.print with a normal print
+                print(
+                    f"(epoch: {epoch}, iters: {epoch_iter}, "
+                    f"time: {optimize_time:.3f}, data: {t_data:.3f}) "
+                    + " ".join([f"{k}: {v:.3f}" for k, v in losses.items()])
+                )
+                
                 #if opt.display_id is None or opt.display_id > 0:
                     #visualizer.plot_current_losses(epoch, float(epoch_iter) / dataset_size, losses)
                 # log all generator/discriminator losses each iteration in wandb
