@@ -145,7 +145,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         #"--CUT_mode", "CUT",
         "--model", "cycle_gan",
         "--dataset_mode", "hsi_unaligned",
-        "--gpu_ids", "2",
+        "--gpu_ids", "3",
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
