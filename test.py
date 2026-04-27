@@ -115,8 +115,10 @@ if __name__ == '__main__':
         # added code to save output images directly, without html
         # keep full original filename
         img_name = os.path.basename(img_path[0])
-
-        img_name = os.path.basename(img_path[0])
+        # specify the file extension to save images with
+        img_stem, _ = os.path.splitext(img_name)
+        img_name = f"{img_stem}.png"
+        
 
         # explicitly only save real_B and fake_B images to avoid running into problems with 
         # hyperspectral image dimensions
