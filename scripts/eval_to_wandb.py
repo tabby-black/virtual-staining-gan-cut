@@ -157,7 +157,8 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--crop_size", "256",
     ]
 
-    print("\n[run_test_py] Running:", " ".join(cmd))  # <-- proves we’re in this function
+    # proves we are in this function
+    print("\n[run_test_py] Running:", " ".join(cmd))
 
     try:
         res = subprocess.run(cmd, cwd=repo_root, text=True, capture_output=True)
