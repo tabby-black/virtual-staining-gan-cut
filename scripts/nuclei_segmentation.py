@@ -1,7 +1,7 @@
 # use cellpose to create nuclei segmentation mask on RGB images
 
-from cellpose import models, io
 import os
+from cellpose import models, io
 import numpy as np
 from PIL import Image
 
@@ -20,16 +20,18 @@ def create_nuclei_segmentation_mask(input_dir, output_dir):
         # just extracting masks from this
         masks, flows, styles = model.eval(
             img,
-            channels=[0, 0],
-            diameter=None
+            channels=[1, 0],
+            diameter=None,
+            invert=True
         )
 
         save_name = os.path.splitext(filename)[0] + "_mask.npy"
         np.save(os.path.join(output_dir, save_name), masks)
 
 # create nuclei segmentation masks for all real RGB images
-input_dir = "./datasets/histology_full/test_B"
-output_dir = "./results/histology_analysis/real_RGB_nuclei_masks"
+# input directory is the same as using the real_B folder inside one of the model epoch results folders
+input_dir = "../datasets/histology_full/test_B"
+output_dir = "../results/histology_analysis/real_RGB_nuclei_masks"
 create_nuclei_segmentation_mask(input_dir, output_dir)
 
 # and then for each of the 8 reporting runs (4 CycleGAN, 4 CUT)
