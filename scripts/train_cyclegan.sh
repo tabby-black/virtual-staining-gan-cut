@@ -13,7 +13,7 @@ set -ex
 #python train.py --dataroot ./datasets/histology_full --dataset_mode hsi_unaligned --name hsi_to_rgb_cyclegan_run7 --model cycle_gan --continue_train --epoch 21 --epoch_count 22 --lr_policy linear --n_epochs 100 --n_epochs_decay 100 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 3 --num_threads 0 --lr 0.0002 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
 
 # first CycleGAN reporting run command!!! woohoo
-#python train.py --dataroot ./datasets/histology_full --dataset_mode hsi_unaligned --patch_mode random_crop --name hsi_to_rgb_cyclegan_rep2a --model cycle_gan --continue_train --epoch 169 --epoch_count 170 --lr_policy linear --n_epochs 100 --n_epochs_decay 100 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 1 --num_threads 0 --lr 0.0002 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
+python train.py --dataroot ./datasets/histology_full --dataset_mode hsi_unaligned --patch_mode random_crop --name hsi_to_rgb_cyclegan_rep2a --model cycle_gan --continue_train --epoch 170 --epoch_count 171 --lr_policy linear --n_epochs 100 --n_epochs_decay 100 --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 3 --num_threads 0 --lr 0.0002 --pool_size 50 --no_dropout --lambda_identity 0 --batch_size 1 --preprocess resize_and_crop --load_size 286 --crop_size 256 --display_id -1 --print_freq 100 --display_freq 1000 --save_epoch_freq 1 --no_html --amp
 
 
 # have commented out CUT training command for now - trying to train CycleGAN model
@@ -22,5 +22,5 @@ set -ex
 # get initial CUT training underway!
 # expecting some debugging to get dual encoder to work
 # I am wokring on starting a new CUT run with the new dataloader 
-python train.py --dataroot ./datasets/histology_full --dataset_mode hsi_unaligned --patch_mode overlapping --name hsi_to_rgb_CUTrep1 --CUT_mode CUT --use_wandb --wandb_project_name hyperspectral_image_reconstruction --gpu_ids 3 --nce_layers 4,8,12,16 --lambda_NCE 0.5 --pool_size 50 --no_dropout --print_freq 100 --save_epoch_freq 1 --display_id -1 --num_threads 0 --no_html --batch_size 1
+#python train.py --dataroot ./datasets/histology_full --dataset_mode hsi_unaligned --patch_mode overlapping --name hsi_to_rgb_CUTrep1 --CUT_mode CUT --use_wandb --wandb_project_name hyperspectral_image_reconstruction --nce_idt False --gpu_ids 3 --nce_layers 4,8,12,16 --lambda_NCE 0.5 --pool_size 50 --no_dropout --print_freq 100 --save_epoch_freq 1 --display_id -1 --num_threads 0 --no_html --batch_size 1
 # --continue_train --epoch 75 --epoch_count 76
