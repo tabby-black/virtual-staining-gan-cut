@@ -11,7 +11,9 @@ def create_nuclei_segmentation_mask(input_dir, output_dir):
     # specify that we are segmenting images by nuclei
     model = models.CellposeModel(model_type="nuclei", gpu=True)
 
+    i = 0
     for filename in os.listdir(input_dir):
+        i += 1
         # all files will end in .png since they are all RGB images
         path = os.path.join(input_dir, filename)
 
@@ -27,6 +29,7 @@ def create_nuclei_segmentation_mask(input_dir, output_dir):
 
         save_name = os.path.splitext(filename)[0] + "_mask.npy"
         np.save(os.path.join(output_dir, save_name), masks)
+        print("Nuclei segmentation mask", i, " saved!")
 
 # create nuclei segmentation masks for all real RGB images
 # input directory is the same as using the real_B folder inside one of the model epoch results folders
