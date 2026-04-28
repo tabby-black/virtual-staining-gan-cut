@@ -33,8 +33,9 @@ def create_nuclei_segmentation_mask(input_dir, output_dir):
 
 # create nuclei segmentation masks for all real RGB images
 # input directory is the same as using the real_B folder inside one of the model epoch results folders
-input_dir = "../datasets/histology_full/testB"
-output_dir = "../results/histology_analysis/real_RGB_nuclei_masks"
+# calling this script from main project folder
+input_dir = "datasets/histology_full/testB"
+output_dir = "results/histology_analysis/real_RGB_nuclei_masks"
 create_nuclei_segmentation_mask(input_dir, output_dir)
 
 # and then for each of the 8 reporting runs (4 CycleGAN, 4 CUT)
