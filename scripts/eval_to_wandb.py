@@ -132,7 +132,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         #"--CUT_mode", "CUT",
         "--model", "cycle_gan",
         "--dataset_mode", "hsi_unaligned",
-        "--gpu_ids", "1",
+        "--gpu_ids", "3",
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
@@ -168,7 +168,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_rep1a"
+    experiment_name = "hsi_to_rgb_cyclegan_rep2a"
     # so run this from /scripts
     # test on new test patches
     dataroot = "./datasets/histology_full/"
