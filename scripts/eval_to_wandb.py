@@ -1,18 +1,3 @@
-#print("A: script start", flush=True)
-#import os
-#print("B: after os import", flush=True)
-
-#import wandb
-#print("C: after wandb import", flush=True)
-
-#print("D: about to wandb.init", flush=True)
-#run = wandb.init(
-   #project="hyperspectral_image_reconstruction",
-    #id="8xtrbsng",
-    #resume="allow",
-#)
-#print("E: after wandb.init", flush=True)
-
 import os
 import re
 import subprocess
@@ -25,6 +10,8 @@ from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import peak_signal_noise_ratio as psnr
 import wandb
 from collections import defaultdict
+
+import time
 
 
 def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
@@ -181,7 +168,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_rep1"
+    experiment_name = "hsi_to_rgb_cyclegan_rep2"
     # so run this from /scripts
     # test on new test patches
     dataroot = "./datasets/histology_full/"
@@ -189,7 +176,7 @@ if __name__ == "__main__":
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(0, 205, 5))
+    epochs = list(range(180, 205, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -200,8 +187,8 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        #id="8lkbozne",
-        #resume = "allow"
+        id="8lkbozne",
+        resume = "allow"
     )
 
     for ep in epochs:
