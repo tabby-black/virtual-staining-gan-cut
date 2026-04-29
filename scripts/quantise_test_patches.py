@@ -13,7 +13,7 @@ def quantise_patch(patch, bits):
 
 
 current_test_directory = "datasets/histology_full/testB"
-new_test_directory = "datasets/histology_full/testB_6b"
+new_test_directory = "datasets/histology_full/testB_8b_16"
 
 os.makedirs(new_test_directory, exist_ok=True)
 
@@ -27,11 +27,12 @@ for filename in os.listdir(current_test_directory):
 
     # load patch
     img = Image.open(input_path).convert("RGB")
+    img_fp16 = img.astype(np.float16)
     # normalise to [0,1]
     # calibration normalises hsi images but I haven't yet normalised rgb images - this is done by the data loader to [-1,1]
     img_np = np.array(img).astype(np.float32) / 255.0
     # quantise patch
-    img_q = quantise_patch(img_np, 6)
+    img_q = quantise_patch(img_fp16.astype(np.float32), 8).astype(np.float16)
     # convert back to [0,255]
     img_q = (img_q * 255).clip(0, 255).astype(np.uint8)
 
