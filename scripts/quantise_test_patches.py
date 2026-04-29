@@ -13,7 +13,7 @@ def quantise_patch(patch, bits):
 
 
 current_test_directory = "datasets/histology_full/testB"
-new_test_directory = "datasets/histology_full/testB_8b_16"
+new_test_directory = "datasets/histology_full/testB_6b_16"
 
 os.makedirs(new_test_directory, exist_ok=True)
 
@@ -32,7 +32,7 @@ for filename in os.listdir(current_test_directory):
     img_np = np.array(img).astype(np.float32) / 255.0
     img_fp16 = img_np.astype(np.float16)
     # quantise patch
-    img_q = quantise_patch(img_fp16.astype(np.float32), 8).astype(np.float16)
+    img_q = quantise_patch(img_fp16.astype(np.float32), 6).astype(np.float16)
     # convert back to [0,255]
     img_q = (img_q * 255).clip(0, 255).astype(np.uint8)
 
