@@ -4,8 +4,8 @@ import wandb
 
 
 PROJECT = "hyperspectral_image_reconstruction"
-RUN_NAME = "rep1a_backfilled"
-LOSS_LOG = "checkpoints/hsi_to_rgb_cyclegan_rep1a/loss_log.txt"
+RUN_NAME = "rep2a_backfilled"
+LOSS_LOG = "checkpoints/hsi_to_rgb_cyclegan_rep2a/loss_log.txt"
 
 # Parse: (epoch: 1, iters: 700, time: ..., data: ...) D_A: 0.2 G_A: 0.3 ...
 epoch_pat = re.compile(r"epoch:\s*(\d+)")
