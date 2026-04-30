@@ -105,7 +105,7 @@ if __name__ == '__main__':
         img_path = model.get_image_paths()     # get image paths
         
         # debug statement to check that we have all 4 dictionaries for visualiser
-        print("visual keys:", visuals.keys())
+        #print("visual keys:", visuals.keys())
 
         if i % 5 == 0:  # save images to an HTML file
             print('processing (%04d)-th image... %s' % (i, img_path))
