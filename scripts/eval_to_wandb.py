@@ -133,7 +133,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--model", "cycle_gan",
         "--num_test", "846",
         "--dataset_mode", "hsi_unaligned",
-        #"--gpu_ids", "0",
+        "--gpu_ids", "0",
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
@@ -177,7 +177,7 @@ if __name__ == "__main__":
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(100, 205, 5))
+    epochs = list(range(105, 205, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -188,7 +188,7 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        id="kcelr6jl",
+        id="o074te17",
         resume = "allow"
     )
 
