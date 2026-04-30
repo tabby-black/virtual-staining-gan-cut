@@ -3,7 +3,7 @@ set -ex
 
 
 # CHANGE THIS LINE
-python test.py --dataroot ./datasets/histology_full --dataset_mode hsi_unaligned --model cycle_gan -–num_test 846 --name hsi_to_rgb_cyclegan_rep1 --epoch str(ep) --gpu_ids 2 --num_threads 0 --preprocess resize_and_crop --load_size 286 --batch_size 1 --crop_size 256 --no_dropout
+python test.py --dataroot ./datasets/histology_full --dataset_mode hsi_unaligned --model cycle_gan -–num_test 846 --name hsi_to_rgb_cyclegan_rep2a --epoch str(ep) --gpu_ids 3 --num_threads 0 --preprocess resize_and_crop --load_size 286 --batch_size 1 --crop_size 256 --no_dropout
 # --CUT_mode CUT 
 # --model cycle_gan
 # --dataroot ./datasets/histology_full
