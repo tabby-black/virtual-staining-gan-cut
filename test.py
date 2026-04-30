@@ -93,8 +93,7 @@ if __name__ == '__main__':
             if opt.eval:
                 model.eval()
         
-        # removed restriction on number of testing images
-        # want to test on all testing images in final tests, not a subset
+        # explicitly defined num_test as 846 rather than 50
         if i >= opt.num_test:  # only apply our model to opt.num_test images.
             break
         
