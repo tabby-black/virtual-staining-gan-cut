@@ -22,6 +22,5 @@ set -ex
 # get initial CUT training underway!
 # expecting some debugging to get dual encoder to work
 # I am wokring on starting a new CUT run with the new dataloader 
-python train.py --dataroot /content/drive/MyDrive/Part_II_Project --name hsi_to_rgb_CUTrep1 --CUT_mode CUT --checkpoints_dir /content/drive/MyDrive/Part_II_Project/checkpoints --dataset_mode hsi_unaligned --patch_mode overlapping --use_wandb --wandb_project_name hyperspectral_image_reconstruction --nce_idt False --nce_layers 4,8,12,16 --lr_policy linear --n_epochs 100 --n_epochs_decay 100 --pool_size 50 --no_dropout --print_freq 10 --save_epoch_freq 1 --display_id -1 --num_threads 2 --no_html --batch_size 1
+python train.py --dataroot ./datasets/histology_full --name hsi_to_rgb_CUTrep1b --CUT_mode CUT --dataset_mode hsi_unaligned --patch_mode overlapping --use_wandb --wandb_project_name hyperspectral_image_reconstruction --nce_idt False --nce_layers 4,8,12,16 --lr_policy linear --n_epochs 100 --n_epochs_decay 100 --pool_size 50 --no_dropout --print_freq 10 --save_epoch_freq 1 --display_id -1 --num_threads 2 --no_html --batch_size 1
 # --continue_train --epoch 75 --epoch_count 76
---dataroot ./datasets/histology_full
