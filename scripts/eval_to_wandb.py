@@ -168,7 +168,8 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 
 
 if __name__ == "__main__":
-    repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
+    #repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
+    repo_root = "/content/virtual-staining-gan-cut"
     # CHANGE THIS LINE
     experiment_name = "hsi_to_rgb_cyclegan_rep2quant8"
     # so run this from /scripts
