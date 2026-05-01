@@ -101,7 +101,7 @@ def extract_features_to_csv(mask_dir, output_csv_dir):
 # calling this script from main project folder
 input_dir = "results/hsi_to_rgb_cyclegan_rep2/test_190/images/fake_B"
 output_dir = "results/histology_analysis/rep2_e190_fake_RGB_nuclei_masks"
-#create_nuclei_segmentation_mask(input_dir, output_dir)
+create_nuclei_segmentation_mask(input_dir, output_dir)
 
 # and then for each of the 8 reporting runs (4 CycleGAN, 4 CUT)
 # where x is the optimal epoch
