@@ -216,7 +216,7 @@ if __name__ == "__main__":
                 #ckpt_dir / f"{ep}_net_F.pth",
                 #ckpt_dir / f"{ep}_net_G.pth",
             #]
-
+            print("Checking: ", expected_files)
             missing = [p.name for p in expected_files if not p.exists()]
             if missing:
                 print(f"Checkpoint missing for epoch {ep}: {missing}; skipping.")
