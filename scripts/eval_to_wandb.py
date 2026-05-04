@@ -171,7 +171,7 @@ if __name__ == "__main__":
     #repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     repo_root = "/content/"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_rep2quant8"
+    experiment_name = "hsi_to_rgb_cyclegan_rep2"
     # so run this from /scripts
     # test on new test patches
     #dataroot = "./datasets/histology_full/"
