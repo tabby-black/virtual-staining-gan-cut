@@ -180,7 +180,7 @@ if __name__ == "__main__":
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(190, 190, 5))
+    epochs = list(range(190, 200, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
