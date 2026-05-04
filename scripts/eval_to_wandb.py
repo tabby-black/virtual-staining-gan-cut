@@ -129,7 +129,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "python", "-u", "test.py",
         "--name", experiment_name,
         "--dataroot", dataroot,
-        "--checkpoints_dir", "/content/checkpoints/hsi_to_rgb_cyclegan_rep2quant8",
+        "--checkpoints_dir", "/content/checkpoints/hsi_to_rgb_cyclegan_rep2",
         #"--CUT_mode", "CUT",
         "--model", "cycle_gan",
         "--num_test", "846",
