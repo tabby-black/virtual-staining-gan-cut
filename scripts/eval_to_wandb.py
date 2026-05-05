@@ -218,7 +218,7 @@ if __name__ == "__main__":
             if missing:
                 print(f"Checkpoint missing for epoch {ep}: {missing}; skipping.")
                 continue
-            repo_root = "/content/virtual-staining-gan-cut"
+            #repo_root = "/content/virtual-staining-gan-cut"
             run_test_py(repo_root, experiment_name, dataroot, ep, results_dir=str(results_root.parent))
         else:
             print(f"Found existing outputs for epoch {ep}, skipping test.py")
