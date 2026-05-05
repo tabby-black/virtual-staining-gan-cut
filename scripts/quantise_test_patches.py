@@ -32,7 +32,7 @@ for filename in os.listdir(current_test_directory):
     img_np = np.array(img).astype(np.float32) / 255.0
     #img_fp16 = img_np.astype(np.float16)
     # quantise patch
-    img_q = quantise_patch(img, 8)
+    img_q = quantise_patch(img_np, 8)
     # convert back to [0,255]
     img_q = (img_q * 255).clip(0, 255).astype(np.uint8)
 
