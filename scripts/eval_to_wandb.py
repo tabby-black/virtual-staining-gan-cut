@@ -177,7 +177,7 @@ if __name__ == "__main__":
     # so run this from /scripts
     # test on new test patches
     dataroot = "./datasets/histology_full_quant/"
-    results_root = Path(repo_root) / "results" / "hsi_to_rgb_cyclegan_quant8"
+    results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs

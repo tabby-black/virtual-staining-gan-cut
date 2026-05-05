@@ -410,9 +410,6 @@ class HSIUnalignedDataset(BaseDataset):
         
 
         A_path = self.A_paths[index % self.A_size]
-        # use this B_path because I have paired (even if not perfectly) data
-        # rather than totally unpaired data
-        # B_path = self.B_paths[index % self.B_size]
 
         # make sure index is within range
         if self.opt.serial_batches:
