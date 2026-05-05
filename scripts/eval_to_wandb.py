@@ -129,12 +129,11 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "python", "-u", "test.py",
         "--name", experiment_name,
         "--dataroot", dataroot,
-        "--checkpoints_dir", "/content/checkpoints/hsi_to_rgb_cyclegan_rep2",
         #"--CUT_mode", "CUT",
         "--model", "cycle_gan",
         "--num_test", "846",
         "--dataset_mode", "hsi_unaligned",
-        #"--gpu_ids", "3",
+        "--gpu_ids", "2",
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
@@ -168,14 +167,12 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 
 
 if __name__ == "__main__":
-    #repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
-    repo_root = "/content/"
+    repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_rep2"
+    experiment_name = "hsi_to_rgb_cyclegan_quant8"
     # so run this from /scripts
     # test on new test patches
-    #dataroot = "./datasets/histology_full/"
-    dataroot = "/content/data/testB_8b"
+    dataroot = "./datasets/histology_full_quant/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
