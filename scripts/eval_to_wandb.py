@@ -169,11 +169,11 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_quant8"
+    experiment_name = "hsi_to_rgb_cyclegan_rep2"
     # so run this from /scripts
     # test on new test patches
     dataroot = "./datasets/histology_full_quant/"
-    results_root = Path(repo_root) / "results" / experiment_name
+    results_root = Path(repo_root) / "results" / "hsi_to_rgb_cyclegan_quant8"
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
