@@ -165,6 +165,10 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         print("\n[run_test_py] Exception raised:", repr(e))
         raise
 
+# measure checkpoint size to compare fp16 to fp32 model size
+def checkpoint_size_mb(checkpoint_paths):
+    total_bytes = sum(Path(p).stat().st_size for p in checkpoint_paths if Path(p).exists())
+    return total_bytes / (1024 ** 2)
 
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
@@ -206,6 +210,10 @@ if __name__ == "__main__":
                 ckpt_dir / f"{ep}_net_G_A.pth",
                 ckpt_dir / f"{ep}_net_G_B.pth",
             ]
+            generator_files = [
+                ckpt_dir / f"{ep}_net_G_A.pth",
+                ckpt_dir / f"{ep}_net_G_B.pth",
+            ]
             # expected files for CUT
             #expected_files = [
                 #ckpt_dir / f"{ep}_net_D.pth",
@@ -219,7 +227,11 @@ if __name__ == "__main__":
                 print(f"Checkpoint missing for epoch {ep}: {missing}; skipping.")
                 continue
             #repo_root = "/content/virtual-staining-gan-cut"
+            # measure end-to-end test runtime to compare fp16 and fp32 models
+            start_time = time.perf_counter()
             run_test_py(repo_root, experiment_name, dataroot, ep, results_dir=str(results_root.parent))
+            end_time = time.perf_counter()
+            inference_time_s = end_time - start_time
         else:
             print(f"Found existing outputs for epoch {ep}, skipping test.py")
 
@@ -227,6 +239,10 @@ if __name__ == "__main__":
         # out_images_dir is the directory of the RGB output images produced during testing
         metrics = evaluate_epoch(str(out_images_dir))
         metrics["epoch"] = ep
+        # measure the generator checkpoint size to compare between fp16 and fp32
+        metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
+        # measure end-to-end test time to compare between fp16 and fp32
+        metrics["eval/test_runtime_s"] = inference_time_s
         wandb.log(metrics)  
         print(ep, metrics)
 
