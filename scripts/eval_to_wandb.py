@@ -181,7 +181,7 @@ if __name__ == "__main__":
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(0, 200, 5))
+    epochs = list(range(40, 200, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -192,8 +192,8 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        #id="fcrdn3mu",
-        #resume = "allow"
+        id="nkh634be",
+        resume = "allow"
     )
 
     for ep in epochs:
