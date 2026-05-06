@@ -192,7 +192,7 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        id="nkh634be",
+        id="79fgdl8e",
         resume = "allow"
     )
 
