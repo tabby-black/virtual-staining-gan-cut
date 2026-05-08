@@ -96,7 +96,7 @@ def patch_rgb(image_path, i=0):
 
 # patch rgb images
 # call this function on all images in testB - using glob
-test_directory = "datasets/extra_test/new"
+test_directory = "datasets/extra_test"
 png_test_files = sorted(glob.glob(os.path.join(test_directory, "*.png")))
 
 for png in png_test_files:
