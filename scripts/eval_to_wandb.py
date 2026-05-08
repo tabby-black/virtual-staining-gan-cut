@@ -173,7 +173,7 @@ def checkpoint_size_mb(checkpoint_paths):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_CUTrep2"
+    experiment_name = "hsi_to_rgb_CUTrep2a"
     # so run this from /scripts
     # test on new test patches
     dataroot = "./datasets/histology_full/"
@@ -192,7 +192,7 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        id="6osj7xf5",
+        id="c4fgacxj",
         resume = "allow"
     )
 
