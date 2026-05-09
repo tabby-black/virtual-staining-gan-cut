@@ -99,8 +99,8 @@ def extract_features_to_csv(mask_dir, output_csv_dir):
 # create nuclei segmentation masks for all real RGB images
 # input directory is the same as using the real_B folder inside one of the model epoch results folders
 # calling this script from main project folder
-input_dir = "results/hsi_to_rgb_CUTrep1/test_130/images/fake_B"
-output_dir = "results/histology_analysis/cutrep1a_e130_fake_RGB_nuclei_masks"
+input_dir = "results/hsi_to_rgb_CUTrep1b/test_70/images/fake_B"
+output_dir = "results/histology_analysis/cutrep1_e70_fake_RGB_nuclei_masks"
 create_nuclei_segmentation_mask(input_dir, output_dir)
 
 # and then for each of the 8 reporting runs (4 CycleGAN, 4 CUT)
@@ -109,6 +109,6 @@ create_nuclei_segmentation_mask(input_dir, output_dir)
 # output_dir = ./results/histology_analysis/cganrep1_RGB_nuclei_masks
 
 
-mask_dir = "results/histology_analysis/cutrep1a_e130_fake_RGB_nuclei_masks"
-output_csv_dir = "results/histology_analysis/cutrep1a_e130_fake_RGB_nuclei_features.csv"
+mask_dir = "results/histology_analysis/cutrep1_e70_fake_RGB_nuclei_masks"
+output_csv_dir = "results/histology_analysis/cutrep1_e70_fake_RGB_nuclei_features.csv"
 extract_features_to_csv(mask_dir, output_csv_dir)
