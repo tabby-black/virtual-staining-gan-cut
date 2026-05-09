@@ -193,7 +193,7 @@ if __name__ == "__main__":
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(85, 200, 5))
+    epochs = list(range(75, 80, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -204,8 +204,8 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        id="c4fgacxj",
-        resume = "allow"
+        #id="c4fgacxj",
+        #resume = "allow"
     )
 
     for ep in epochs:
@@ -233,6 +233,10 @@ if __name__ == "__main__":
                 ckpt_dir / f"{ep}_net_F.pth",
                 ckpt_dir / f"{ep}_net_G.pth",
             ]
+            generator_files = [
+                ckpt_dir / f"{ep}_net_E_B.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
+            ]
             print("Checking: ", expected_files)
             missing = [p.name for p in expected_files if not p.exists()]
             if missing:
@@ -250,16 +254,16 @@ if __name__ == "__main__":
         metrics["epoch"] = ep
         # measure the generator checkpoint size to compare between fp16 and fp32
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
-        #metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
+        metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
         # measure end-to-end test time to compare between fp16 and fp32
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
-        #timing_path = results_root / experiment_name / f"test_{ep}" / "timing_metrics.json"
+        timing_path = results_root / experiment_name / f"test_{ep}" / "timing_metrics.json"
 
-        #with open (timing_path, "r") as f:
-            #timing_metrics = json.load(f)
+        with open (timing_path, "r") as f:
+            timing_metrics = json.load(f)
 
-        #metrics["eval/inference_mean_s"] = timing_metrics["mean_inference_time_s"]
-        #metrics["eval/inference_std_s"] = timing_metrics["std_inference_time_s"]
+        metrics["eval/inference_mean_s"] = timing_metrics["mean_inference_time_s"]
+        metrics["eval/inference_std_s"] = timing_metrics["std_inference_time_s"]
         
         
         wandb.log(metrics)  
