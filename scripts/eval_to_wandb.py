@@ -177,7 +177,7 @@ if __name__ == "__main__":
     experiment_name = "hsi_to_rgb_cyclegan_rep2"
     # so run this from /scripts
     # test on new test patches
-    dataroot = "./datasets/histology_full/"
+    dataroot = "./datasets/histology_full_quant/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
@@ -193,8 +193,8 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        #id="c4fgacxj",
-        #resume = "allow"
+        id="lw2p06wj",
+        resume = "allow"
     )
 
     for ep in epochs:
