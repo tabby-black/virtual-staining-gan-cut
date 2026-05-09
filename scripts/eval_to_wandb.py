@@ -130,8 +130,8 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "python", "-u", "test.py",
         "--name", experiment_name,
         "--dataroot", dataroot,
-        #"--CUT_mode", "CUT",
-        "--model", "cycle_gan",
+        "--CUT_mode", "CUT",
+        #"--model", "cycle_gan",
         "--num_test", "846",
         "--dataset_mode", "hsi_unaligned",
         "--gpu_ids", "1",
@@ -174,15 +174,15 @@ def checkpoint_size_mb(checkpoint_paths):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_rep2"
+    experiment_name = "hsi_to_rgb_CUTrep1"
     # so run this from /scripts
     # test on new test patches
-    dataroot = "./datasets/histology_full_quant/"
+    dataroot = "./datasets/histology_full/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(190, 195, 5))
+    epochs = list(range(135, 200, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -193,7 +193,7 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        id="lw2p06wj",
+        id="nkh634be",
         resume = "allow"
     )
 
@@ -205,23 +205,23 @@ if __name__ == "__main__":
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
             # expected files for CycleGAN
-            expected_files = [
-                ckpt_dir / f"{ep}_net_D_A.pth",
-                ckpt_dir / f"{ep}_net_D_B.pth",
-                ckpt_dir / f"{ep}_net_G_A.pth",
-                ckpt_dir / f"{ep}_net_G_B.pth",
-            ]
+            #expected_files = [
+                #ckpt_dir / f"{ep}_net_D_A.pth",
+                #ckpt_dir / f"{ep}_net_D_B.pth",
+                #ckpt_dir / f"{ep}_net_G_A.pth",
+                #ckpt_dir / f"{ep}_net_G_B.pth",
+            #]
             #generator_files = [
                 #ckpt_dir / f"{ep}_net_G_A.pth",
                 #ckpt_dir / f"{ep}_net_G_B.pth",
             #]
             # expected files for CUT
-            #expected_files = [
-                #ckpt_dir / f"{ep}_net_D.pth",
-                #ckpt_dir / f"{ep}_net_E_B.pth",
-                #ckpt_dir / f"{ep}_net_F.pth",
-                #ckpt_dir / f"{ep}_net_G.pth",
-            #]
+            expected_files = [
+                ckpt_dir / f"{ep}_net_D.pth",
+                ckpt_dir / f"{ep}_net_E_B.pth",
+                ckpt_dir / f"{ep}_net_F.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
+            ]
             print("Checking: ", expected_files)
             missing = [p.name for p in expected_files if not p.exists()]
             if missing:
@@ -241,13 +241,14 @@ if __name__ == "__main__":
         # INCLUDE THIS FOR QUANT
         #metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
         # measure end-to-end test time to compare between fp16 and fp32
-        timing_path = results_root / experiment_name / f"test_{ep}" / "timing_metrics.json"
+        # INCLUDE THIS FOR QUANT
+        #timing_path = results_root / experiment_name / f"test_{ep}" / "timing_metrics.json"
 
-        with open (timing_path, "r") as f:
-            timing_metrics = json.load(f)
+        #with open (timing_path, "r") as f:
+            #timing_metrics = json.load(f)
 
-        metrics["eval/inference_mean_s"] = timing_metrics["mean_inference_time_s"]
-        metrics["eval/inference_std_s"] = timing_metrics["std_inference_time_s"]
+        #metrics["eval/inference_mean_s"] = timing_metrics["mean_inference_time_s"]
+        #metrics["eval/inference_std_s"] = timing_metrics["std_inference_time_s"]
         
         
         wandb.log(metrics)  
