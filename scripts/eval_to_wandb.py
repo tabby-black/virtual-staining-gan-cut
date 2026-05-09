@@ -12,6 +12,7 @@ import wandb
 from collections import defaultdict
 
 import time
+import json
 
 
 def evaluate_epoch(results_dir, data_range=255.0, channel_axis=2):
@@ -226,12 +227,9 @@ if __name__ == "__main__":
             if missing:
                 print(f"Checkpoint missing for epoch {ep}: {missing}; skipping.")
                 continue
-            #repo_root = "/content/virtual-staining-gan-cut"
-            # measure end-to-end test runtime to compare fp16 and fp32 models
-            start_time = time.perf_counter()
+        
             run_test_py(repo_root, experiment_name, dataroot, ep, results_dir=str(results_root.parent))
-            end_time = time.perf_counter()
-            inference_time_s = end_time - start_time
+        
         else:
             print(f"Found existing outputs for epoch {ep}, skipping test.py")
 
@@ -243,8 +241,15 @@ if __name__ == "__main__":
         # INCLUDE THIS FOR QUANT
         #metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
         # measure end-to-end test time to compare between fp16 and fp32
-        # INCLUDE THIS FOR QUANT
-        #metrics["eval/test_runtime_s"] = inference_time_s
+        timing_path = results_root / experiment_name / f"test_{ep}" / "timing_metrics.json"
+
+        with open (timing_path, "r") as f:
+            timing_metrics = json.load(f)
+
+        metrics["eval/inference_mean_s"] = timing_metrics["mean_inference_time_s"]
+        metrics["eval/inference_std_s"] = timing_metrics["std_inference_time_s"]
+        
+        
         wandb.log(metrics)  
         print(ep, metrics)
 

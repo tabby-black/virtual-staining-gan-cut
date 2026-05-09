@@ -35,6 +35,9 @@ from util.visualizer import save_images
 from util import html
 import util.util as util
 import torch
+import time
+import json
+import numpy as np
 
 try:
     import wandb
@@ -80,6 +83,7 @@ if __name__ == '__main__':
     if opt.eval:
         model.eval()
     
+    inference_times = []
     for i, data in enumerate(dataset):
         if i == 0:
             # added selection statement in here - only CUT / FastCUT training need a data-dependent initialisation step, not CycleGAN
@@ -98,8 +102,15 @@ if __name__ == '__main__':
             break
         
         model.set_input(data)  # unpack data from data loader
-        model.test()           # run inference
         
+        # time around here to time model inference  for each image without including time taken to load data etc.
+        start = time.perf_counter()
+        model.test()           # run inference
+        end = time.perf_counter()
+
+        inference_times.append(end - start)
+
+
         # this is needed for saving images, not just for visualizer
         visuals = model.get_current_visuals()  # get image results
         img_path = model.get_image_paths()     # get image paths
@@ -138,6 +149,22 @@ if __name__ == '__main__':
             #util.save_image(image_numpy, save_path, aspect_ratio=opt.aspect_ratio)
 
             #assert os.path.exists(save_path), f"File not saved: {save_path}"
+
+    # compute mean and standard deviation of inference times
+    mean_time = float(np.mean(inference_times))
+    std_time = float(np.std(inference_times))
+
+    timing_results = {
+        "mean_inference_time_s": mean_time,
+        "std_inference_time_s": std_time,
+        "n_images": len(inference_times)
+    }
+
+    # save the model timings results to a json file that can be opened in eval_to_wandb.py
+    timing_path = os.path.join(web_dir, "timing_metrics.json")
+
+    with open(timing_path, "w") as f:
+        json.dump(timing_results, f, indent=2)
 
     webpage.save()  # save the HTML
 
