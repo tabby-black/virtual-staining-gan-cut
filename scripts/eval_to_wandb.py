@@ -249,6 +249,7 @@ if __name__ == "__main__":
             print(f"Found existing outputs for epoch {ep}, skipping test.py")
 
         # define generator files outside if statement so it is defined for runs where the test has already been done
+        ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
         generator_files = [
                 ckpt_dir / f"{ep}_net_E_B.pth",
                 ckpt_dir / f"{ep}_net_G.pth",
