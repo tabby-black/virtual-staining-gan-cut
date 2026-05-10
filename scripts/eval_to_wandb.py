@@ -257,7 +257,7 @@ if __name__ == "__main__":
         metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
         # measure end-to-end test time to compare between fp16 and fp32
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
-        timing_path = results_root / experiment_name / f"test_{ep}" / "timing_metrics.json"
+        timing_path = results_root / f"test_{ep}" / "timing_metrics.json"
 
         with open (timing_path, "r") as f:
             timing_metrics = json.load(f)
