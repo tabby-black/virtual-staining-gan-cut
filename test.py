@@ -68,17 +68,17 @@ if __name__ == '__main__':
     # added code to manually handle where the generated output images get saved now I have removed the
     # html pipeline
     # directory for saved test images
-    #results_dir = os.path.join(
-        #opt.results_dir,
-        #opt.name,
-        #f'{opt.phase}_{opt.epoch}'
-    #)
+    results_dir = os.path.join(
+        opt.results_dir,
+        opt.name,
+        f'{opt.phase}_{opt.epoch}'
+    )
 
     # 'images' subfolder inside each epoch's test folder
-    #images_dir = os.path.join(results_dir, "images")
+    images_dir = os.path.join(results_dir, "images")
     
-    #util.mkdirs(images_dir)
-    #print('Saving test results to', images_dir)
+    util.mkdirs(images_dir)
+    print('Saving test results to', images_dir)
 
     if opt.eval:
         model.eval()
@@ -105,11 +105,11 @@ if __name__ == '__main__':
         
         # time around here to time model inference  for each image without including time taken to load data etc.
         # INCLUDE FOR REPORTING IMAGE RUNS
-        #start = time.perf_counter()
+        start = time.perf_counter()
         model.test()           # run inference
-        #end = time.perf_counter()
+        end = time.perf_counter()
 
-        #inference_times.append(end - start)
+        inference_times.append(end - start)
 
 
         # this is needed for saving images, not just for visualizer
@@ -153,20 +153,20 @@ if __name__ == '__main__':
 
     # INCLUDE FOR REPORTING IMAGE RUNS
     # compute mean and standard deviation of inference times
-    #mean_time = float(np.mean(inference_times))
-    #std_time = float(np.std(inference_times))
+    mean_time = float(np.mean(inference_times))
+    std_time = float(np.std(inference_times))
 
-    #timing_results = {
-        #"mean_inference_time_s": mean_time,
-        #"std_inference_time_s": std_time,
-        #"n_images": len(inference_times)
-    #}
+    timing_results = {
+        "mean_inference_time_s": mean_time,
+        "std_inference_time_s": std_time,
+        "n_images": len(inference_times)
+    }
 
     # save the model timings results to a json file that can be opened in eval_to_wandb.py
-    #timing_path = os.path.join(web_dir, "timing_metrics.json")
+    timing_path = os.path.join(web_dir, "timing_metrics.json")
 
-    #with open(timing_path, "w") as f:
-        #json.dump(timing_results, f, indent=2)
+    with open(timing_path, "w") as f:
+        json.dump(timing_results, f, indent=2)
 
     webpage.save()  # save the HTML
 
