@@ -127,7 +127,7 @@ if __name__ == '__main__':
         if opt.fp16:
             # need to convert real_A and real_B because G_A and G_B are both used during CycleGAN inference
             model.real_A = model.real_A.half()
-            model.real_B = model.real_A.half()
+            model.real_B = model.real_B.half()
 
         # time around here to time model inference  for each image without including time taken to load data etc.
         # INCLUDE FOR REPORTING IMAGE RUNS
