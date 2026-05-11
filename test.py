@@ -100,19 +100,33 @@ if __name__ == '__main__':
                 model.netG_B.half()
 
                 # save fp16 checkpoints for size comparison
-                fp16_ckpt_path = os.path.join(
+                fp16_ckpt_path_g_a = os.path.join(
                     opt.results_dir,
                     opt.name,
                     f"test_{opt.epoch}",
                     "fp16_netG_A.pth"
                 )
                 
-                os.makedirs(os.path.dirname(fp16_ckpt_path), exist_ok=True)
+                fp16_ckpt_path_g_b = os.path.join(
+                    opt.results_dir,
+                    opt.name,
+                    f"test_{opt.epoch}",
+                    "fp16_netG_B.pth"
+                )
+
+
+                os.makedirs(os.path.dirname(fp16_ckpt_path_g_a), exist_ok=True)
 
                 torch.save(
                     model.netG_A.state_dict(),
-                    fp16_ckpt_path
+                    fp16_ckpt_path_g_a
                 )
+
+                torch.save(
+                    model.netG_B.state_dict(),
+                    fp16_ckpt_path_g_b
+                )
+            
             
             if opt.eval:
                 model.eval()
