@@ -151,12 +151,12 @@ if __name__ == '__main__':
                 os.makedirs(os.path.dirname(fp16_ckpt_path_g), exist_ok=True)
 
                 torch.save(
-                    model.netG_A.state_dict(),
+                    model.netG.state_dict(),
                     fp16_ckpt_path_g
                 )
 
                 torch.save(
-                    model.netG_B.state_dict(),
+                    model.netE_B.state_dict(),
                     fp16_ckpt_path_e_b
                 )
 
