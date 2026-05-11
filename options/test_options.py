@@ -21,6 +21,9 @@ class TestOptions(BaseOptions):
         # added fp16 quantisation testing argument
         parser.add_argument('--fp16', action='store_true')
 
+        # added suffix argument to avoid overwriting results when testing the same epoch on different datasets e.g. quantisation
+        parser.add_argument('--result_suffix', type=str, default='')
+
         # To avoid cropping, the load_size should be the same as crop_size
         parser.set_defaults(load_size=parser.get_default('crop_size'))
         self.isTrain = False

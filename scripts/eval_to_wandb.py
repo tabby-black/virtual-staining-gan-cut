@@ -142,6 +142,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--name", experiment_name,
         "--dataroot", dataroot,
         "--fp16",
+        "--results_suffix", "6b_16fp",
         #"--CUT_mode", "CUT",
         "--model", "cycle_gan",
         "--num_test", "846",
@@ -212,7 +213,8 @@ if __name__ == "__main__":
     for ep in epochs:
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
-        out_images_dir = results_root / f"test_{ep}" / "images"
+        # insert results_suffix manually
+        out_images_dir = results_root / f"test_{ep}_6b_16fp" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
