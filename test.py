@@ -93,6 +93,26 @@ if __name__ == '__main__':
             
             model.setup(opt)               # regular setup: load and print networks; create schedulers
             model.parallelize()
+
+            # for 16fp quantisation testing (CycleGAN)
+            if opt.fp16:
+                model.netG_A.half()
+                model.netG_B.half()
+
+                # save fp16 checkpoints for size comparison
+                fp16_ckpt_path = os.path.join(
+                    opt.results_dir,
+                    opt.name,
+                    f"test_{opt.epoch}",
+                    "fp16_netG_A.pth"
+                )
+                
+                os.makedirs(os.path.dirname(fp16_ckpt_path), exist_ok=True)
+
+                torch.save(
+                    model.netG_A.state_dict(),
+                    fp16_ckpt_path
+                )
             
             if opt.eval:
                 model.eval()
@@ -103,6 +123,11 @@ if __name__ == '__main__':
         
         model.set_input(data)  # unpack data from data loader
         
+        # for 16fp quantisation testing (CycleGAN)
+        if opt.fp16:
+            # only need to convert real_A not real_B because only real_A is passed through the generator during inference
+            model.real_A = model.real_A.half()
+
         # time around here to time model inference  for each image without including time taken to load data etc.
         # INCLUDE FOR REPORTING IMAGE RUNS
         start = time.perf_counter()
