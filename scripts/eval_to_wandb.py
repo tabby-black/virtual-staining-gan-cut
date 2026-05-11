@@ -230,6 +230,7 @@ if __name__ == "__main__":
             # for 16fp
             generator_files = [
                 results_root / f"test_{ep}" / "fp16_netG_A.pth",
+                results_root / f"test_{ep}" / "fp16_netG_B.pth",
             ]
             # expected files for CUT
             #expected_files = [

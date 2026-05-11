@@ -125,8 +125,9 @@ if __name__ == '__main__':
         
         # for 16fp quantisation testing (CycleGAN)
         if opt.fp16:
-            # only need to convert real_A not real_B because only real_A is passed through the generator during inference
+            # need to convert real_A and real_B because G_A and G_B are both used during CycleGAN inference
             model.real_A = model.real_A.half()
+            model.real_B = model.real_A.half()
 
         # time around here to time model inference  for each image without including time taken to load data etc.
         # INCLUDE FOR REPORTING IMAGE RUNS
