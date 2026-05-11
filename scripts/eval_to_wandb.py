@@ -188,7 +188,7 @@ if __name__ == "__main__":
     experiment_name = "hsi_to_rgb_cyclegan_rep2"
     # so run this from /scripts
     # test on new test patches
-    dataroot = "./datasets/histology_full_quant/"
+    dataroot = "./datasets/histology_full_visuals/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
