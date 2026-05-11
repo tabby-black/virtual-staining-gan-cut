@@ -185,15 +185,15 @@ def checkpoint_size_mb(checkpoint_paths):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_CUTrep2a"
+    experiment_name = "hsi_to_rgb_CUTrep1b"
     # so run this from /scripts
     # test on new test patches
-    dataroot = "./datasets/histology_full_visuals/"
+    dataroot = "./datasets/histology_full/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(75, 80, 5))
+    epochs = list(range(90, 200, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -204,8 +204,8 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        #id="6osj7xf5",
-        #resume = "allow"
+        id="79fgdl8e",
+        resume = "allow"
     )
 
     for ep in epochs:
