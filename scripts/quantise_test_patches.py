@@ -25,6 +25,9 @@ for filename in os.listdir(current_test_directory):
     if not filename.lower().endswith(".hdr"):
         continue
 
+    # debug statement to work out why not all hsi patches are being quantised
+    print("Quantising patch", filename)
+
     hdr_input_path = os.path.join(current_test_directory, filename)
     # corresponding .img path is inferred automatically
     img = spectral.envi.open(hdr_input_path)
