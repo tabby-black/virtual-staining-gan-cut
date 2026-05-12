@@ -225,15 +225,15 @@ if __name__ == "__main__":
                 ckpt_dir / f"{ep}_net_G_A.pth",
                 ckpt_dir / f"{ep}_net_G_B.pth",
             ]
-            generator_files = [
-                ckpt_dir / f"{ep}_net_G_A.pth",
-                ckpt_dir / f"{ep}_net_G_B.pth",
-            ]
-            # for 16fp
             #generator_files = [
-                #results_root / f"test_{ep}" / "fp16_netG_A.pth",
-                #results_root / f"test_{ep}" / "fp16_netG_B.pth",
+                #ckpt_dir / f"{ep}_net_G_A.pth",
+                #ckpt_dir / f"{ep}_net_G_B.pth",
             #]
+            # for 16fp
+            generator_files = [
+                results_root / f"test_{ep}" / "fp16_netG_A.pth",
+                results_root / f"test_{ep}" / "fp16_netG_B.pth",
+            ]
             # expected files for CUT
             #expected_files = [
                 #ckpt_dir / f"{ep}_net_D.pth",
@@ -264,9 +264,9 @@ if __name__ == "__main__":
         # define generator files outside if statement so it is defined for runs where the test has already been done
         ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
         generator_files = [
-                ckpt_dir / f"{ep}_net_G_A.pth",
-                ckpt_dir / f"{ep}_net_G_B.pth",
-            ]
+            results_root / f"test_{ep}" / "fp16_netG_A.pth",
+            results_root / f"test_{ep}" / "fp16_netG_B.pth",
+        ]
         # 2: evaluate and log
         # out_images_dir is the directory of the RGB output images produced during testing
         metrics = evaluate_epoch(str(out_images_dir))
