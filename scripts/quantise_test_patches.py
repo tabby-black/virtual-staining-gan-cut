@@ -3,7 +3,7 @@
 import os
 import numpy as np
 from PIL import Image
-import spectral as spy
+import spectral
 
 
 def quantise_patch(patch, bits):
@@ -25,7 +25,7 @@ for filename in os.listdir(current_test_directory):
     
     hdr_input_path = os.path.join(current_test_directory, filename)
     # corresponding .img path is inferred automatically
-    img = spy.open_image(hdr_input_path)
+    img = spectral.envi.open(hdr_input_path)
 
     # load hyperspectral cube
     patch = img.load().astype(np.float32)
@@ -41,7 +41,7 @@ for filename in os.listdir(current_test_directory):
     
 
     # save new quantised .img and .hdr pair - with same names as originals
-    spy.envi.save_image(
+    spectral.envi.save_image(
         hdr_output_path,
         patch_q,
         dtype=np.float32,
