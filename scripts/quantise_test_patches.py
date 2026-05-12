@@ -19,7 +19,7 @@ new_test_directory = "datasets/testA_8b"
 os.makedirs(new_test_directory, exist_ok=True)
 
 i = 0
-for filename in os.listdir(current_test_directory):
+for filename in sorted(os.listdir(current_test_directory)):
     i += 1
     # for every patch in the current test directory, quantise it and save to new test directory
     if not filename.lower().endswith(".hdr"):
