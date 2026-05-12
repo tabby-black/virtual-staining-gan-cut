@@ -142,7 +142,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--name", experiment_name,
         "--dataroot", dataroot,
         "--fp16",
-        "--result_suffix", "6b_",
+        "--result_suffix", "6b_16fp",
         "--CUT_mode", "CUT",
         #"--model", "cycle_gan",
         "--num_test", "846",
