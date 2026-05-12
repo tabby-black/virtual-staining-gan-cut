@@ -38,7 +38,7 @@ for filename in os.listdir(current_test_directory):
     patch_q = quantise_patch(patch, 8)
 
     # output paths
-    base_name = os.splitext(filename)[0]
+    base_name = os.path.splitext(filename)[0]
     hdr_output_path = os.path.join(new_test_directory, base_name + ".hdr")
     
 
