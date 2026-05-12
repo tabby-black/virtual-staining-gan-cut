@@ -177,11 +177,13 @@ if __name__ == '__main__':
             model.real_B = model.real_B.half()
 
         # time around here to time model inference  for each image without including time taken to load data etc.
+        # added synchronisation so timing is done properly
         # INCLUDE FOR REPORTING IMAGE RUNS
+        torch.cude.synchronize()
         start = time.perf_counter()
         model.test()           # run inference
+        torch.cuda.synchronize()
         end = time.perf_counter()
-
         inference_times.append(end - start)
 
 
