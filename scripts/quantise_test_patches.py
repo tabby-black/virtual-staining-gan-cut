@@ -22,7 +22,9 @@ i = 0
 for filename in os.listdir(current_test_directory):
     i += 1
     # for every patch in the current test directory, quantise it and save to new test directory
-    
+    if not filename.lower().endswith(".hdr"):
+        continue
+
     hdr_input_path = os.path.join(current_test_directory, filename)
     # corresponding .img path is inferred automatically
     img = spectral.envi.open(hdr_input_path)
