@@ -219,37 +219,37 @@ if __name__ == "__main__":
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
             # expected files for CycleGAN
-            expected_files = [
-                ckpt_dir / f"{ep}_net_D_A.pth",
-                ckpt_dir / f"{ep}_net_D_B.pth",
-                ckpt_dir / f"{ep}_net_G_A.pth",
-                ckpt_dir / f"{ep}_net_G_B.pth",
-            ]
+            #expected_files = [
+                #ckpt_dir / f"{ep}_net_D_A.pth",
+                #ckpt_dir / f"{ep}_net_D_B.pth",
+                #ckpt_dir / f"{ep}_net_G_A.pth",
+                #ckpt_dir / f"{ep}_net_G_B.pth",
+            #]
             #generator_files = [
                 #ckpt_dir / f"{ep}_net_G_A.pth",
                 #ckpt_dir / f"{ep}_net_G_B.pth",
             #]
             # for 16fp
-            generator_files = [
-                results_root / f"test_{ep}" / "fp16_netG_A.pth",
-                results_root / f"test_{ep}" / "fp16_netG_B.pth",
-            ]
-            # expected files for CUT
-            #expected_files = [
-                #ckpt_dir / f"{ep}_net_D.pth",
-                #ckpt_dir / f"{ep}_net_E_B.pth",
-                #ckpt_dir / f"{ep}_net_F.pth",
-                #ckpt_dir / f"{ep}_net_G.pth",
+            #generator_files = [
+                #results_root / f"test_{ep}" / "fp16_netG_A.pth",
+                #results_root / f"test_{ep}" / "fp16_netG_B.pth",
             #]
+            # expected files for CUT
+            expected_files = [
+                ckpt_dir / f"{ep}_net_D.pth",
+                ckpt_dir / f"{ep}_net_E_B.pth",
+                ckpt_dir / f"{ep}_net_F.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
+            ]
             #generator_files = [
                 #ckpt_dir / f"{ep}_net_E_B.pth",
                 #ckpt_dir / f"{ep}_net_G.pth",
             #]
             # for 16fp
-            #generator_files = [
-                #results_root / f"test_{ep}" / "fp16_netG.pth",
-                #results_root / f"test_{ep}" / "fp16_netE_B.pth",
-            #]
+            generator_files = [
+                results_root / f"test_{ep}" / "fp16_netG.pth",
+                results_root / f"test_{ep}" / "fp16_netE_B.pth",
+            ]
             print("Checking: ", expected_files)
             missing = [p.name for p in expected_files if not p.exists()]
             if missing:
@@ -264,9 +264,9 @@ if __name__ == "__main__":
         # define generator files outside if statement so it is defined for runs where the test has already been done
         ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
         generator_files = [
-            results_root / f"test_{ep}" / "fp16_netG_A.pth",
-            results_root / f"test_{ep}" / "fp16_netG_B.pth",
-        ]
+                results_root / f"test_{ep}" / "fp16_netG.pth",
+                results_root / f"test_{ep}" / "fp16_netE_B.pth",
+            ]
         # 2: evaluate and log
         # out_images_dir is the directory of the RGB output images produced during testing
         metrics = evaluate_epoch(str(out_images_dir))
