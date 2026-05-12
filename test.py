@@ -179,7 +179,7 @@ if __name__ == '__main__':
         # time around here to time model inference  for each image without including time taken to load data etc.
         # added synchronisation so timing is done properly
         # INCLUDE FOR REPORTING IMAGE RUNS
-        torch.cude.synchronize()
+        torch.cuda.synchronize()
         start = time.perf_counter()
         model.test()           # run inference
         torch.cuda.synchronize()
