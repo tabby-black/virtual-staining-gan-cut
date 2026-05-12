@@ -3,6 +3,7 @@
 import os
 import numpy as np
 from PIL import Image
+import spectral as spy
 
 
 def quantise_patch(patch, bits):
@@ -12,8 +13,8 @@ def quantise_patch(patch, bits):
     return img_q.astype(np.float32)
 
 
-current_test_directory = "datasets/histology_full/testB"
-new_test_directory = "datasets/testB_8b"
+current_test_directory = "datasets/histology_full/testA"
+new_test_directory = "datasets/testA_8b"
 
 os.makedirs(new_test_directory, exist_ok=True)
 
@@ -22,21 +23,32 @@ for filename in os.listdir(current_test_directory):
     i += 1
     # for every patch in the current test directory, quantise it and save to new test directory
     
-    input_path = os.path.join(current_test_directory, filename)
-    output_path = os.path.join(new_test_directory, filename)
+    hdr_input_path = os.path.join(current_test_directory, filename)
+    # corresponding .img path is inferred automatically
+    img = spy.open_image(hdr_input_path)
 
-    # load patch
-    img = Image.open(input_path).convert("RGB")
-    # normalise to [0,1]
-    # calibration normalises hsi images but I haven't yet normalised rgb images - this is done by the data loader to [-1,1]
-    img_np = np.array(img).astype(np.float32) / 255.0
-    #img_fp16 = img_np.astype(np.float16)
+    # load hyperspectral cube
+    patch = img.load().astype(np.float32)
+
+    # calibration has already normalised hsi to [0,1]
+
     # quantise patch
-    img_q = quantise_patch(img_np, 8)
-    # convert back to [0,255]
-    img_q = (img_q * 255).clip(0, 255).astype(np.uint8)
+    patch_q = quantise_patch(patch, 8)
 
-    # save patch - with same name as original
-    Image.fromarray(img_q).save(output_path)
-    print("Quantised patch", i, " stored!")
+    # output paths
+    base_name = os.splitext(filename)[0]
+    hdr_output_path = os.path.join(new_test_directory, base_name + ".hdr")
+    
+
+    # save new quantised .img and .hdr pair - with same names as originals
+    spy.envi.save_image(
+        hdr_output_path,
+        patch_q,
+        dtype=np.float32,
+        ext='.img',
+        force=True
+    )
+
+
+    print("Quantised hyperspectral patch", i, " stored!")
 
