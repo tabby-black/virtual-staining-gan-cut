@@ -143,11 +143,11 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--dataroot", dataroot,
         "--fp16",
         "--result_suffix", "_16fp_visuals",
-        #"--CUT_mode", "CUT",
-        "--model", "cycle_gan",
+        "--CUT_mode", "CUT",
+        #"--model", "cycle_gan",
         "--num_test", "846",
         "--dataset_mode", "hsi_unaligned",
-        "--gpu_ids", "1",
+        "--gpu_ids", "2",
         "--epoch", str(ep),
        # CHANGE THIS LINE
         # only include this line for eval on training dataset
@@ -187,15 +187,15 @@ def checkpoint_size_mb(checkpoint_paths):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_cyclegan_rep2"
+    experiment_name = "hsi_to_rgb_CUTrep2a"
     # so run this from /scripts
     # test on new test patches
-    dataroot = "./datasets/histology_full_visuals/"
+    dataroot = "./datasets/histology_full/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(190, 195, 5))
+    epochs = list(range(75, 80, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -214,7 +214,7 @@ if __name__ == "__main__":
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
         # insert results_suffix manually
-        out_images_dir = results_root / f"test_{ep}_16fp_visuals" / "images"
+        out_images_dir = results_root / f"test_{ep}_16fp" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
@@ -278,7 +278,7 @@ if __name__ == "__main__":
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
         # CHANGE THIS LINE
         # insert results_suffix manually
-        timing_path = results_root / f"test_{ep}_16fp_visuals" / "timing_metrics.json"
+        timing_path = results_root / f"test_{ep}_16fp" / "timing_metrics.json"
 
         with open (timing_path, "r") as f:
             timing_metrics = json.load(f)
