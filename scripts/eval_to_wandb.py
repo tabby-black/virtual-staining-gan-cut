@@ -142,9 +142,9 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--name", experiment_name,
         "--dataroot", dataroot,
         #"--fp16",
-        #"--result_suffix", "6b",
-        "--CUT_mode", "CUT",
-        #"--model", "cycle_gan",
+        "--result_suffix", "normal",
+        #"--CUT_mode", "CUT",
+        "--model", "cycle_gan",
         "--num_test", "846",
         "--dataset_mode", "hsi_unaligned",
         "--gpu_ids", "1",
@@ -187,7 +187,7 @@ def checkpoint_size_mb(checkpoint_paths):
 if __name__ == "__main__":
     repo_root = "/local/scratch-3/tb789/projects/virtual-staining-gan-cut"
     # CHANGE THIS LINE
-    experiment_name = "hsi_to_rgb_CUTrep2a"
+    experiment_name = "hsi_to_rgb_cyclegan_rep2"
     # so run this from /scripts
     # test on new test patches
     dataroot = "./datasets/histology_full/"
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
     # plot every epoch for reporting runs
-    epochs = list(range(85, 200, 5))
+    epochs = list(range(190, 195, 5))
     wandb_project = "hyperspectral_image_reconstruction"
     # set to training run id each time so I can see metrics on the same run
     # currently set to id of run2 i.e. cyclegan_initial
@@ -206,45 +206,45 @@ if __name__ == "__main__":
         project=wandb_project,
         #name=f"{experiment_name}_eval_{Path(dataroot).name}",
         # CHANGE THIS LINE
-        id="c4fgacxj",
-        resume = "allow"
+        #id="c4fgacxj",
+        #resume = "allow"
     )
 
     for ep in epochs:
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
         # insert results_suffix manually
-        out_images_dir = results_root / f"test_{ep}" / "images"
+        out_images_dir = results_root / f"test_{ep}normal" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
             # expected files for CycleGAN
-            #expected_files = [
-                #ckpt_dir / f"{ep}_net_D_A.pth",
-                #ckpt_dir / f"{ep}_net_D_B.pth",
-                #ckpt_dir / f"{ep}_net_G_A.pth",
-                #ckpt_dir / f"{ep}_net_G_B.pth",
-            #]
-            #generator_files = [
-                #ckpt_dir / f"{ep}_net_G_A.pth",
-                #ckpt_dir / f"{ep}_net_G_B.pth",
-            #]
+            expected_files = [
+                ckpt_dir / f"{ep}_net_D_A.pth",
+                ckpt_dir / f"{ep}_net_D_B.pth",
+                ckpt_dir / f"{ep}_net_G_A.pth",
+                ckpt_dir / f"{ep}_net_G_B.pth",
+            ]
+            generator_files = [
+                ckpt_dir / f"{ep}_net_G_A.pth",
+                ckpt_dir / f"{ep}_net_G_B.pth",
+            ]
             # for 16fp
             #generator_files = [
                 #results_root / f"test_{ep}" / "fp16_netG_A.pth",
                 #results_root / f"test_{ep}" / "fp16_netG_B.pth",
             #]
             # expected files for CUT
-            expected_files = [
-                ckpt_dir / f"{ep}_net_D.pth",
-                ckpt_dir / f"{ep}_net_E_B.pth",
-                ckpt_dir / f"{ep}_net_F.pth",
-                ckpt_dir / f"{ep}_net_G.pth",
-            ]
-            generator_files = [
-                ckpt_dir / f"{ep}_net_E_B.pth",
-                ckpt_dir / f"{ep}_net_G.pth",
-            ]
+            #expected_files = [
+                #ckpt_dir / f"{ep}_net_D.pth",
+                #ckpt_dir / f"{ep}_net_E_B.pth",
+                #ckpt_dir / f"{ep}_net_F.pth",
+                #ckpt_dir / f"{ep}_net_G.pth",
+            #]
+            #generator_files = [
+                #ckpt_dir / f"{ep}_net_E_B.pth",
+                #ckpt_dir / f"{ep}_net_G.pth",
+            #]
             # for 16fp
             #generator_files = [
                 #results_root / f"test_{ep}" / "fp16_netG.pth",
@@ -264,8 +264,8 @@ if __name__ == "__main__":
         # define generator files outside if statement so it is defined for runs where the test has already been done
         ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
         generator_files = [
-                ckpt_dir / f"{ep}_net_E_B.pth",
-                ckpt_dir / f"{ep}_net_G.pth",
+                ckpt_dir / f"{ep}_net_G_A.pth",
+                ckpt_dir / f"{ep}_net_G_B.pth",
             ]
         # 2: evaluate and log
         # out_images_dir is the directory of the RGB output images produced during testing
@@ -276,7 +276,9 @@ if __name__ == "__main__":
         metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
         # measure end-to-end test time to compare between fp16 and fp32
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
-        timing_path = results_root / f"test_{ep}" / "timing_metrics.json"
+        # CHANGE THIS LINE
+        # insert results_suffix manually
+        timing_path = results_root / f"test_{ep}normal" / "timing_metrics.json"
 
         with open (timing_path, "r") as f:
             timing_metrics = json.load(f)
