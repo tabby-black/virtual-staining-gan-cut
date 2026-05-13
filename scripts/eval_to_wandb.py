@@ -141,8 +141,8 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "python", "-u", "test.py",
         "--name", experiment_name,
         "--dataroot", dataroot,
-        "--fp16",
-        "--result_suffix", "_8b_16fp",
+        #"--fp16",
+        "--result_suffix", "_8b",
         "--CUT_mode", "CUT",
         #"--model", "cycle_gan",
         "--num_test", "846",
@@ -214,7 +214,7 @@ if __name__ == "__main__":
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
         # insert results_suffix manually
-        out_images_dir = results_root / f"test_{ep}_8b_16fp" / "images"
+        out_images_dir = results_root / f"test_{ep}_8b" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
@@ -241,15 +241,15 @@ if __name__ == "__main__":
                 ckpt_dir / f"{ep}_net_F.pth",
                 ckpt_dir / f"{ep}_net_G.pth",
             ]
-            #generator_files = [
-                #ckpt_dir / f"{ep}_net_E_B.pth",
-                #ckpt_dir / f"{ep}_net_G.pth",
-            #]
-            # for 16fp
             generator_files = [
-                results_root / f"test_{ep}" / "fp16_netG.pth",
-                results_root / f"test_{ep}" / "fp16_netE_B.pth",
+                ckpt_dir / f"{ep}_net_E_B.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
             ]
+            # for 16fp
+            #generator_files = [
+                #results_root / f"test_{ep}" / "fp16_netG.pth",
+                #results_root / f"test_{ep}" / "fp16_netE_B.pth",
+            #]
             print("Checking: ", expected_files)
             missing = [p.name for p in expected_files if not p.exists()]
             if missing:
@@ -264,8 +264,8 @@ if __name__ == "__main__":
         # define generator files outside if statement so it is defined for runs where the test has already been done
         ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
         generator_files = [
-                results_root / f"test_{ep}" / "fp16_netG.pth",
-                results_root / f"test_{ep}" / "fp16_netE_B.pth",
+                ckpt_dir / f"{ep}_net_E_B.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
             ]
         # 2: evaluate and log
         # out_images_dir is the directory of the RGB output images produced during testing
@@ -278,7 +278,7 @@ if __name__ == "__main__":
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
         # CHANGE THIS LINE
         # insert results_suffix manually
-        timing_path = results_root / f"test_{ep}_8b_16fp" / "timing_metrics.json"
+        timing_path = results_root / f"test_{ep}_8b" / "timing_metrics.json"
 
         with open (timing_path, "r") as f:
             timing_metrics = json.load(f)
