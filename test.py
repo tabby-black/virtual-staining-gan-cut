@@ -95,74 +95,74 @@ if __name__ == '__main__':
             model.parallelize()
 
             # for 16fp quantisation testing (CycleGAN)
-            if opt.fp16:
-                model.netG_A.half()
-                model.netG_B.half()
+            #if opt.fp16:
+                #model.netG_A.half()
+                #model.netG_B.half()
 
                 # save fp16 checkpoints for size comparison
-                fp16_ckpt_path_g_a = os.path.join(
-                    opt.results_dir,
-                    opt.name,
-                    f"test_{opt.epoch}",
-                    "fp16_netG_A.pth"
-                )
+                #fp16_ckpt_path_g_a = os.path.join(
+                    #opt.results_dir,
+                    #opt.name,
+                    #f"test_{opt.epoch}",
+                    #"fp16_netG_A.pth"
+                #)
                 
-                fp16_ckpt_path_g_b = os.path.join(
-                    opt.results_dir,
-                    opt.name,
-                    f"test_{opt.epoch}",
-                    "fp16_netG_B.pth"
-                )
+                #fp16_ckpt_path_g_b = os.path.join(
+                    #opt.results_dir,
+                    #opt.name,
+                    #f"test_{opt.epoch}",
+                    #"fp16_netG_B.pth"
+                #)
 
 
-                os.makedirs(os.path.dirname(fp16_ckpt_path_g_a), exist_ok=True)
+                #os.makedirs(os.path.dirname(fp16_ckpt_path_g_a), exist_ok=True)
 
-                torch.save(
-                    model.netG_A.state_dict(),
-                    fp16_ckpt_path_g_a
-                )
+                #torch.save(
+                    #model.netG_A.state_dict(),
+                    #fp16_ckpt_path_g_a
+                #)
 
-                torch.save(
-                    model.netG_B.state_dict(),
-                    fp16_ckpt_path_g_b
-                )
+                #torch.save(
+                    #model.netG_B.state_dict(),
+                    #fp16_ckpt_path_g_b
+                #)
             
             # for 16fp quantisation testing (CUT)
-            #if opt.fp16:
-                #model.netG.half()
-                #model.netE_B.half()
+            if opt.fp16:
+                model.netG.half()
+                model.netE_B.half()
 
                 # save fp16 checkpoints for size comparison
-                #fp16_ckpt_path_g = os.path.join(
-                    #opt.results_dir,
-                    #opt.name,
-                    #f"test_{opt.epoch}",
-                    #"fp16_netG.pth"
-                #)
+                fp16_ckpt_path_g = os.path.join(
+                    opt.results_dir,
+                    opt.name,
+                    f"test_{opt.epoch}",
+                    "fp16_netG.pth"
+                )
                 
-                #fp16_ckpt_path_e_b = os.path.join(
-                    #opt.results_dir,
-                    #opt.name,
-                    #f"test_{opt.epoch}",
-                    #"fp16_netE_B.pth"
-                #)
+                fp16_ckpt_path_e_b = os.path.join(
+                    opt.results_dir,
+                    opt.name,
+                    f"test_{opt.epoch}",
+                    "fp16_netE_B.pth"
+                )
 
 
                 #os.makedirs(os.path.dirname(fp16_ckpt_path_g), exist_ok=True)
 
-                #torch.save(
-                    #model.netG.state_dict(),
-                    #fp16_ckpt_path_g
-                #)
+                torch.save(
+                    model.netG.state_dict(),
+                    fp16_ckpt_path_g
+                )
 
-                #torch.save(
-                    #model.netE_B.state_dict(),
-                    #fp16_ckpt_path_e_b
-                #)
+                torch.save(
+                    model.netE_B.state_dict(),
+                    fp16_ckpt_path_e_b
+                )
 
             
-            #if opt.eval:
-                #model.eval()
+            if opt.eval:
+                model.eval()
         
         # explicitly defined num_test as 846 rather than 50
         if i >= opt.num_test:  # only apply our model to opt.num_test images.
@@ -170,7 +170,7 @@ if __name__ == '__main__':
         
         model.set_input(data)  # unpack data from data loader
         
-        # for 16fp quantisation testing (CycleGAN)
+        # for 16fp quantisation testing (CycleGAN + CUT)
         if opt.fp16:
             # need to convert real_A and real_B because G_A and G_B are both used during CycleGAN inference
             model.real_A = model.real_A.half()
