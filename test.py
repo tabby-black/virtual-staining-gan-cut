@@ -95,37 +95,37 @@ if __name__ == '__main__':
             model.parallelize()
 
             # for 16fp quantisation testing (CycleGAN)
-            #if opt.fp16:
-                #model.netG_A.half()
-                #model.netG_B.half()
+            if opt.fp16:
+                model.netG_A.half()
+                model.netG_B.half()
 
                 # save fp16 checkpoints for size comparison
-                #fp16_ckpt_path_g_a = os.path.join(
-                    #opt.results_dir,
-                    #opt.name,
-                    #f"test_{opt.epoch}",
-                    #"fp16_netG_A.pth"
-                #)
+                fp16_ckpt_path_g_a = os.path.join(
+                    opt.results_dir,
+                    opt.name,
+                    f"test_{opt.epoch}",
+                    "fp16_netG_A.pth"
+                )
                 
-                #fp16_ckpt_path_g_b = os.path.join(
-                    #opt.results_dir,
-                    #opt.name,
-                    #f"test_{opt.epoch}",
-                    #"fp16_netG_B.pth"
-                #)
+                fp16_ckpt_path_g_b = os.path.join(
+                    opt.results_dir,
+                    opt.name,
+                    f"test_{opt.epoch}",
+                    "fp16_netG_B.pth"
+                )
 
 
-                #os.makedirs(os.path.dirname(fp16_ckpt_path_g_a), exist_ok=True)
+                os.makedirs(os.path.dirname(fp16_ckpt_path_g_a), exist_ok=True)
 
-                #torch.save(
-                    #model.netG_A.state_dict(),
-                    #fp16_ckpt_path_g_a
-                #)
+                torch.save(
+                    model.netG_A.state_dict(),
+                    fp16_ckpt_path_g_a
+                )
 
-                #torch.save(
-                    #model.netG_B.state_dict(),
-                    #fp16_ckpt_path_g_b
-                #)
+                torch.save(
+                    model.netG_B.state_dict(),
+                    fp16_ckpt_path_g_b
+                )
             
             # for 16fp quantisation testing (CUT)
             #if opt.fp16:
