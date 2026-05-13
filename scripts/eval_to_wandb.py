@@ -219,12 +219,12 @@ if __name__ == "__main__":
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
             # expected files for CycleGAN
-            expected_files = [
-                ckpt_dir / f"{ep}_net_D_A.pth",
-                ckpt_dir / f"{ep}_net_D_B.pth",
-                ckpt_dir / f"{ep}_net_G_A.pth",
-                ckpt_dir / f"{ep}_net_G_B.pth",
-            ]
+            #expected_files = [
+                #ckpt_dir / f"{ep}_net_D_A.pth",
+                #ckpt_dir / f"{ep}_net_D_B.pth",
+                #ckpt_dir / f"{ep}_net_G_A.pth",
+                #ckpt_dir / f"{ep}_net_G_B.pth",
+            #]
             #generator_files = [
                 #ckpt_dir / f"{ep}_net_G_A.pth",
                 #ckpt_dir / f"{ep}_net_G_B.pth",
@@ -235,12 +235,12 @@ if __name__ == "__main__":
                 #results_root / f"test_{ep}" / "fp16_netG_B.pth",
             #]
             # expected files for CUT
-            #expected_files = [
-                #ckpt_dir / f"{ep}_net_D.pth",
-                #ckpt_dir / f"{ep}_net_E_B.pth",
-                #ckpt_dir / f"{ep}_net_F.pth",
-                #ckpt_dir / f"{ep}_net_G.pth",
-            #]
+            expected_files = [
+                ckpt_dir / f"{ep}_net_D.pth",
+                ckpt_dir / f"{ep}_net_E_B.pth",
+                ckpt_dir / f"{ep}_net_F.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
+            ]
             #generator_files = [
                 #ckpt_dir / f"{ep}_net_E_B.pth",
                 #ckpt_dir / f"{ep}_net_G.pth",
