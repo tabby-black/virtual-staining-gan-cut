@@ -13,8 +13,8 @@ def quantise_patch(patch, bits):
     return img_q.astype(np.float32)
 
 
-current_test_directory = "datasets/histology_full/testA"
-new_test_directory = "datasets/testA_6b"
+current_test_directory = "datasets/histology_full_visuals/testA"
+new_test_directory = "datasets/histology_full_visuals/testA_8b"
 
 os.makedirs(new_test_directory, exist_ok=True)
 
@@ -38,7 +38,7 @@ for filename in sorted(os.listdir(current_test_directory)):
     # calibration has already normalised hsi to [0,1]
 
     # quantise patch
-    patch_q = quantise_patch(patch, 6)
+    patch_q = quantise_patch(patch, 8)
 
     # output paths
     base_name = os.path.splitext(filename)[0]
