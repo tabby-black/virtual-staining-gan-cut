@@ -142,7 +142,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--name", experiment_name,
         "--dataroot", dataroot,
         "--fp16",
-        "--result_suffix", "_16fp_visuals",
+        "--result_suffix", "_8b_16fp",
         "--CUT_mode", "CUT",
         #"--model", "cycle_gan",
         "--num_test", "846",
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     experiment_name = "hsi_to_rgb_CUTrep2a"
     # so run this from /scripts
     # test on new test patches
-    dataroot = "./datasets/histology_full_visuals/"
+    dataroot = "./datasets/histology_full_quant/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
@@ -214,7 +214,7 @@ if __name__ == "__main__":
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
         # insert results_suffix manually
-        out_images_dir = results_root / f"test_{ep}_16fp_visuals" / "images"
+        out_images_dir = results_root / f"test_{ep}_8b_16fp" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
@@ -278,7 +278,7 @@ if __name__ == "__main__":
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
         # CHANGE THIS LINE
         # insert results_suffix manually
-        timing_path = results_root / f"test_{ep}_16fp_visuals" / "timing_metrics.json"
+        timing_path = results_root / f"test_{ep}_8b_16fp" / "timing_metrics.json"
 
         with open (timing_path, "r") as f:
             timing_metrics = json.load(f)
