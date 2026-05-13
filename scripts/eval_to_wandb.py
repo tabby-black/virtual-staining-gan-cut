@@ -214,7 +214,7 @@ if __name__ == "__main__":
         # 1: generate outputs (skip if already exists)
         # CHANGE THIS LINE
         # insert results_suffix manually
-        out_images_dir = results_root / f"test_{ep}_8b_16fp" / "images"
+        out_images_dir = results_root / f"test_{ep}_8b_visuals" / "images"
         if not out_images_dir.exists():
             ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
             # CHANGE THIS LINE
