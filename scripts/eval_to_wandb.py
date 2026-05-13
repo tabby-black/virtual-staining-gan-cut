@@ -190,7 +190,7 @@ if __name__ == "__main__":
     experiment_name = "hsi_to_rgb_CUTrep2a"
     # so run this from /scripts
     # test on new test patches
-    dataroot = "./datasets/histology_full_quant/"
+    dataroot = "./datasets/histology_full_visuals/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
@@ -241,15 +241,15 @@ if __name__ == "__main__":
                 ckpt_dir / f"{ep}_net_F.pth",
                 ckpt_dir / f"{ep}_net_G.pth",
             ]
-            #generator_files = [
-                #ckpt_dir / f"{ep}_net_E_B.pth",
-                #ckpt_dir / f"{ep}_net_G.pth",
-            #]
-            # for 16fp
             generator_files = [
-                results_root / f"test_{ep}" / "fp16_netG.pth",
-                results_root / f"test_{ep}" / "fp16_netE_B.pth",
+                ckpt_dir / f"{ep}_net_E_B.pth",
+                ckpt_dir / f"{ep}_net_G.pth",
             ]
+            # for 16fp
+            #generator_files = [
+                #results_root / f"test_{ep}" / "fp16_netG.pth",
+                #results_root / f"test_{ep}" / "fp16_netE_B.pth",
+            #]
             print("Checking: ", expected_files)
             missing = [p.name for p in expected_files if not p.exists()]
             if missing:
@@ -263,28 +263,24 @@ if __name__ == "__main__":
 
         # define generator files outside if statement so it is defined for runs where the test has already been done
         ckpt_dir = Path(repo_root) / "checkpoints" / experiment_name
-        generator_files = [
-                results_root / f"test_{ep}" / "fp16_netG.pth",
-                results_root / f"test_{ep}" / "fp16_netE_B.pth",
-            ]
         # 2: evaluate and log
         # out_images_dir is the directory of the RGB output images produced during testing
         metrics = evaluate_epoch(str(out_images_dir))
         metrics["epoch"] = ep
         # measure the generator checkpoint size to compare between fp16 and fp32
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
-        metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
+        #metrics["eval/checkpoint_size_mb"] = checkpoint_size_mb(generator_files)
         # measure end-to-end test time to compare between fp16 and fp32
         # INCLUDE THIS FOR REPORTING IMAGE RUNS
         # CHANGE THIS LINE
         # insert results_suffix manually
-        timing_path = results_root / f"test_{ep}_8b_16fp" / "timing_metrics.json"
+        #timing_path = results_root / f"test_{ep}_8b_16fp" / "timing_metrics.json"
 
-        with open (timing_path, "r") as f:
-            timing_metrics = json.load(f)
+        #with open (timing_path, "r") as f:
+            #timing_metrics = json.load(f)
 
-        metrics["eval/inference_mean_s"] = timing_metrics["mean_inference_time_s"]
-        metrics["eval/inference_std_s"] = timing_metrics["std_inference_time_s"]
+        #metrics["eval/inference_mean_s"] = timing_metrics["mean_inference_time_s"]
+        #metrics["eval/inference_std_s"] = timing_metrics["std_inference_time_s"]
         
         
         wandb.log(metrics)  
