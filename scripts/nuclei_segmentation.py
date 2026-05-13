@@ -109,6 +109,6 @@ create_nuclei_segmentation_mask(input_dir, output_dir)
 # output_dir = ./results/histology_analysis/cganrep1_RGB_nuclei_masks
 
 
-mask_dir = "results/histology_analysis/cut_6b_16fp_fake_RGB_nuclei_masks"
+mask_dir = "results/histology_analysis/cut_6b_fake_RGB_nuclei_masks"
 output_csv_dir = "results/histology_analysis/cut_6b_fake_RGB_nuclei_features.csv"
 extract_features_to_csv(mask_dir, output_csv_dir)
