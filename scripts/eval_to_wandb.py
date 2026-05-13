@@ -142,7 +142,7 @@ def run_test_py(repo_root, experiment_name, dataroot, ep, results_dir):
         "--name", experiment_name,
         "--dataroot", dataroot,
         "--fp16",
-        "--result_suffix", "_6b_16fp",
+        "--result_suffix", "_6b_16fp_visuals",
         #"--CUT_mode", "CUT",
         "--model", "cycle_gan",
         "--num_test", "846",
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     experiment_name = "hsi_to_rgb_cyclegan_rep2"
     # so run this from /scripts
     # test on new test patches
-    dataroot = "./datasets/histology_full_quant/"
+    dataroot = "./datasets/histology_full_visuals/"
     results_root = Path(repo_root) / "results" / experiment_name
     # CUT1 epochs: 0-101
     # CHANGE THIS LINE
