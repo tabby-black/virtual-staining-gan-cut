@@ -99,7 +99,7 @@ def extract_features_to_csv(mask_dir, output_csv_dir):
 # create nuclei segmentation masks for all real RGB images
 # input directory is the same as using the real_B folder inside one of the model epoch results folders
 # calling this script from main project folder
-input_dir = "results/hsi_to_rgb_CUTrep2a/test_190_6b/images/fake_B"
+input_dir = "results/hsi_to_rgb_CUTrep2a/test_75_6b/images/fake_B"
 output_dir = "results/histology_analysis/cut_6b_fake_RGB_nuclei_masks"
 create_nuclei_segmentation_mask(input_dir, output_dir)
 
