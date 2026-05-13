@@ -421,7 +421,19 @@ class HSIUnalignedDataset(BaseDataset):
         B_path = self.B_paths[index_B]
 
         # use load_hsi function because this includes transposing tensors from (H, W, C) to (C, H, W) so it is compatable with PyTorch
-        A = self.load_hsi(A_path)
+        # only load uncorrupted hsi files
+        while True:
+            try:
+                A = self.load_hsi(A_path)
+                break
+
+            except Exception as e:
+                print(f"[WARNING] Corrupted HSI skipped: {A_path}")
+                print(f"Reason: {e}")
+
+                index = (index + 1) % self.A_size
+                A_path = self.A_paths[index]
+
         B = self.load_rgb(B_path)
 
         # commented this part out for now
